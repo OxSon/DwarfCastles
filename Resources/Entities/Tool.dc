@@ -1,0 +1,5 @@
+.entity
+.weapon
+type:tool
+weight:1
+carriable:yes
