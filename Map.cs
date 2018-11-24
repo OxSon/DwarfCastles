@@ -13,7 +13,7 @@ namespace DwarfFortress
     public class Map
     {
         // Represents the max Size of the map
-        public Point size;
+        public Point Size;
         
         public IEnumerable<Entity> Entities { get; }
 
@@ -45,7 +45,7 @@ namespace DwarfFortress
 
         public bool InBounds(Point pos)
         {
-            return pos.X > 0 && pos.Y > 0 && pos.X < size.X && pos.Y < size.Y;
+            return pos.X > 0 && pos.Y > 0 && pos.X < Size.X && pos.Y < Size.Y;
         }
         /// <summary>
         /// Get all entites that have a certain tag, ignoring the value of that tag
