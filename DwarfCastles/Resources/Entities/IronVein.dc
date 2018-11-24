@@ -1,8 +1,0 @@
-.block
-.resource
-:harvestable
-	:yeild
-		name:iron
-		amount:
-			min:10
-			max:50

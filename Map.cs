@@ -28,12 +28,15 @@ namespace DwarfFortress
             // Generate Trees
             for (int i = rand.Next(20, 50); i != 0; i--)
             {
-                Entity e = new Entity("Tree", new Point(rand.Next(0,40), rand.Next(0, 40)), 'T');
+                Entity e = new Entity("Tree", new Point(rand.Next(0,40), rand.Next(0, 40)), 'T', ConsoleColor.Black, ConsoleColor.Green);
+                
+                AddEntity(e);
             }
             // Generate Rocks
             for (int i = rand.Next(20, 50); i != 0; i--)
             {
-                Entity e = new Entity("Tree", new Point(rand.Next(0,40), rand.Next(0, 40)), 'T');
+                Entity e = new Entity("Rock", new Point(rand.Next(0,40), rand.Next(0, 40)), 'r', ConsoleColor.Black, ConsoleColor.Gray);
+                AddEntity(e);
             }
             
         }
