@@ -42,7 +42,7 @@ namespace DwarfFortress
                 if (e is Actor)
                 {
                     Actor a = (Actor) e;
-                    if (a.Tasks.Any())
+                    if (a.Tasks.Count == 0)
                     {
                         Random r = new Random();
                         

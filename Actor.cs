@@ -27,8 +27,9 @@ namespace DwarfFortress
         public void Update()
         {
             Logger.Log("Update Method for Actor");
+            Logger.Log("Task Count: " + Tasks.Count);
             if (Tasks.Count == 0 || Tasks.First().Location.Equals(Pos)) return;
-            
+            Logger.Log("Next step");
             //recheck our pathing every 5 moves, or if we don't currently have a path
             if (currentTravelPath == null || counter > 4)
             {
