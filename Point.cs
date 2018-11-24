@@ -15,5 +15,10 @@ namespace DwarfFortress
             X = x;
             Y = y;
         }
+
+        public Point Add(Point p)
+        {
+            return new Point(X + p.X, Y + p.Y);
+        }
     }
 }

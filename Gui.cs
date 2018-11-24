@@ -9,17 +9,25 @@ namespace DwarfFortress
     /// </summary>
     public class Gui
     {
-        public int CameraOffset { get; }
+        public Point CameraOffset { get; }
 
-        public Gui(int cameraOffset)
+        public Gui()
         {
-            CameraOffset = cameraOffset;
+            CameraOffset = new Point(0,0);
+
         }
 
         public void Draw(Map map)
         {
-            //TODO
-            throw new NotImplementedException();
+            Console.CursorVisible = false;
+            foreach (Entity e in map.Entities)
+            {
+                if (map.InBounds(e.Pos.Add(CameraOffset)))
+                {
+                    Console.SetCursorPosition(e.Pos.X - CameraOffset.X, e.Pos.Y - CameraOffset.Y);
+                    Console.Write(e.Ascii);
+                }
+            }
         }
     }
 }
