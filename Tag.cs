@@ -21,8 +21,18 @@ namespace DwarfFortress
                 else throw new ArgumentException();
             }
         }
+        
+        
 
         public string Name { get; }
         public Dictionary<string, Tag> SubTags { get; }
+
+        public Tag(){}
+        
+        public Tag(string name, bool value)
+        {
+            Name = name;
+            
+        }
     }
 }

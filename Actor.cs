@@ -26,7 +26,7 @@ namespace DwarfFortress
             //recheck our pathing every 5 moves, or if we don't currently have a path
             if (currentTravelPath == null || counter > 4)
             {
-                currentTravelPath = GenTravelPath(map.impassables, Tasks.First());
+                currentTravelPath = GenTravelPath(map.Impassables, Tasks.First());
                 counter = 0;
             }
             else

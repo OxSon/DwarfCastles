@@ -15,8 +15,8 @@ namespace DwarfFortress
         // Represents the max Size of the map
         public Point Size;
         
-        public IEnumerable<Entity> Entities { get; }
-        public bool[,] impassables;
+        public IList<Entity> Entities { get; }
+        public bool[,] Impassables;
         
 
         public Map()
@@ -31,7 +31,8 @@ namespace DwarfFortress
             for (int i = rand.Next(20, 50); i != 0; i--)
             {
                 Entity e = new Entity("Tree", new Point(rand.Next(0,40), rand.Next(0, 40)), 'T', ConsoleColor.Black, ConsoleColor.Green);
-                
+                //e.Tags.Add(new Tag("Passable", false)); // TODO Implement Tags
+                Impassables[e.Pos.X, e.Pos.Y] = true; //TODO will this work for testing?
                 AddEntity(e);
             }
             // Generate Rocks
@@ -45,7 +46,7 @@ namespace DwarfFortress
 
         public void AddEntity(Entity e)
         {
-            
+            Entities.Add(e);
         }
 
         public bool InBounds(Point pos)
