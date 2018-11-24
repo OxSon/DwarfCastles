@@ -13,8 +13,7 @@ namespace DwarfFortress
 
         public Gui()
         {
-            CameraOffset = new Point(0,0);
-
+            CameraOffset = new Point();
         }
 
         public void Draw(Map map)
