@@ -19,6 +19,19 @@ namespace DwarfCastles
             else
             {
                 Logger.Log("Found file!");
+                try
+                {
+                    using (StreamReader reader = new StreamReader(file))
+                    {
+                        string fileContent = reader.ReadToEnd();
+                        Console.WriteLine(file);
+                    }
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine("Exception caught!");
+                    Console.WriteLine(e.Message);
+                }
             }
 
             return "";
