@@ -21,7 +21,10 @@ namespace DwarfFortress
 
         public Map()
         {
-            Size = new Point(50, 50);
+            Entities = new List<Entity>();
+            Size = new Point(25,25);
+            Impassables = new bool[Size.X, Size.Y];
+            GenerateSampleMap();
         }
 
         private void GenerateSampleMap()
@@ -30,7 +33,7 @@ namespace DwarfFortress
             // Generate Trees
             for (int i = rand.Next(20, 50); i != 0; i--)
             {
-                Entity e = new Entity("Tree", new Point(rand.Next(0,40), rand.Next(0, 40)), 'T', ConsoleColor.Black, ConsoleColor.Green);
+                Entity e = new Entity("Tree", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'T', ConsoleColor.Black, ConsoleColor.Green);
                 //e.Tags.Add(new Tag("Passable", false)); // TODO Implement Tags
                 Impassables[e.Pos.X, e.Pos.Y] = true; //TODO will this work for testing?
                 AddEntity(e);
@@ -38,7 +41,13 @@ namespace DwarfFortress
             // Generate Rocks
             for (int i = rand.Next(20, 50); i != 0; i--)
             {
-                Entity e = new Entity("Rock", new Point(rand.Next(0,40), rand.Next(0, 40)), 'r', ConsoleColor.Black, ConsoleColor.Gray);
+                Entity e = new Entity("Rock", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'r', ConsoleColor.Black, ConsoleColor.Gray);
+                AddEntity(e);
+            }
+            // Generate Dwarves
+            for (int i = rand.Next(2,7); i != 0; i--)
+            {
+                Entity e = new Entity("Dwarf", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'D', ConsoleColor.Black, ConsoleColor.Blue);
                 AddEntity(e);
             }
             
