@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using DwarfCastles;
 
 namespace DwarfFortress
 {
@@ -13,26 +14,33 @@ namespace DwarfFortress
         //TODO Josh what is this? needs more functionality I assume?
         public IList<Task> Tasks { get; }
         public Map map { get; } //current map Actor is on
-        
-        public Actor(string name, Point pos, char ascii,
+
+        public Actor(string name, Point pos, char ascii, Map map,
             ConsoleColor backgroundColor = ConsoleColor.Black,
             ConsoleColor foregroundColor = ConsoleColor.White) :
-            base(name, pos, ascii, backgroundColor, foregroundColor) { }
+            base(name, pos, ascii, backgroundColor, foregroundColor)
+        {
+            this.map = map;
+            Tasks = new List<Task>();
+        }
 
         public void Update()
         {
-            if (Tasks.First().Location.Equals(Pos)) return;
+            Logger.Log("Update Method for Actor");
+            if (Tasks.Count == 0 || Tasks.First().Location.Equals(Pos)) return;
             
             //recheck our pathing every 5 moves, or if we don't currently have a path
             if (currentTravelPath == null || counter > 4)
             {
+                Logger.Log(Tasks.Count + "");
                 currentTravelPath = GenTravelPath(map.Impassables, Tasks.First());
                 counter = 0;
             }
             else
                 counter++;
-
+            Logger.Log("Update for Actor moving from (" + Pos.X + ", " + Pos.Y + ") to");
             Pos = currentTravelPath.Dequeue();
+            Logger.Log("(" + Pos.X + ", " + Pos.Y + ")");
         }
         
         private Queue<Point> GenTravelPath(bool[,] impassables, Task task)

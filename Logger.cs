@@ -3,7 +3,7 @@ using System.IO;
 
 namespace DwarfCastles
 {
-    public class Logger
+    public static class Logger
     {
         static Logger()
         {

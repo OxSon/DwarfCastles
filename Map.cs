@@ -47,8 +47,8 @@ namespace DwarfFortress
             // Generate Dwarves
             for (int i = rand.Next(2,7); i != 0; i--)
             {
-                Entity e = new Entity("Dwarf", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'D', ConsoleColor.Black, ConsoleColor.Blue);
-                AddEntity(e);
+                Actor a = new Actor("Dwarf", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'D', this, ConsoleColor.Black, ConsoleColor.Blue);
+                AddEntity(a);
             }
             
         }

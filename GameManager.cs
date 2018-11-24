@@ -2,6 +2,7 @@ using System;
 using System.CodeDom;
 using System.Drawing;
 using System.Threading;
+using DwarfCastles;
 
 namespace DwarfFortress
 {
@@ -35,6 +36,7 @@ namespace DwarfFortress
 
         public void Update()
         {
+            Logger.Log("Entering Update Method in GameManager.cs");
             foreach (Entity e in Map.Entities)
             {
                 if (e is Actor)
@@ -48,7 +50,7 @@ namespace DwarfFortress
                         do
                         {
                             nextPos = new Point(r.Next(0, Map.Size.X), r.Next(0, Map.Size.Y));
-                        } while (Map.Impassables[nextPos.X,nextPos.Y]);
+                        } while (!Map.Impassables[nextPos.X,nextPos.Y]);
                         
                         Task t = new Task(0, nextPos);
                         a.Tasks.Add(t);

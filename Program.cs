@@ -6,7 +6,7 @@ namespace DwarfCastles
     {
         public static void Main()
         {
-            // ResourceParser.ParseFile("BuildingObjects.info");
+             ResourceParser.ParseFile("BuildingObjects.info");
             GameManager game = new GameManager(new Map(), new Gui());
         }
     }
