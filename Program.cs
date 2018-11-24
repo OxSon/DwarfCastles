@@ -1,9 +1,10 @@
-﻿namespace DwarfFortress
+﻿namespace DwarfCastles
 {
-    internal class Program
+    public class Program 
     {
-        public static void Main()
+        public static void Main(string[] args)
         {
+            ResourceParser.ParseFile("BuildingObjects.info");
         }
     }
 }

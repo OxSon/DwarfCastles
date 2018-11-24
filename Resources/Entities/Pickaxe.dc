@@ -1,0 +1,17 @@
+.entity
+.tool
+type:pickaxe
+name:pickaxe
+weight:3
+durability:100
+craftable:
+	resource:
+		name:iron
+		amount:3
+	resource:
+		type:wood
+		amount:2
+	station:
+		type:forge
+	time:100
+	tool:hammer	
