@@ -31,7 +31,7 @@ namespace DwarfCastles
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error writing to Log File.");
+                Console.WriteLine("Error writing to Log File\n" + e.StackTrace);
             }
         }
     }
