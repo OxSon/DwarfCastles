@@ -3,11 +3,11 @@ Action Tags are tags that allow the player to do something to it, for example, b
 These are tags that mean you are allowed to do an action to the entity, rather than actual information about the entitiy itself. Often ends in "able"
 
 Harvestable
-	This represents an ojbect that can be destroyed to produce some other kind of material or resource. Thic can include trees, rocks, mineral veins, ect.
+	This represents an object that can be destroyed to produce some other kind of material or resource. This can include trees, rocks, mineral veins, etc.
 	Subtags include:
 	tool:
 		type:ToolType e.g. type:hammer
-	yeild:
+	yield:
 		resource:
 			name:resourcename e.g. name:flint
 			type:resourcetype e.g. type:stone
@@ -21,7 +21,7 @@ Buildable
 		amount:amount needed e.g. amount:10
 	tool:
 		type:ToolType e.g. type:hammer
-	Steps to do this action is having the required tool, or tools, in the Buildalbe tag present in the inventory of the builder, the required resource(s), at the building site, and 	 the builder at the spot of the building. 
+	Steps to do this action is having the required tool, or tools, in the Buildable tag present in the inventory of the builder, the required resource(s), at the building site, and the builder at the spot of the building. 
 Craftable
 	This tag represents an object that can be built at a crafting station. This includes pickaxes, cooked food, weapons, or anything else. Usually something that can be carried.
 	Subtags include:
