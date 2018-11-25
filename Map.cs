@@ -15,6 +15,8 @@ namespace DwarfFortress
         public Point size;
         
         public IEnumerable<Entity> Entities { get; }
+        public bool[,] impassables;
+        
 
         public Map()
         {

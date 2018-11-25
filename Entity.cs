@@ -14,7 +14,7 @@ namespace DwarfFortress
         public IDictionary<string, Tag> Tags { get; }
 
         public string Name { get; }
-        public Point Pos { get; }
+        public Point Pos { get; protected set; }
         public int Id { get; } //TODO Josh what is this for?
         private static int id;
 
