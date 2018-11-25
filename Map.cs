@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace DwarfFortress
     public class Map
     {
         // Represents the max Size of the map
-        public Point size;
+        public Point Size;
         
         public IEnumerable<Entity> Entities { get; }
         public bool[,] impassables;
@@ -20,12 +21,33 @@ namespace DwarfFortress
 
         public Map()
         {
-            size = new Point();
+            Size = new Point(50, 50);
+        }
+
+        private void GenerateSampleMap()
+        {
+            Random rand = new Random();
+            // Generate Trees
+            for (int i = rand.Next(20, 50); i != 0; i--)
+            {
+                Entity e = new Entity("Tree", new Point(rand.Next(0,40), rand.Next(0, 40)), 'T');
+            }
+            // Generate Rocks
+            for (int i = rand.Next(20, 50); i != 0; i--)
+            {
+                Entity e = new Entity("Tree", new Point(rand.Next(0,40), rand.Next(0, 40)), 'T');
+            }
+            
+        }
+
+        public void AddEntity(Entity e)
+        {
+            
         }
 
         public bool InBounds(Point pos)
         {
-            return pos.X > 0 && pos.Y > 0 && pos.X < size.X && pos.Y < size.Y;
+            return pos.X > 0 && pos.Y > 0 && pos.X < Size.X && pos.Y < Size.Y;
         }
         /// <summary>
         /// Get all entites that have a certain tag, ignoring the value of that tag
