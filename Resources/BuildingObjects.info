@@ -1,12 +1,12 @@
-Building ojbects using .dc files
+Building objects using .dc files
 Each file represents an object or a set of default values
 
 For instance, Entity.dc represents a set of default values that all entities have
 
-To inherit from this, you will type .entitiy at the top of a .dc file along with other inheritences
-Inheritences will go in order, and the latests inheritence will be used
+To inherit from this, you will type .entity at the top of a .dc file along with other inheritences
+Inheritances will go in order, and the latest inheritance will be used
 
-Each line in a file after inheritence represents a single tag
+Each line in a file after inheritance represents a single tag
 Tags are created with values, though this can also be left blank (Intended for declaring Subtags)
 When creating a tag, the format of the tag is TagName:TagValue
 e.g. file
@@ -18,12 +18,12 @@ e.g. blank tag
 cool:
 
 
-Indented lines represent subtags to the tag before it with less tabs
+Indented lines represent subtags to the tag before it with fewer tabs
 e.g.
 harvestable:yes
 	tool:yes
 		type:axe
-	yeild:yes
+	yield:yes
 		resource:
 			name:wood
 			amount:50
