@@ -24,7 +24,7 @@ namespace DwarfCastles
                     using (StreamReader reader = new StreamReader(file))
                     {
                         string fileContent = reader.ReadToEnd();
-                        Console.WriteLine(file);
+                        //Console.WriteLine(fileContent);
                     }
                 }
                 catch (Exception e)
