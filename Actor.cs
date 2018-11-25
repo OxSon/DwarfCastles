@@ -2,16 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.InteropServices;
 
 namespace DwarfFortress
 {
-    /// <inheritdoc />
+    /// <inheritdoc/>
     public class Actor : Entity
     {
         private Queue<Point> currentTravelPath;
         private static int counter;
         //TODO Josh what is this? needs more functionality I assume?
-        public IList<Task> Tasks { get; }
+        public IEnumerable<Task> Tasks { get; }
         public Map map { get; } //current map Actor is on
         
         public Actor(string name, Point pos, char ascii,
@@ -26,7 +27,7 @@ namespace DwarfFortress
             //recheck our pathing every 5 moves, or if we don't currently have a path
             if (currentTravelPath == null || counter > 4)
             {
-                currentTravelPath = GenTravelPath(map.impassables, Tasks.First());
+                currentTravelPath = new Queue<Point>(GenTravelPath(map.impassables, Tasks.First()));
                 counter = 0;
             }
             else
@@ -35,27 +36,45 @@ namespace DwarfFortress
             Pos = currentTravelPath.Dequeue();
         }
         
-        private Queue<Point> GenTravelPath(bool[,] impassables, Task task)
+        private IEnumerable<Point> GenTravelPath(bool[,] impassables, Task task)
         {
-            var destination = task.Location;
             if (!CanMove(impassables)) return null;
-            
-            var path = new Queue<Point>();
-            while (!path.Last().Equals(destination))
-            {
-                Point next;
-                var last = path.Last();
-                
-                foreach (var point in AdjacentPoints(last))
-                {
-                    if (RelativeDistanceTo(point, destination) < RelativeDistanceTo(next, destination))
-                        next = point;
-                }
-                
-                path.Enqueue(next);
-            }
 
-            return path;
+            var points = new Queue<Point>();
+            points.Enqueue(Pos);
+
+            //TODO unnecessary?
+            // var visited = new bool[map.Size.Y, map.Size.X];
+            
+            var cameFrom = new Dictionary<Point, Point>(); //used to construct our path at the end
+            cameFrom.Add(points.Peek(), points.Peek()); //indicate that our starting node "came" from nowhere
+
+            Point current;
+            //generate list of paths
+            while (points.Count > 0)
+            {
+                current = points.Dequeue();
+                
+                foreach (var point in AdjacentPoints(current))
+                {
+                    if (!cameFrom.ContainsKey(point))
+                    {
+                        points.Enqueue(point);
+                        cameFrom.Add(point, current);
+                    }
+                }
+            }
+            
+            var path = new Stack<Point>();
+            current = task.Location;
+
+            while (current != Pos)
+            {
+                path.Push(current);
+                cameFrom.TryGetValue(current, out current);
+            }
+            
+            return path.ToList();
         }
         
         private bool CanMove(bool[,] impassables)
@@ -78,7 +97,7 @@ namespace DwarfFortress
                     new Point(origin.X - 1, origin.Y),
                     new Point(origin.X + 1, origin.Y),
                     new Point(origin.X, origin.Y - 1),
-                    new Point(origin.X, origin.Y + 1),
+                    new Point(origin.X, origin.Y + 1)
             };
 
             return rawAdjacents.Where(point => map.InBounds(point)).ToList();
