@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 
 namespace DwarfFortress
 {
@@ -20,9 +21,9 @@ namespace DwarfFortress
         public void Draw(Map map)
         {
             Console.CursorVisible = false;
-            foreach (Entity e in map.Entities)
+            foreach (var e in map.Entities)
             {
-                if (map.InBounds(e.Pos.Add(CameraOffset)))
+                if (map.InBounds(Point.Add(e.Pos, new Size(CameraOffset))))
                 {
                     Console.SetCursorPosition(e.Pos.X - CameraOffset.X, e.Pos.Y - CameraOffset.Y);
                     Console.Write(e.Ascii);
