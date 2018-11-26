@@ -55,7 +55,14 @@ namespace DwarfFortress
                     {
                         Console.BackgroundColor = ConsoleColor.Black;
                         Console.ForegroundColor = ConsoleColor.White;
-                        Console.Write('.');
+                        if (map.InBounds(new Point(i, j)))
+                        {
+                            Console.Write('.');
+                        }
+                        else
+                        {
+                            Console.Write(' ');
+                        }
                     }
                 }
             }
