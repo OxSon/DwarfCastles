@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Concurrent;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading;
 using DwarfCastles;
 
@@ -13,17 +15,29 @@ namespace DwarfFortress
     /// </summary>
     public class GameManager
     {
+        public Map Map { get; }
+        public Gui Gui { get; }
+        private bool Running = true;
+        private static ConcurrentQueue<Task> Tasks;
+
         public GameManager(Map map, Gui gui)
         {
             Map = map;
             Gui = gui;
+            Tasks = new ConcurrentQueue<Task>();
             Run();
         }
 
-        public Map Map { get; }
-        public Gui Gui { get; }
+        public void AddTask(Task task)
+        {
+            Tasks.Enqueue(task);
+        }
 
-        private bool Running = true;
+        public Task GetTask()
+        {
+            return Tasks.TryDequeue(out var result) ? result : null;
+        }
+
         
         public void Run()
         {
@@ -53,7 +67,7 @@ namespace DwarfFortress
                         } while (!Map.Impassables[nextPos.X,nextPos.Y]);
                         
                         Task t = new Task(0, nextPos);
-                        a.Tasks.Add(t);
+                        a.Tasks.Enqueue(t);
                     }
                     a.Update();
                 }
