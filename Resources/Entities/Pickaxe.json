@@ -6,26 +6,26 @@
     "name": "ironpickaxe",
     "display": "Iron Pickaxe",
     "ascii": "p",
-    "background":"black",
-    "foreground":"grey",
+    "backgroundcolor":"black",
+    "foregroundcolor":"grey",
     "weight": 3
   },
   "stats": {
     "durability": 100
   },
   "craftable": {
-    "resources": {
-      "resource": {
+    "resources": [
+      {
         "name": "iron",
         "amount": 3
       },
-      "resource": {
+      {
         "type": "wood",
         "amount": 2
-      },
-      "station": "forge",
-      "workrequired": 50,
-      "tool": "hammer"
-    }
+      }
+    ],
+    "station": "forge",
+    "workrequired": 50,
+    "tool": "hammer"
   }
 }

@@ -12,7 +12,7 @@ namespace DwarfCastles
     public class Entity
     {
         private Tag t;
-        public IList<Tag> Tags => t.SubTags;
+        private IList<Tag> Tags => t.SubTags;
 
         public string Name { get; set; }
         public string Display { get; set; }
@@ -54,6 +54,11 @@ namespace DwarfCastles
             Id = id++;
         }
 
+        public void AddTag(Tag tag)
+        {
+            t.AddTag(tag);
+        }
+
         /// <summary>
         /// gets value of tag queried if applicable
         /// </summary>
@@ -80,7 +85,7 @@ namespace DwarfCastles
             };
             foreach (Tag t in Tags)
             {
-                e.Tags.Add(t.Clone());
+                e.t.AddTag(t.Clone());
             }
 
             return e;
@@ -97,9 +102,9 @@ namespace DwarfCastles
             Ascii = e.Ascii;
             BackgroundColor = e.BackgroundColor;
             ForegroundColor = e.ForegroundColor;
-            foreach (var t in e.Tags)
+            foreach (var tag in e.Tags)
             {
-                Tags.Add(t.Clone());
+                t.AddTag(tag.Clone());
             }
         }
     }

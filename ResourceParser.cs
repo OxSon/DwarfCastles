@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -10,9 +11,7 @@ namespace DwarfCastles
     {
         public static Entity ParseFile(string fileName)
         {
-            string tempScanString = "../../Resources/"; // TODO fix for release
-            var file = Directory.GetFiles(tempScanString, fileName, SearchOption.AllDirectories).FirstOrDefault();
-            if (file == null)
+            if (!File.Exists(fileName))
             {
                 Logger.Log($"Couldn't find file {fileName}!");
             }
@@ -21,7 +20,7 @@ namespace DwarfCastles
                 Logger.Log($"Found file {fileName}, loading contents.");
                 try
                 {
-                    using (StreamReader reader = new StreamReader(file))
+                    using (StreamReader reader = new StreamReader(fileName))
                     {
                         string fileContent = reader.ReadToEnd();
                         IDictionary<string, object> json = JsonParser.FromJson(fileContent);
@@ -45,29 +44,37 @@ namespace DwarfCastles
 
             Logger.Log("Found Attributes in file: " + string.Join(", ", Attributes.Keys));
 
-            switch (Attributes["class"])
+            switch (Attributes.TryGetValue("class", out var output) ? output : "")
             {
                 case "entity":
+                    Logger.Log("Found class to be Entity");
                     e = new Entity();
                     break;
                 case "actor":
+                    Logger.Log("Found class to be Actor");
                     e = new Actor();
                     break;
                 default:
+                    Logger.Log("Could not find class definition in attributes, using entity as default");
                     e = new Entity();
                     break;
             }
 
-            if (json.TryGetValue("inheritance", out var inheritanceArray))
+            if (json.TryGetValue("inheritance", out var inheritanceOut))
             {
-                foreach (string s in (IEnumerable<string>) inheritanceArray)
+                Logger.Log(inheritanceOut.GetType().ToString());
+                List<object> InheritanceArray = (List<object>) inheritanceOut;
+                
+                Logger.Log($"Entering inheritance with {InheritanceArray.Count} elements");
+                foreach (object o in InheritanceArray)
                 {
+                    string s = (string) o;
                     Entity defaultE = ResourceMasterList.GetDefault(s);
                     if (defaultE == null)
                     {
-                        return new Entity();
+                        return new Entity {Name = "Inheritance Missing"};
                     }
-
+                    
                     e.Inherit(defaultE);
                 }
             }
@@ -98,11 +105,9 @@ namespace DwarfCastles
             foreach (var o in json)
             {
                 Logger.Log($"Trying ParseTag on tag {o.Key}");
-                e.Tags.Add(ParseTag(o));
+                e.AddTag(ParseTag(o));
             }
 
-
-            //Logger.Log(string.Join(",", json.Keys));
             Logger.Log(e.ToString());
             return e;
         }
@@ -110,7 +115,7 @@ namespace DwarfCastles
         public static Tag ParseTag(KeyValuePair<string, object> json)
         {
             Tag tag = new Tag(json.Key);
-            Logger.Log($"Tag {json.Key} has a type of {json.Value.GetType()}");
+            Logger.Log($"Tag {json.Key} has a value type of {json.Value.GetType()} and value of {json.Value}");
             Type type = json.Value.GetType();
             if (type == typeof(Dictionary<string, object>))
             {
@@ -122,10 +127,21 @@ namespace DwarfCastles
             }
             else if (type == typeof(List<object>))
             {
-                List<object> array = (List<object>)json.Value;
+                List<object> array = (List<object>) json.Value;
+
                 foreach (var o in array)
                 {
-                    tag.AddArrayValue(new Value(o));
+                    if (o.GetType() == typeof(Dictionary<string, object>))
+                    {
+                        Logger.Log("Hit Dictionary inside list");
+                        Tag temp = ParseTag(new KeyValuePair<string, object>("", o));
+                        tag.AddTag(temp);
+                        Logger.Log($"End Tag created from dictionary was {temp}");
+                    }
+                    else
+                    {
+                        tag.AddArrayValue(new Value(o));
+                    }
                 }
             }
             else

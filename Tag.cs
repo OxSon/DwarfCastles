@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace DwarfCastles
@@ -80,20 +81,40 @@ namespace DwarfCastles
 
             return CurrentTag;
         }
-        
+
 
         public void AddTag(Tag tag)
         {
-            if (GetTag(tag.Name) != null)
+            if (GetTag(tag.Name) != null && tag.Name != "") // Tags with "" are actually list items
             {
+                int index = 0;
                 for (int i = 0; i < SubTags.Count; i++)
                 {
                     if (SubTags[i].Name == tag.Name)
                     {
-                        SubTags.RemoveAt(i);
+                        index = i;
+                        break;
                     }
                 }
+
+                Logger.Log($"Adding Tag of a similar name {tag.Name}");
+                if (tag.SubTags.Count == 0)
+                {
+                    Logger.Log("Replacing Tag, as it is a value tag");
+                    SubTags.RemoveAt(index);
+                }
+                else
+                {
+                    Logger.Log("Because there are subtags, merging tags");
+                    foreach (var t in tag.SubTags)
+                    {
+                        SubTags[index].AddTag(t);
+                    }
+
+                    return;
+                }
             }
+
             SubTags.Add(tag);
         }
 
@@ -118,17 +139,24 @@ namespace DwarfCastles
         public override string ToString()
         {
             string builtString = Name + "\n";
+            bool valOut = false;
             foreach (var t in SubTags)
             {
-                builtString += t.ToString() + "\n";
+                builtString += t + "\n";
+                valOut = true;
             }
 
             foreach (var v in ArrayValues)
             {
                 builtString += v + "\n";
+                valOut = true;
             }
 
-            builtString += Value + "\n";
+            if (!valOut)
+            {
+                builtString += Value + "\n";
+            }
+
             return builtString;
         }
     }
