@@ -1,11 +1,11 @@
 {
-  "Inheritance": [
+  "inheritance": [
     "entity"
   ],
-  "Types":[ 
-    "Combat"
+  "types":[ 
+    "combat"
   ],
-  "Attributes": {
+  "attributes": {
     "class": "actor",
     "name": "dwarf",
     "display": "Dwarf",
@@ -14,13 +14,13 @@
     "foregroundcolor":"blue",
     "passable":true
   },
-  "Stats": {
+  "stats": {
     "weight": 80,
     "Combat": {
       "health": 20
     }
   },
-  "Updateables": {
+  "updateables": {
     "hunger": {
       "rate": 1,
       "value": 100,
