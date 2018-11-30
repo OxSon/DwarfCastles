@@ -11,17 +11,16 @@ namespace DwarfFortress
     {
         private Queue<Point> currentTravelPath;
         private static int counter;
-        //TODO Josh what is this? needs more functionality I assume?
-        public IList<Task> Tasks { get; }
-        public Map map { get; } //current map Actor is on
+        public PriorityQueue<Task> Tasks { get; }
+        public Map Map { get; } //current map Actor is on
 
         public Actor(string name, Point pos, char ascii, Map map,
             ConsoleColor backgroundColor = ConsoleColor.Black,
             ConsoleColor foregroundColor = ConsoleColor.White) :
             base(name, pos, ascii, backgroundColor, foregroundColor)
         {
-            this.map = map;
-            Tasks = new List<Task>();
+            Map = map;
+            Tasks = new PriorityQueue<Task>();
         }
 
         public void Update()
@@ -33,7 +32,7 @@ namespace DwarfFortress
             //recheck our pathing every 5 moves, or if we don't currently have a path
             if (currentTravelPath == null || counter > 4)
             {
-                currentTravelPath = new Queue<Point>(GenTravelPath(map.Impassables, Tasks.First()));
+                currentTravelPath = new Queue<Point>(GenTravelPath(Map.Impassables, Tasks.First()));
                 Logger.Log(Tasks.Count + "");
                 counter = 0;
             }
@@ -44,6 +43,8 @@ namespace DwarfFortress
             Pos = currentTravelPath.Dequeue();
             Logger.Log("(" + Pos.X + ", " + Pos.Y + ")");
         }
+        
+        
         
         private IEnumerable<Point> GenTravelPath(bool[,] impassables, Task task)
         {
@@ -63,7 +64,7 @@ namespace DwarfFortress
                 
                 foreach (var point in AdjacentPoints(current))
                 {
-                    if (!cameFrom.ContainsKey(point))
+                    if (!cameFrom.ContainsKey(point) && !Map.Impassables[point.X, point.Y])
                     {
                         points.Enqueue(point);
                         cameFrom.Add(point, current);
@@ -93,7 +94,7 @@ namespace DwarfFortress
                     new Point(Pos.X, Pos.Y + 1)
             };
 
-            return adjacents.Any(s => map.InBounds(s) && !impassables[s.X, s.Y]);
+            return adjacents.Any(s => Map.InBounds(s) && !impassables[s.X, s.Y]);
         }
 
         private IEnumerable<Point> AdjacentPoints(Point origin)
@@ -106,7 +107,7 @@ namespace DwarfFortress
                     new Point(origin.X, origin.Y + 1)
             };
 
-            return rawAdjacents.Where(point => map.InBounds(point)).ToList();
+            return rawAdjacents.Where(point => Map.InBounds(point)).ToList();
         }
 
         /// <summary>
