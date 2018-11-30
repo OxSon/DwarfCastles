@@ -8,11 +8,5 @@
         "ascii": "?",
         "passable": true,
         "carriable": false
-    },
-    "harvestable": {
-        "display": "break",
-        "tool": "none",
-        "work": 0,
-        "workrequired": 1
     }
 }
