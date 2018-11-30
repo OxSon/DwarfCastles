@@ -36,4 +36,9 @@ Carriable
 	This tag represents an object that can be carried from one place to another. This can be used in conjunction with other action tags, for instance a crafting station that can be carried like a mortal and pastel set, or a simple toolset.
 	Subtags include:
 	weight:weightinkg e.g. weight:5
-Throwable
+Projectable
+    This tag represents a weapon that can be used at range.
+    Subtags include:
+    range:distance e.g. range:10 This is measured in squares.
+    ammo:requiresammo e.g ammo:yes This is if the weapon is using seperate ammo. False means the weapon is the ammo
+        type:ammotype e.g. ammo:arrow
