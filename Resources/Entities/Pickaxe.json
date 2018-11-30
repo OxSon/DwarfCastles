@@ -1,8 +1,8 @@
 {
-  "Types": [
+  "types": [
     "pickaxe"
   ],
-  "Attributes": {
+  "attributes": {
     "name": "ironpickaxe",
     "display": "Iron Pickaxe",
     "ascii": "p",
@@ -10,10 +10,10 @@
     "foreground":"grey",
     "weight": 3
   },
-  "Stats": {
+  "stats": {
     "durability": 100
   },
-  "Craftable": {
+  "craftable": {
     "resources": {
       "resource": {
         "name": "iron",

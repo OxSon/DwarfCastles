@@ -1,5 +1,5 @@
 {
-  	"Attributes":{
+  	"attributes":{
 		"class":"entity",
 		"name":"ironvein",
 		"display":"Iron Vein",
@@ -8,7 +8,7 @@
 		"foregroundcolor":"white",
 		"passable":false
 	},
-	"Harvestable":{
+	"harvestable":{
       	"Tool":{
 			"Type":"pickaxe"	
 		},

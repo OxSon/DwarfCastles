@@ -1,5 +1,5 @@
 {
-    "Attributes": {
+    "attributes": {
         "class": "entity",
         "name": "entity",
         "display": "entity",
@@ -9,7 +9,7 @@
         "passable": true,
         "carriable": false
     },
-    "Harvestable": {
+    "harvestable": {
         "display": "break",
         "tool": "none",
         "work": 0,
