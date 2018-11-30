@@ -69,7 +69,7 @@ namespace DwarfFortress
         /// <returns>matching values</returns>
         public IEnumerable<Entity> LocateEntitiesByTag(string tagName)
         {
-            return from ent in Entities where ent.Tags.ContainsKey(tagName) select ent;
+            return from ent in Entities where ent.GetTag(tagName) != null select ent;
         }
 
         /// <summary>
@@ -77,13 +77,34 @@ namespace DwarfFortress
         /// </summary>
         /// <param name="tag">tag to search for</param>
         /// <returns>matching entities</returns>
-        public IEnumerable<Entity> LocateEntitiesByTag(Tag tag)
+        public IEnumerable<Entity> LocateEntitiesByTag(Tag tag) // TODO Needs reworking
         {
             string name = tag.Name;
             return from ent in Entities
-                where ent.Tags.ContainsKey(name) &&
+                where ent.GetTag(name) != null &&
                       ent.GetTag(name).Value == tag.Value
                 select ent;
+        }
+
+        public IEnumerable<Entity> LocateEntitiesByType(string Type)
+        {
+            IList<Entity> MatchingEntities = new List<Entity>();
+            foreach (var e in Entities)
+            {
+                var Types = e.GetTag("Types");
+                if (e != null)
+                {
+                    foreach (var v in Types.ArrayValues)
+                    {
+                        if (v.GetString() == Type)
+                        {
+                            MatchingEntities.Add(e);
+                        }
+                    }
+                }
+            }
+
+            return MatchingEntities;
         }
     }
 }
