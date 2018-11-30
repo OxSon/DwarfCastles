@@ -1,0 +1,48 @@
+{
+  "Inheritance": [
+    "entity"
+  ],
+  "Types":[ 
+    "Combat"
+  ],
+  "Attributes": {
+    "class": "actor",
+    "name": "dwarf",
+    "display": "Dwarf",
+    "ascii":"D",
+    "backgroundcolor":"black",
+    "foregroundcolor":"blue",
+    "passable":true
+  },
+  "Stats": {
+    "weight": 80,
+    "Combat": {
+      "health": 20
+    }
+  },
+  "Updateables": {
+    "hunger": {
+      "rate": 1,
+      "value": 100,
+      "conditions": {
+        "condition": {
+          "type": "LessThan",
+          "value": 50,
+          "acquires": {
+            "mod": {
+              "something": "Here"
+            }
+          }
+        }
+      }
+    },
+    "thirst": {
+      "rate": 1,
+      "value": 100
+    },
+    "sleep": {
+      "rate": 0.5,
+      "value": 100
+    }
+  }
+}

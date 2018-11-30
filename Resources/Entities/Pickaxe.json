@@ -1,0 +1,31 @@
+{
+  "Types": [
+    "pickaxe"
+  ],
+  "Attributes": {
+    "name": "ironpickaxe",
+    "display": "Iron Pickaxe",
+    "ascii": "p",
+    "background":"black",
+    "foreground":"grey",
+    "weight": 3
+  },
+  "Stats": {
+    "durability": 100
+  },
+  "Craftable": {
+    "resources": {
+      "resource": {
+        "name": "iron",
+        "amount": 3
+      },
+      "resource": {
+        "type": "wood",
+        "amount": 2
+      },
+      "station": "forge",
+      "workrequired": 50,
+      "tool": "hammer"
+    }
+  }
+}

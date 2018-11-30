@@ -1,0 +1,18 @@
+{
+    "Attributes": {
+        "class": "entity",
+        "name": "entity",
+        "display": "entity",
+        "backgroundcolor": "black",
+        "foregroundcolor": "white",
+        "ascii": "?",
+        "passable": true,
+        "carriable": false
+    },
+    "Harvestable": {
+        "display": "break",
+        "tool": "none",
+        "work": 0,
+        "workrequired": 1
+    }
+}
