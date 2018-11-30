@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DwarfFortress
+namespace DwarfCastles
 {
     /// <summary>
     /// Authors: Alec Mills and Josh DeMoss

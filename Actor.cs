@@ -2,9 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using DwarfCastles;
 
-namespace DwarfFortress
+namespace DwarfCastles
 {
     /// <inheritdoc/>
     public class Actor : Entity

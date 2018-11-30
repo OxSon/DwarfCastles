@@ -1,8 +1,7 @@
 using System;
 using System.Drawing;
-using DwarfCastles;
 
-namespace DwarfFortress
+namespace DwarfCastles
 {
     /// <summary>
     /// Authors: Alec Mills and Josh DeMoss

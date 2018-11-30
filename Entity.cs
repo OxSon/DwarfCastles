@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 
-namespace DwarfFortress
+namespace DwarfCastles
 {
     /// <summary>
     /// Authors: Alec Mills & Josh DeMoss

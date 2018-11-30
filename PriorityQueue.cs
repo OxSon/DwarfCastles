@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace DwarfFortress
+namespace DwarfCastles
 {
     /// <summary>
     /// naive implementation, should be based on a priority heap or min heap

@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Concurrent;
 using System.Drawing;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
-using DwarfCastles;
 
-namespace DwarfFortress
+namespace DwarfCastles
 {
     /// <summary>
     /// Authors: Alec Mills and Josh DeMoss

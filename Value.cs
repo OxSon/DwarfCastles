@@ -1,4 +1,4 @@
-namespace DwarfFortress
+namespace DwarfCastles
 {
     public class Value
     {
