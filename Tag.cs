@@ -56,19 +56,44 @@ namespace DwarfFortress
             ArrayValues.Add(v);
         }
 
-        public Tag GetTag(string TagName)
+        public Tag GetTag(string TagChain)
         {
-            foreach (var tag in SubTags)
+            string[] Tags = TagChain.Split('.');
+            Tag CurrentTag = this;
+            foreach (var s in Tags)
             {
-                if (tag.Name == TagName)
+                bool Found = false;
+                foreach (var tag in CurrentTag.SubTags)
                 {
-                    return tag;
+                    if (tag.Name != s)
+                        continue;
+                    CurrentTag = tag;
+                    Found = true;
+                    break;
+                }
+
+                if (!Found)
+                {
+                    return null;
                 }
             }
+
+            return CurrentTag;
         }
+        
 
         public void AddTag(Tag tag)
         {
+            if (GetTag(tag.Name) != null)
+            {
+                for (int i = 0; i < SubTags.Count; i++)
+                {
+                    if (SubTags[i].Name == tag.Name)
+                    {
+                        SubTags.RemoveAt(i);
+                    }
+                }
+            }
             SubTags.Add(tag);
         }
 
@@ -88,6 +113,23 @@ namespace DwarfFortress
             }
 
             return clone;
+        }
+
+        public override string ToString()
+        {
+            string builtString = Name + "\n";
+            foreach (var t in SubTags)
+            {
+                builtString += t.ToString() + "\n";
+            }
+
+            foreach (var v in ArrayValues)
+            {
+                builtString += v + "\n";
+            }
+
+            builtString += Value + "\n";
+            return builtString;
         }
     }
 }

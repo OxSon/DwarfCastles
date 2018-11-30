@@ -14,6 +14,11 @@ namespace DwarfFortress
         public PriorityQueue<Task> Tasks { get; }
         public Map Map { get; } //current map Actor is on
 
+        public Actor()
+        {
+            
+        }
+
         public Actor(string name, Point pos, char ascii, Map map,
             ConsoleColor backgroundColor = ConsoleColor.Black,
             ConsoleColor foregroundColor = ConsoleColor.White) :
@@ -94,7 +99,7 @@ namespace DwarfFortress
                     new Point(Pos.X, Pos.Y + 1)
             };
 
-            return adjacents.Any(s => Map.InBounds(s) && !impassables[s.X, s.Y]);
+            return adjacents.Any(s => Map.InBounds(s));
         }
 
         private IEnumerable<Point> AdjacentPoints(Point origin)

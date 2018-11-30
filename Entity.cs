@@ -11,9 +11,11 @@ namespace DwarfFortress
     /// </summary>
     public class Entity
     {
-        public IList<Tag> Tags { get; }
+        private Tag t;
+        public IList<Tag> Tags => t.SubTags;
 
         public string Name { get; set; }
+        public string Display { get; set; }
         public Point Pos { get; protected set; }
         public int Id { get; }
         private static int id;
@@ -31,17 +33,16 @@ namespace DwarfFortress
             BackgroundColor = ConsoleColor.Black;
             ForegroundColor = ConsoleColor.White;
             Id = id++;
+            t = new Tag();
         }
 
-        /// <summary>
-        /// constructor allowing for color specification
         /// </summary>
         /// <param name="name"></param>
         /// <param name="pos"></param>
         /// <param name="ascii"></param>
         /// <param name="backgroundColor"> Optional; default = black </param>
         /// <param name="foregroundColor"> Optional; default = white </param>
-        public Entity(string name, Point pos, char ascii,
+        public Entity(string name, Point pos, char ascii, //TODO Remove constructor TESTING
             ConsoleColor backgroundColor = ConsoleColor.Black, ConsoleColor foregroundColor = ConsoleColor.White)
         {
             Name = name;
@@ -85,8 +86,21 @@ namespace DwarfFortress
             return e;
         }
 
+        public override string ToString()
+        {
+            return t.ToString();
+        }
+
         public void Inherit(Entity e)
         {
+            Name = e.Name;
+            Ascii = e.Ascii;
+            BackgroundColor = e.BackgroundColor;
+            ForegroundColor = e.ForegroundColor;
+            foreach (var t in e.Tags)
+            {
+                Tags.Add(t.Clone());
+            }
         }
     }
 }

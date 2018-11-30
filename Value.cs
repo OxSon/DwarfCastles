@@ -5,19 +5,27 @@ namespace DwarfFortress
         private double doubleValue;
         private bool boolValue;
         private string stringValue;
+
+        public Value(){}
+        
+        public Value(object o)
+        {
+            setValue(o);
+        }
         
         // Setters
-        public void setValue(double d)
+        public void setValue(object o)
         {
-            doubleValue = d;
-        }
-        public void setValue(string s)
-        {
-            stringValue = s;
-        }
-        public void setValue(bool b)
-        {
-            boolValue = b;
+            if (o.GetType() == typeof(double))
+            {
+                doubleValue = (double) o;
+            }else if (o.GetType() == typeof(bool))
+            {
+                boolValue = (bool) o;
+            }else if (o.GetType() == typeof(string))
+            {
+                stringValue = (string) o;
+            }
         }
         
         // Getters
@@ -48,7 +56,12 @@ namespace DwarfFortress
         {
             return doubleValue;
         }
-        
+
+        public override string ToString()
+        {
+            return $"Value ({boolValue}, {stringValue}, {doubleValue})";
+        }
+
         // Utility Methods
         public Value Clone()
         {
