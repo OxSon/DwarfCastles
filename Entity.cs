@@ -11,25 +11,27 @@ namespace DwarfFortress
     /// </summary>
     public class Entity
     {
-        public IDictionary<string, Tag> Tags { get; }
+        public IList<Tag> Tags { get; }
 
-        public string Name { get; }
+        public string Name { get; set; }
         public Point Pos { get; protected set; }
-        public int Id { get; } //TODO Josh what is this for?
+        public int Id { get; }
         private static int id;
 
         //console 'drawing' related values
-        public char Ascii { get; } //ascii character used to 'draw' entity
-        public ConsoleColor BackgroundColor { get; }
-        public ConsoleColor ForegroundColor { get; }
+        public char Ascii { get; set; } //ascii character used to 'draw' entity
+        public ConsoleColor BackgroundColor { get; set; }
+        public ConsoleColor ForegroundColor { get; set; }
 
-        //TODO
-        /*
-         * Seems to me that we shouldn't have to specify ascii everytime we create an entity. Are there
-         * a limited number of possible varieties of Entity? If so, why not an enum for 'types' of entities,
-         * and then the ascii will be based on that enum value? Or a struct, like EntityType, if we need
-         * to be more flexible with what EntityType gets what ascii char?
-         */
+        public Entity()
+        {
+            Name = "N/A";
+            Pos = new Point();
+            Ascii = '?';
+            BackgroundColor = ConsoleColor.Black;
+            ForegroundColor = ConsoleColor.White;
+            Id = id++;
+        }
 
         /// <summary>
         /// constructor allowing for color specification
@@ -58,17 +60,33 @@ namespace DwarfFortress
         /// <returns>value of Tag, or null if Tag is not present in Entity's Tag-list</returns>
         public Tag GetTag(string tagName)
         {
-            return Tags.TryGetValue(tagName, out var result) ? result : null;
+            foreach (var tag in Tags)
+            {
+                if (tag.Name == tagName)
+                {
+                    return tag;
+                }
+            }
+
+            return null;
         }
 
-        public void SetTag(string value, Tag tag)
+        public Entity Clone()
         {
-            //TODO * input validation for different tag types?
-            //TODO * are we allowing a tag to be changed? if so, if it's present do we remove it first then readd?
-            //TODO * how should this work?
-            //TODO * by default the IDictionary.Add() method will throw an exception if tag is already present
-            //TODO * this is how it currently functions
-            Tags.Add(value, tag);
+            Entity e = new Entity
+            {
+                Name = Name, Ascii = Ascii, BackgroundColor = BackgroundColor, ForegroundColor = ForegroundColor
+            };
+            foreach (Tag t in Tags)
+            {
+                e.Tags.Add(t.Clone());
+            }
+
+            return e;
+        }
+
+        public void Inherit(Entity e)
+        {
         }
     }
 }
