@@ -60,12 +60,20 @@ namespace DwarfCastles
 
         public bool InBounds(Point pos)
         {
-            return pos.X > 0 && pos.Y > 0 && pos.X < Size.X && pos.Y < Size.Y;
+            var result = pos.X > 0 && pos.Y > 0 && pos.X < Size.X && pos.Y < Size.Y;
+//            Logger.Log($"Map.InBounds for {pos} == {result}");
+            return result;
         }
 
-        public bool Passable(Point pos)
+        private bool Passable(Point pos)
         {
-            return InBounds(pos) && Impassables[pos.X, pos.Y];
+//            Logger.Log("Found impassables: ");
+            
+//            foreach (var x in Impassables)
+//            {
+//                Logger.Log(x.ToString());
+//            }
+            return InBounds(pos) && !Impassables[pos.X, pos.Y];
         }
         
         public IEnumerable<Point> AdjacentPoints(Point origin)
@@ -78,7 +86,24 @@ namespace DwarfCastles
                 new Point(origin.X, origin.Y + 1)
             };
 
-            return rawAdjacents.Where(Passable).ToList();
+//            foreach (var p in rawAdjacents)
+//            {
+//                Logger.Log($"{p} passable? : {Passable(p)}");
+//            }
+            
+            var result = rawAdjacents.Where(Passable).ToList();
+
+            if (result.Count > 0)
+            {
+//                foreach (var el in result)
+//                {
+////                    Logger.Log($"Found passable point: {el}");
+//                }
+            }
+            else
+                Logger.Log("Found no passable points");
+
+            return result;
         }
         
         /// <summary>

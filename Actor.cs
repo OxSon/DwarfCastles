@@ -15,6 +15,7 @@ namespace DwarfCastles
 
         public Actor()
         {
+            Tasks = new PriorityQueue<Task>();
         }
 
         public Actor(string name, Point pos, char ascii, Map map,
@@ -29,10 +30,10 @@ namespace DwarfCastles
         public void Update()
         {
             Logger.Log("Update Method for Actor");
-            
+
             var updateables = GetTag("updateables");
             Logger.Log("Found updateables to be non-null");
-            
+
             if (updateables != null)
             {
                 foreach (var tag in updateables.SubTags)
@@ -41,18 +42,24 @@ namespace DwarfCastles
                     var rate = tag.GetTag("rate").Value;
                     value.setValue(value.GetDouble() - rate.GetDouble());
                 }
-                Logger.Log("Actor.Update : exited foreach loop");
+
+//                Logger.Log("Actor.Update : exited foreach loop");
             }
 
             Logger.Log("Task Count: " + Tasks.Count);
-            
+
             if (Tasks.Count == 0 || Tasks.First().Location.Equals(Pos)) return;
-            
+
             Logger.Log("Next step");
             //recheck our pathing every 5 moves, or if we don't currently have a path
             if (currentTravelPath == null || counter > 4)
             {
-                currentTravelPath = new Queue<Point>(Tasks.First().GenTravelPath());
+                var attemptedPath = Tasks.First().GenTravelPath();
+                if (attemptedPath != null)
+                    currentTravelPath = new Queue<Point>(attemptedPath);
+                else
+                    Logger.Log($"Destination unreachable; Dq'ing: {Tasks.Dequeue()}");
+
                 Logger.Log(Tasks.Count + "");
                 counter = 0;
             }
@@ -60,8 +67,7 @@ namespace DwarfCastles
                 counter++;
 
             Logger.Log("Update for Actor moving from (" + Pos.X + ", " + Pos.Y + ") to");
-            //TODO fixme
-//            Pos = currentTravelPath.Dequeue();
+            Pos = currentTravelPath.Dequeue();
             Logger.Log("(" + Pos.X + ", " + Pos.Y + ")");
         }
 
@@ -69,6 +75,5 @@ namespace DwarfCastles
         {
             return Map.AdjacentPoints(Pos).Any(s => Map.InBounds(s) && !Map.Impassables[s.X, s.Y]);
         }
-
     }
 }

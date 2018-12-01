@@ -1,12 +1,7 @@
 using System;
-using System.Collections;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Linq.Expressions;
-using NUnit.Framework;
 
 namespace DwarfCastles
 {
@@ -24,70 +19,79 @@ namespace DwarfCastles
         //TODO currently always 0, does not yet work
         private int priority;
 
-        public Task(int action, Point location)
+        public Task(int action, Point location, Actor actor)
         {
             Location = location;
             ActionId = action;
+            Actor = actor;
         }
 
         public IEnumerable<Point> GenTravelPath()
         {
+//            Logger.Log("Task.GenTravelPath: ");
+            Logger.Log(Actor.Map.Impassables[Location.X, Location.Y] + " IS THE VALUE OF IMPASSABLE FOR THE LOCATION");
+            Logger.Log("Task.GenTravelPath: Entered");
             if (!Actor.CanMove())
+            {
+                Logger.Log("Task.GenTravelPath: Returning: Can't Move");
                 return null;
+            }
 
             var q = new Queue<Point>();
-            q.Enqueue(Location);
+            q.Enqueue(Actor.Pos);
 
-            var origin = new Dictionary<Point, Point?> {{Location, null}};
+            var origin = new Dictionary<Point, Point?> {{Actor.Pos, null}};
 
+            Point current;
+            
             while (q.Count != 0)
             {
-                var current = q.Dequeue();
+                current = q.Dequeue();
                 
                 foreach (var child in Actor.Map.AdjacentPoints(current))
                 {
                     if (!origin.ContainsKey(child))
                     {
+                        q.Enqueue(child);
                         origin.Add(child, current);
                     }
 
-                    if (child == Location)
+//                    Logger.Log($"Comparing {child} to {Location} -> {child == Location}");
+
+                    if (child == (Location))
+                    {
+                        Logger.Log("Task.GenTravelPath: Returning");
                         return ToPath(origin, Location);
+                    }
                 }
             }
 
-            Logger.Log("failed to find goal while pathing");
-            
-            throw new EvaluateException();
+//            Logger.Log($"Testing: (2, 3) == (2, 3) ? : {new Point(2, 3) == new Point(2, 3)}");
+            Logger.Log($"Pathing failed: last node processed: {current}; goal: {Location}");
+
+            return null;
         }
 
         private IEnumerable<Point> ToPath(Dictionary<Point, Point?> mappings, Point goal)
         {
+            Logger.Log("Task.ToPath : entering");
             var current = goal;
-            var path = new List<Point>(){goal};
+            var path = new List<Point> {goal};
 
-            while (mappings.TryGetValue(current, out var next))
+            while (current != Actor.Pos)
             {
-                if (next != null)
-                    path.Add((Point) next);
+                path.Add(current);
+                Point? result;
+                if (mappings.TryGetValue(current, out result) && result != null)
+                    current = (Point) result;
+                else
+                    Logger.Log("null value in ToPath");
             }
 
             path.Reverse();
 
-            return from p in path select p;
-        }
-
-
-        /// <summary>
-        /// used to see which of n points is closest to another point, without needing to know each exact distance
-        /// </summary>
-        /// <param name="origin"></param>
-        /// <param name="destination"></param>
-        /// <returns>the absolute value of the square of the distance from origin to destination </returns>
-        private static int DistanceHeuristic(Point origin, Point destination)
-        {
-            return Math.Abs((int) Math.Round(Math.Pow(destination.X - origin.X, 2) +
-                                             Math.Pow(destination.Y - origin.Y, 2)));
+            Logger.Log("Task.ToPath : returning");
+            return from p in path select p;  
         }
 
         public int CompareTo(object obj)
