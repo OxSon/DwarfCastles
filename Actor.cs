@@ -15,13 +15,12 @@ namespace DwarfCastles
 
         public Actor()
         {
-            
         }
 
         public Actor(string name, Point pos, char ascii, Map map,
-            ConsoleColor backgroundColor = ConsoleColor.Black,
-            ConsoleColor foregroundColor = ConsoleColor.White) :
-            base(name, pos, ascii, backgroundColor, foregroundColor)
+                ConsoleColor backgroundColor = ConsoleColor.Black,
+                ConsoleColor foregroundColor = ConsoleColor.White) :
+                base(name, pos, ascii, backgroundColor, foregroundColor)
         {
             Map = map;
             Tasks = new PriorityQueue<Task>();
@@ -36,94 +35,131 @@ namespace DwarfCastles
             //recheck our pathing every 5 moves, or if we don't currently have a path
             if (currentTravelPath == null || counter > 4)
             {
-                currentTravelPath = new Queue<Point>(GenTravelPath(Map.Impassables, Tasks.First()));
+                currentTravelPath = new Queue<Point>(GenTravelPath(Tasks.First()));
                 Logger.Log(Tasks.Count + "");
                 counter = 0;
             }
             else
                 counter++;
-            
+
             Logger.Log("Update for Actor moving from (" + Pos.X + ", " + Pos.Y + ") to");
             Pos = currentTravelPath.Dequeue();
             Logger.Log("(" + Pos.X + ", " + Pos.Y + ")");
         }
-        
-        
-        
-        private IEnumerable<Point> GenTravelPath(bool[,] impassables, Task task)
+
+
+        private IEnumerable<Point> GenTravelPath(Task task)
         {
-            if (!CanMove(impassables)) return null;
+            var head = new Path(Pos, Move.Null, task, Map);
+            var q = new PriorityQueue<Path>();
 
-            var points = new Queue<Point>();
-            points.Enqueue(Pos);
-
-            var cameFrom = new Dictionary<Point, Point>(); //used to construct our path at the end
-            cameFrom.Add(points.Peek(), points.Peek()); //indicate that our starting node "came" from nowhere
-
-            Point current;
-            //generate list of paths
-            while (points.Count > 0)
+            do
             {
-                current = points.Dequeue();
-                
-                foreach (var point in AdjacentPoints(current))
+                var children = AdjacentPoints(head.pos, Map);
+
+                foreach (var p in children)
                 {
-                    if (!cameFrom.ContainsKey(point) && !Map.Impassables[point.X, point.Y])
-                    {
-                        points.Enqueue(point);
-                        cameFrom.Add(point, current);
-                    }
+                    q.Enqueue(new Path(p, p.Parse(task.Location), task, Map, head));
                 }
-            }
-            
-            var path = new Stack<Point>();
-            current = task.Location;
 
-            while (current != Pos)
-            {
-                path.Push(current);
-                cameFrom.TryGetValue(current, out current);
-            }
-            
-            return path.ToList();
+                head = q.Dequeue();
+            } while (head.pos != task.Location);
+
+            return head.Convert();
         }
-        
-        private bool CanMove(bool[,] impassables)
+
+        public static IEnumerable<Point> AdjacentPoints(Point origin, Map map)
         {
-            var adjacents = new[]
+            //all adjacent squares, even if they're outside the bounds of our map
+            var options = new List<Point>
             {
-                    new Point(Pos.X - 1, Pos.Y),
-                    new Point(Pos.X + 1, Pos.Y),
-                    new Point(Pos.X, Pos.Y - 1),
-                    new Point(Pos.X, Pos.Y + 1)
+                    new Point(origin.X - 1, origin.Y), new Point(origin.X + 1, origin.Y),
+                    new Point(origin.X, origin.Y - 1), new Point(origin.X, origin.Y + 1)
             };
-
-            return adjacents.Any(s => Map.InBounds(s));
+            //only return in-bounds points
+            return options.Where(p => p.X >= 0 && p.Y >= 0 && p.X <= map.Size.X && p.Y <= map.Size.Y);
         }
 
-        private IEnumerable<Point> AdjacentPoints(Point origin)
+        private bool CanMove()
         {
-            var rawAdjacents = new[]
+            //returns true if any of the adjacent points are passable otherrwise false
+            return AdjacentPoints(Pos).Any(p => !Map.Impassables[p.X, p.Y]);
+        }
+    }
+
+    public class Path : IComparable
+    {
+        public Point pos { get; }
+        private int priority;
+        private Map map;
+        private List<Move> prevMoves;
+        private Task task;
+        private Path prev;
+
+        public Path(Point pos, Move move, Task task, Map map, Path prev = null)
+        {
+            this.pos = pos;
+            this.map = map;
+            this.prev = prev;
+            this.task = task;
+            priority = Map.DistanceHeuristic(pos, task.Location);
+
+            if (prev?.prevMoves != null)
+                prevMoves = new List<Move>(prev.prevMoves);
+            else
+                prevMoves = new List<Move>();
+
+            prevMoves.Add(move);
+        }
+
+        public List<Path> choices()
+        {
+            var result = from p in Actor.AdjacentPoints(pos, map)
+                    where !map.Impassables[p.X, p.Y]
+                    select new Path(p, pos.Parse(p), task, map, this);
+
+            return result.ToList();
+        }
+
+        public int CompareTo(object obj)
+        {
+            if (!(obj is Path path)) throw new ArgumentException();
+
+            if (path.priority > priority)
+                return -1;
+
+            return path.priority == priority ? 0 : 1;
+        }
+
+        public IEnumerable<Point> Convert()
+        {
+            var converted = new List<Point>();
+
+            var head = this;
+
+            do
             {
-                    new Point(origin.X - 1, origin.Y),
-                    new Point(origin.X + 1, origin.Y),
-                    new Point(origin.X, origin.Y - 1),
-                    new Point(origin.X, origin.Y + 1)
-            };
+                converted.Add(head.pos);
+                head = prev;
+            } while (head.prev != null);
 
-            return rawAdjacents.Where(point => Map.InBounds(point)).ToList();
+            return converted;
         }
+    }
 
-        /// <summary>
-        /// used to see which of n points is closest to another point, without needing to know each exact distance
-        /// </summary>
-        /// <param name="origin"></param>
-        /// <param name="destination"></param>
-        /// <returns>the absolute value of the square of the distance from origin to destination </returns>
-        private static int RelativeDistanceTo(Point origin, Point destination)
+    static class Extensions
+    {
+        public static Move Parse(this Point origin, Point next)
         {
-            return Math.Abs((int) Math.Round(Math.Sqrt(destination.X - origin.X) + Math.Sqrt(destination.Y - origin.Y)));
+            //if we're moving upwards
+            if (origin.X < next.X)
+                return Move.Left;
+            if (origin.X > next.X)
+                return Move.Right;
+            if (origin.Y < next.Y)
+                return Move.Down;
+            if (origin.Y > next.Y)
+                return Move.Up;
         }
-
     }
 }

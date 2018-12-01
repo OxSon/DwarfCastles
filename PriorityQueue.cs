@@ -26,6 +26,11 @@ namespace DwarfCastles
             sorted = false;
         }
 
+        public T Peek()
+        {
+            return items.First();
+        }
+
         public T Dequeue()
         {
             if (!sorted)

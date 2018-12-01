@@ -14,15 +14,15 @@ namespace DwarfCastles
     {
         // Represents the max Size of the map
         public Point Size;
-        
+
         public IList<Entity> Entities { get; }
         public bool[,] Impassables;
-        
+
 
         public Map()
         {
             Entities = new List<Entity>();
-            Size = new Point(25,25);
+            Size = new Point(25, 25);
             Impassables = new bool[Size.X, Size.Y];
             GenerateSampleMap();
         }
@@ -33,24 +33,28 @@ namespace DwarfCastles
             // Generate Trees
             for (int i = rand.Next(20, 50); i != 0; i--)
             {
-                Entity e = new Entity("Tree", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'T', ConsoleColor.Black, ConsoleColor.Green);
+                Entity e = new Entity("Tree", new Point(rand.Next(0, Size.X), rand.Next(0, Size.Y)), 'T',
+                        ConsoleColor.Black, ConsoleColor.Green);
                 //e.Tags.Add(new Tag("Passable", false)); // TODO Implement Tags
                 Impassables[e.Pos.X, e.Pos.Y] = true; //TODO will this work for testing?
                 AddEntity(e);
             }
+
             // Generate Rocks
             for (int i = rand.Next(20, 50); i != 0; i--)
             {
-                Entity e = new Entity("Rock", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'r', ConsoleColor.Black, ConsoleColor.Gray);
+                Entity e = new Entity("Rock", new Point(rand.Next(0, Size.X), rand.Next(0, Size.Y)), 'r',
+                        ConsoleColor.Black, ConsoleColor.Gray);
                 AddEntity(e);
             }
+
             // Generate Dwarves
-            for (int i = rand.Next(2,7); i != 0; i--)
+            for (int i = rand.Next(2, 7); i != 0; i--)
             {
-                Actor a = new Actor("Dwarf", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'D', this, ConsoleColor.Black, ConsoleColor.Blue);
+                Actor a = new Actor("Dwarf", new Point(rand.Next(0, Size.X), rand.Next(0, Size.Y)), 'D', this,
+                        ConsoleColor.Black, ConsoleColor.Blue);
                 AddEntity(a);
             }
-            
         }
 
         public void AddEntity(Entity e)
@@ -62,6 +66,7 @@ namespace DwarfCastles
         {
             return pos.X > 0 && pos.Y > 0 && pos.X < Size.X && pos.Y < Size.Y;
         }
+
         /// <summary>
         /// Get all entites that have a certain tag, ignoring the value of that tag
         /// </summary>
@@ -81,9 +86,9 @@ namespace DwarfCastles
         {
             string name = tag.Name;
             return from ent in Entities
-                where ent.GetTag(name) != null &&
-                      ent.GetTag(name).Value == tag.Value
-                select ent;
+                    where ent.GetTag(name) != null &&
+                          ent.GetTag(name).Value == tag.Value
+                    select ent;
         }
 
         public IEnumerable<Entity> LocateEntitiesByType(string Type)
@@ -105,6 +110,13 @@ namespace DwarfCastles
             }
 
             return MatchingEntities;
+        }
+
+        public static int DistanceHeuristic(Point origin, Point destination)
+        {
+            //the distance formula, skipping the final square root as we are only comparing between values
+            return (int) Math.Round(Math.Abs(Math.Pow(origin.X - destination.X, 2) +
+                                             Math.Pow(origin.Y - destination.Y, 2)));
         }
     }
 }
