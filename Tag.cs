@@ -59,12 +59,15 @@ namespace DwarfCastles
         public Tag GetTag(string TagChain)
         {
             var Tags = TagChain.ToLower().Split('.');
+            Logger.Log($"Entering GetTag() with a Tag chain of length {Tags.Length}");
             var CurrentTag = this;
             foreach (var s in Tags)
             {
+                Logger.Log($"Searching for tag {s} in {CurrentTag.Name}");
                 var Found = false;
                 foreach (var tag in CurrentTag.SubTags)
                 {
+                    Logger.Log($"Checking tag {tag.Name}");
                     if (tag.Name != s)
                         continue;
                     CurrentTag = tag;
@@ -137,7 +140,7 @@ namespace DwarfCastles
 
         public override string ToString()
         {
-            var builtString = Name + "\n";
+            var builtString = "Tag Name: " + Name + "\n";
             var valOut = false;
             foreach (var t in SubTags)
             {

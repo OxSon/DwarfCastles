@@ -1,0 +1,15 @@
+{
+  "types":[
+    "burnable",
+    "wood"
+  ],
+  "attributes":{
+    "class":"entity",
+    "name":"wood",
+    "display":"Wood",
+    "ascii":"w",
+    "backgroundcolor":"black",
+    "foregroundcolor":"orange",
+    "passable":false
+  }
+}

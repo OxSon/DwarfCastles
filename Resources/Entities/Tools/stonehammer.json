@@ -24,6 +24,7 @@
         "amount": 2
       }
     ],
-    "workrequired": 5
+    "station":"none",
+    "workrequired":5
   }
 }

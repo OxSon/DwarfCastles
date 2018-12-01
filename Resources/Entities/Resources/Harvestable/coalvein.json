@@ -1,3 +1,24 @@
 {
-  
+  "attributes":{
+    "class":"entity",
+    "name":"ironvein",
+    "display":"Iron Vein",
+    "ascii":"I",
+    "backgroundcolor":"grey",
+    "foregroundcolor":"white",
+    "passable":false
+  },
+  "harvestable":{
+    "tool":{
+      "type":"pickaxe"
+    },
+    "yield":[
+      {
+        "name":"ironore",
+        "amount":"50"
+      }
+    ],
+    "work":0,
+    "workrequired":20
+  }
 }

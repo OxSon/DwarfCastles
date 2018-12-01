@@ -20,23 +20,23 @@ namespace DwarfCastles
         {
             CameraOffset = new Point();
             CameraSize = new Point(25, 25);
+
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            for (int i = 0; i < CameraSize.Y; i++)
+            {
+                Console.SetCursorPosition(0,i);
+                Console.Write(string.Concat(Enumerable.Repeat(" ", Console.WindowWidth)));
+            }
         }
 
-        
-
-        public void DrawMenu(Dictionary<string, string> Options)
-        {
-            
-        }
-
-        public void Draw(Map map)
+        public void Draw(Map map, MenuManager menus)
         {
             char[,] visibleChars = new char[CameraSize.X, CameraSize.Y];
             ConsoleColor[,] visibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
             ConsoleColor[,] visibleCharsColorsBackground = new ConsoleColor[CameraSize.X, CameraSize.Y];
-            Logger.Log(visibleChars[0, 0] + " " + visibleCharsColorsBackground[0, 0] + " " +
-                       visibleCharsColorsForeground[0, 0]);
             Console.CursorVisible = false;
+
             foreach (var e in map.Entities)
             {
                 if (map.InBounds(Point.Add(e.Pos, new Size(CameraOffset))))
@@ -67,12 +67,55 @@ namespace DwarfCastles
                     }
                 }
             }
+            DrawMenu(menus);
+        }
+
+        public void DrawMenu(MenuManager menu)
+        {
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
+            for (int i = 0; i < CameraSize.Y; i++)
+            {
+                Console.SetCursorPosition(CameraSize.X * 2, i);
+                Console.Write("|");
+            }
+
+            int FreeSpace = Console.WindowWidth - CameraSize.X * 2 - 3;
+            int Start = CameraSize.X * 2 + 2;
+ 
+            IList<string> correctedLines = new List<string>();
+
+            foreach (var s in menu.GetMenuDisplay().Split('\n'))
+            {
+                Logger.Log($"Line for Menu display is {s} which has a length of {s.Length}");
+                foreach (var splitString in Split(s, FreeSpace))
+                {
+                    Logger.Log($"SplitString for menu display is {splitString}");
+                    correctedLines.Add(splitString);
+                }
+            }
+
+            Console.ForegroundColor = ConsoleColor.Black;
+            for (int i = 0; i < CameraSize.Y; i++)
+            {
+                Console.SetCursorPosition(Start, i);
+                Console.Write(string.Concat(Enumerable.Repeat(" ", FreeSpace)));
+            }
+
+            Console.ForegroundColor = ConsoleColor.White;
+            var line = 0;
+            foreach (var s in correctedLines)
+            {
+                Console.SetCursorPosition(Start, line);
+                Console.Write(s);
+                line++;
+            }
         }
 
         private static IEnumerable<string> Split(string str, int chunkSize)
         {
-            return Enumerable.Range(0, str.Length / chunkSize)
-                .Select(i => str.Substring(i * chunkSize, chunkSize));
+            return Enumerable.Range(0, str.Length / chunkSize + 1)
+                .Select(i => str.Substring(i * chunkSize, Math.Min(str.Length, chunkSize)));
         }
     }
 }

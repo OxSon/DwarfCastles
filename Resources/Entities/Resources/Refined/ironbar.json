@@ -17,16 +17,17 @@
     "resources": [
       {
         "name": "ironore",
-        "amount": 3
+        "amount": 1
       },
       {
-        "type": "coal",
+        "type": "wood",
         "amount": 1
       }
     ],
+    "amount": 1,
     "station": "smeltery",
-    "work":0,
-    "workrequired": 50,
+    "work": 0,
+    "workrequired": 5,
     "tool": "hammer"
   }
 }

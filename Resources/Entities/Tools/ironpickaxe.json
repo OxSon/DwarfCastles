@@ -26,6 +26,8 @@
     ],
     "station": "forge",
     "workrequired": 50,
-    "tool": "hammer"
+    "tool": {
+      "type":"hammer"
+    }
   }
 }

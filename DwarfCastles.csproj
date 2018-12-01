@@ -52,6 +52,7 @@
     <Compile Include="Entity.cs" />
     <Compile Include="GameManager.cs" />
     <Compile Include="Gui.cs" />
+    <Compile Include="InputManager.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="Jobs\Build.cs" />
       <Compile Include="Jobs\Construct.cs"/>
