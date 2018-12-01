@@ -1,11 +1,11 @@
 {
   "attributes":{
     "class":"entity",
-    "name":"ironvein",
-    "display":"Iron Vein",
-    "ascii":"I",
+    "name":"coalvein",
+    "display":"Coal Vein",
+    "ascii":"C",
     "backgroundcolor":"grey",
-    "foregroundcolor":"white",
+    "foregroundcolor":"black",
     "passable":false
   },
   "harvestable":{
@@ -14,11 +14,11 @@
     },
     "yield":[
       {
-        "name":"ironore",
-        "amount":"50"
+        "name":"coal",
+        "amount":"30"
       }
     ],
     "work":0,
-    "workrequired":20
+    "workrequired":10
   }
 }
