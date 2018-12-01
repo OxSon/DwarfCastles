@@ -1,0 +1,32 @@
+{
+  "types":[
+    "iron",
+    "metal",
+    "refined"
+  ],
+  "attributes":{
+    "class":"entity",
+    "name":"ironbar",
+    "display":"Iron Bar",
+    "ascii":"i",
+    "backgroundcolor":"black",
+    "foregroundcolor":"grey",
+    "passable":false
+  },
+  "craftable":{
+    "resources": [
+      {
+        "name": "ironore",
+        "amount": 3
+      },
+      {
+        "type": "coal",
+        "amount": 1
+      }
+    ],
+    "station": "smeltery",
+    "work":0,
+    "workrequired": 50,
+    "tool": "hammer"
+  }
+}

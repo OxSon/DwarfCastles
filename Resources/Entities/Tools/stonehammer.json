@@ -1,0 +1,29 @@
+{
+  "types": [
+    "hammer"
+  ],
+  "attributes": {
+    "name": "stonehammer",
+    "display": "Stone Hammer",
+    "ascii": "h",
+    "backgroundcolor":"black",
+    "foregroundcolor":"grey",
+    "weight": 5
+  },
+  "stats": {
+    "durability": 40
+  },
+  "craftable": {
+    "resources": [
+      {
+        "name": "stone",
+        "amount": 3
+      },
+      {
+        "type": "wood",
+        "amount": 2
+      }
+    ],
+    "workrequired": 5
+  }
+}

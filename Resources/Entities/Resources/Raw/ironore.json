@@ -1,0 +1,15 @@
+{
+  "types":[
+    "iron",
+    "metal"
+  ],
+  "attributes":{
+    "class":"entity",
+    "name":"ironore",
+    "display":"Iron Ore",
+    "ascii":"i",
+    "backgroundcolor":"grey",
+    "foregroundcolor":"black",
+    "passable":false
+  }
+}

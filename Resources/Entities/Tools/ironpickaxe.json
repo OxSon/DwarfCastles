@@ -16,7 +16,7 @@
   "craftable": {
     "resources": [
       {
-        "name": "iron",
+        "name": "ironbar",
         "amount": 3
       },
       {

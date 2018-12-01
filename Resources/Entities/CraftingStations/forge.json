@@ -1,0 +1,26 @@
+{
+  "attributes":{
+    "class":"entity",
+    "name":"forge",
+    "display":"Forge",
+    "ascii":"F",
+    "backgroundcolor":"black",
+    "foregroundcolor":"red",
+    "passable":false
+  },
+  "buildable":{
+    "resources":[
+      {
+        "type":"stone",
+        "amount":40
+      },
+      {
+        "name":"ironore",
+        "amount":10
+      }
+    ],
+    "tool":"hammer",
+    "work":0,
+    "workrequired":30
+  }
+}

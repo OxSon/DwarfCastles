@@ -9,10 +9,10 @@
 		"passable":false
 	},
 	"harvestable":{
-      	"Tool":{
-			"Type":"pickaxe"	
+      	"tool":{
+			"type":"pickaxe"	
 		},
-		"Yield":[
+		"yield":[
 			{
 				"name":"ironore",
 				"amount":"50"

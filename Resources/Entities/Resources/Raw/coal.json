@@ -1,0 +1,14 @@
+{
+  "types":[
+    "burnable"
+  ],
+  "attributes":{
+    "class":"entity",
+    "name":"coal",
+    "display":"Coal Chunk",
+    "ascii":"c",
+    "backgroundcolor":"grey",
+    "foregroundcolor":"black",
+    "passable":false
+  }
+}

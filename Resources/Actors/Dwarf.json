@@ -16,7 +16,8 @@
   },
   "stats": {
     "weight": 80,
-    "Combat": {
+    "carryweight":80,
+    "combat": {
       "health": 20
     }
   },
