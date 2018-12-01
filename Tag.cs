@@ -58,11 +58,11 @@ namespace DwarfCastles
 
         public Tag GetTag(string TagChain)
         {
-            string[] Tags = TagChain.Split('.');
-            Tag CurrentTag = this;
+            var Tags = TagChain.ToLower().Split('.');
+            var CurrentTag = this;
             foreach (var s in Tags)
             {
-                bool Found = false;
+                var Found = false;
                 foreach (var tag in CurrentTag.SubTags)
                 {
                     if (tag.Name != s)
@@ -86,8 +86,8 @@ namespace DwarfCastles
         {
             if (GetTag(tag.Name) != null && tag.Name != "") // Tags with "" are actually list items
             {
-                int index = 0;
-                for (int i = 0; i < SubTags.Count; i++)
+                var index = 0;
+                for (var i = 0; i < SubTags.Count; i++)
                 {
                     if (SubTags[i].Name == tag.Name)
                     {
@@ -121,7 +121,7 @@ namespace DwarfCastles
 
         public Tag Clone()
         {
-            Tag clone = new Tag {Name = Name, Value = Value.Clone()};
+            var clone = new Tag {Name = Name, Value = Value.Clone()};
             foreach (var subTag in SubTags)
             {
                 clone.AddTag(subTag.Clone());
@@ -137,8 +137,8 @@ namespace DwarfCastles
 
         public override string ToString()
         {
-            string builtString = Name + "\n";
-            bool valOut = false;
+            var builtString = Name + "\n";
+            var valOut = false;
             foreach (var t in SubTags)
             {
                 builtString += t + "\n";

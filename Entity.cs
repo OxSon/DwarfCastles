@@ -50,7 +50,7 @@ namespace DwarfCastles
             Ascii = ascii;
             BackgroundColor = backgroundColor;
             ForegroundColor = foregroundColor;
-
+            t = new Tag();
             Id = id++;
         }
 
