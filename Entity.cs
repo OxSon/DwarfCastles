@@ -66,15 +66,7 @@ namespace DwarfCastles
         /// <returns>value of Tag, or null if Tag is not present in Entity's Tag-list</returns>
         public Tag GetTag(string tagName)
         {
-            foreach (var tag in Tags)
-            {
-                if (tag.Name == tagName)
-                {
-                    return tag;
-                }
-            }
-
-            return null;
+            return t.GetTag(tagName);
         }
 
         public Entity Clone()
