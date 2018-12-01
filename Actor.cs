@@ -31,18 +31,15 @@ namespace DwarfCastles
             Logger.Log("Update Method for Actor");
 
             var updateables = GetTag("updateables");
-            Logger.Log("Found updateables to be non-null");
-
             if (updateables != null)
             {
+                Logger.Log("Found updateables to be non-null");
                 foreach (var tag in updateables.SubTags)
                 {
                     var value = tag.GetTag("value").Value;
                     var rate = tag.GetTag("rate").Value;
                     value.SetValue(value.GetDouble() - rate.GetDouble());
                 }
-
-//                Logger.Log("Actor.Update : exited foreach loop");
             }
 
             Logger.Log("Task Count: " + Jobs.Count);

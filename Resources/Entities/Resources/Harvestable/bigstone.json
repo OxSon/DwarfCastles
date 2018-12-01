@@ -1,8 +1,8 @@
 {
   "attributes":{
     "class":"entity",
-    "name":"stone",
-    "display":"Stone",
+    "name":"bigstone",
+    "display":"Big Stone",
     "ascii":"S",
     "backgroundcolor":"gray",
     "foregroundcolor":"black",
