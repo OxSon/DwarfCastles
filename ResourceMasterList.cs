@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 
@@ -8,8 +7,9 @@ namespace DwarfCastles
     public static class ResourceMasterList
     {
         private static IDictionary<string, Entity> DefaultEntities;
-
-        private static IList<string> MissingDependancesStaging;
+        
+        // TODO Store the dependency names in a paired list, so we know when they have been resolved
+        private static IList<string> MissingDependancesStaging; 
 
         static ResourceMasterList()
         {
@@ -99,6 +99,11 @@ namespace DwarfCastles
         public static Entity GetDefault(string name)
         {
             return DefaultEntities.TryGetValue(name, out var output) ? output : null;
+        }
+
+        public static IEnumerable<Entity> GetAllEntities()
+        {
+            return DefaultEntities.Values;
         }
     }
 }

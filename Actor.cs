@@ -15,7 +15,6 @@ namespace DwarfCastles
 
         public Actor()
         {
-            
         }
 
         public Actor(string name, Point pos, char ascii, Map map,
@@ -29,6 +28,14 @@ namespace DwarfCastles
 
         public void Update()
         {
+            var updateables = GetTag("updateables");
+            foreach (var tag in updateables.SubTags)
+            {
+                var value = tag.GetTag("Value").Value;
+                var rate = tag.GetTag("Rate").Value;
+                value.setValue(value.GetDouble() - rate.GetDouble());
+            }
+
             Logger.Log("Update Method for Actor");
             Logger.Log("Task Count: " + Tasks.Count);
             if (Tasks.Count == 0 || Tasks.First().Location.Equals(Pos)) return;
@@ -42,14 +49,13 @@ namespace DwarfCastles
             }
             else
                 counter++;
-            
+
             Logger.Log("Update for Actor moving from (" + Pos.X + ", " + Pos.Y + ") to");
             Pos = currentTravelPath.Dequeue();
             Logger.Log("(" + Pos.X + ", " + Pos.Y + ")");
         }
-        
-        
-        
+
+
         private IEnumerable<Point> GenTravelPath(bool[,] impassables, Task task)
         {
             if (!CanMove(impassables)) return null;
@@ -65,7 +71,7 @@ namespace DwarfCastles
             while (points.Count > 0)
             {
                 current = points.Dequeue();
-                
+
                 foreach (var point in AdjacentPoints(current))
                 {
                     if (!cameFrom.ContainsKey(point) && !Map.Impassables[point.X, point.Y])
@@ -75,7 +81,7 @@ namespace DwarfCastles
                     }
                 }
             }
-            
+
             var path = new Stack<Point>();
             current = task.Location;
 
@@ -84,18 +90,18 @@ namespace DwarfCastles
                 path.Push(current);
                 cameFrom.TryGetValue(current, out current);
             }
-            
+
             return path.ToList();
         }
-        
+
         private bool CanMove(bool[,] impassables)
         {
             var adjacents = new[]
             {
-                    new Point(Pos.X - 1, Pos.Y),
-                    new Point(Pos.X + 1, Pos.Y),
-                    new Point(Pos.X, Pos.Y - 1),
-                    new Point(Pos.X, Pos.Y + 1)
+                new Point(Pos.X - 1, Pos.Y),
+                new Point(Pos.X + 1, Pos.Y),
+                new Point(Pos.X, Pos.Y - 1),
+                new Point(Pos.X, Pos.Y + 1)
             };
 
             return adjacents.Any(s => Map.InBounds(s));
@@ -105,10 +111,10 @@ namespace DwarfCastles
         {
             var rawAdjacents = new[]
             {
-                    new Point(origin.X - 1, origin.Y),
-                    new Point(origin.X + 1, origin.Y),
-                    new Point(origin.X, origin.Y - 1),
-                    new Point(origin.X, origin.Y + 1)
+                new Point(origin.X - 1, origin.Y),
+                new Point(origin.X + 1, origin.Y),
+                new Point(origin.X, origin.Y - 1),
+                new Point(origin.X, origin.Y + 1)
             };
 
             return rawAdjacents.Where(point => Map.InBounds(point)).ToList();
@@ -122,8 +128,8 @@ namespace DwarfCastles
         /// <returns>the absolute value of the square of the distance from origin to destination </returns>
         private static int RelativeDistanceTo(Point origin, Point destination)
         {
-            return Math.Abs((int) Math.Round(Math.Sqrt(destination.X - origin.X) + Math.Sqrt(destination.Y - origin.Y)));
+            return Math.Abs((int) Math.Round(Math.Sqrt(destination.X - origin.X) +
+                                             Math.Sqrt(destination.Y - origin.Y)));
         }
-
     }
 }

@@ -12,6 +12,7 @@ namespace DwarfCastles
     {
         public int ActionId { get; }
         public Point Location { get; }
+        
         //TODO currently always 0, does not yet work
         private int priority;
 

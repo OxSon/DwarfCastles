@@ -11,8 +11,8 @@ namespace DwarfCastles
     /// </summary>
     public class Entity
     {
-        private Tag t;
-        private IList<Tag> Tags => t.SubTags;
+        protected Tag t;
+        protected IList<Tag> Tags => t.SubTags;
 
         public string Name { get; set; }
         public string Display { get; set; }
