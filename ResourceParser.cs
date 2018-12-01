@@ -18,7 +18,7 @@ namespace DwarfCastles
                 Logger.Log($"Found file {fileName}, loading contents.");
                 try
                 {
-                    using (StreamReader reader = new StreamReader(fileName))
+                    using (var reader = new StreamReader(fileName))
                     {
                         string fileContent = reader.ReadToEnd();
                         IDictionary<string, object> json = JsonParser.FromJson(fileContent);
@@ -64,10 +64,10 @@ namespace DwarfCastles
                 List<object> InheritanceArray = (List<object>) inheritanceOut;
                 
                 Logger.Log($"Entering inheritance with {InheritanceArray.Count} elements");
-                foreach (object o in InheritanceArray)
+                foreach (var o in InheritanceArray)
                 {
                     string s = (string) o;
-                    Entity defaultE = ResourceMasterList.GetDefault(s);
+                    var defaultE = ResourceMasterList.GetDefault(s);
                     if (defaultE == null)
                     {
                         return new Entity {Name = "Inheritance Missing"};
@@ -93,10 +93,9 @@ namespace DwarfCastles
                 e.Display = (string) Attributes["display"];
             }
 
-            ConsoleColor c;
-            ConsoleColor.TryParse((string) Attributes["backgroundcolor"], true, out c);
+            Enum.TryParse((string) Attributes["backgroundcolor"], true, out ConsoleColor c);
             e.BackgroundColor = c;
-            ConsoleColor.TryParse((string) Attributes["foregroundcolor"], true, out c);
+            Enum.TryParse((string) Attributes["foregroundcolor"], true, out c);
             e.ForegroundColor = c;
 
             // Set up all tags, regardless of their use in fields
@@ -112,9 +111,9 @@ namespace DwarfCastles
 
         public static Tag ParseTag(KeyValuePair<string, object> json)
         {
-            Tag tag = new Tag(json.Key);
+            var tag = new Tag(json.Key);
             Logger.Log($"Tag {json.Key} has a value type of {json.Value.GetType()} and value of {json.Value}");
-            Type type = json.Value.GetType();
+            var type = json.Value.GetType();
             if (type == typeof(Dictionary<string, object>))
             {
                 Dictionary<string, object> dict = (Dictionary<string, object>) json.Value;
@@ -132,7 +131,7 @@ namespace DwarfCastles
                     if (o.GetType() == typeof(Dictionary<string, object>))
                     {
                         Logger.Log("Hit Dictionary inside list");
-                        Tag temp = ParseTag(new KeyValuePair<string, object>("", o));
+                        var temp = ParseTag(new KeyValuePair<string, object>("", o));
                         tag.AddTag(temp);
                         Logger.Log($"End Tag created from dictionary was {temp}");
                     }
@@ -144,7 +143,7 @@ namespace DwarfCastles
             }
             else
             {
-                tag.Value.setValue(json.Value);
+                tag.Value.SetValue(json.Value);
             }
 
             return tag;

@@ -11,12 +11,12 @@ namespace DwarfCastles
     /// </summary>
     public class Entity
     {
-        protected Tag t;
-        protected IList<Tag> Tags => t.SubTags;
+        protected readonly Tag t;
+        protected IEnumerable<Tag> Tags => t.SubTags;
 
         public string Name { get; set; }
         public string Display { get; set; }
-        public Point Pos { get; protected set; }
+        public Point Pos { get; set; }
         public int Id { get; }
         private static int id;
 
@@ -36,12 +36,14 @@ namespace DwarfCastles
             t = new Tag();
         }
 
+        /// <summary>
+        /// 
         /// </summary>
         /// <param name="name"></param>
         /// <param name="pos"></param>
         /// <param name="ascii"></param>
-        /// <param name="backgroundColor"> Optional; default = black </param>
-        /// <param name="foregroundColor"> Optional; default = white </param>
+        /// <param name="backgroundColor"></param>
+        /// <param name="foregroundColor"></param>
         public Entity(string name, Point pos, char ascii, //TODO Remove constructor TESTING
             ConsoleColor backgroundColor = ConsoleColor.Black, ConsoleColor foregroundColor = ConsoleColor.White)
         {
@@ -71,13 +73,13 @@ namespace DwarfCastles
 
         public Entity Clone()
         {
-            Entity e = new Entity
+            var e = new Entity
             {
                 Name = Name, Ascii = Ascii, BackgroundColor = BackgroundColor, ForegroundColor = ForegroundColor
             };
-            foreach (Tag t in Tags)
+            foreach (var tag in Tags)
             {
-                e.t.AddTag(t.Clone());
+                e.t.AddTag(tag.Clone());
             }
 
             return e;

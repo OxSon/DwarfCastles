@@ -9,7 +9,7 @@ namespace DwarfCastles
         {
             try
             {
-                using (StreamWriter LogWriter = new StreamWriter("Log.txt"))
+                using (var LogWriter = new StreamWriter("Log.txt"))
                 {
                     //Clears the file and ensures a StreamWriter can be created for the file
                 }
@@ -24,7 +24,7 @@ namespace DwarfCastles
         {
             try
             {
-                using (StreamWriter LogWriter = new StreamWriter("Log.txt", true))
+                using (var LogWriter = new StreamWriter("Log.txt", true))
                 {
                     LogWriter.WriteLine(s);
                 }

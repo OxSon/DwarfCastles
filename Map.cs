@@ -15,8 +15,8 @@ namespace DwarfCastles
         // Represents the max Size of the map
         public Point Size;
         
-        public IList<Entity> Entities { get; }
-        public bool[,] Impassables;
+        public List<Entity> Entities { get; }
+        public readonly bool[,] Impassables;
         
 
         public Map()
@@ -29,11 +29,11 @@ namespace DwarfCastles
 
         private void GenerateSampleMap()
         {
-            Random rand = new Random();
+            var rand = new Random();
             // Generate Trees
             for (int i = rand.Next(20, 50); i != 0; i--)
             {
-                Entity e = new Entity("Tree", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'T', ConsoleColor.Black, ConsoleColor.Green);
+                var e = new Entity("Tree", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'T', ConsoleColor.Black, ConsoleColor.Green);
                 //e.Tags.Add(new Tag("Passable", false)); // TODO Implement Tags
                 Impassables[e.Pos.X, e.Pos.Y] = true; //TODO will this work for testing?
                 AddEntity(e);
@@ -41,20 +41,33 @@ namespace DwarfCastles
             // Generate Rocks
             for (int i = rand.Next(20, 50); i != 0; i--)
             {
-                Entity e = new Entity("Rock", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'r', ConsoleColor.Black, ConsoleColor.Gray);
+                var e = new Entity("Rock", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'r', ConsoleColor.Black, ConsoleColor.Gray);
                 AddEntity(e);
             }
             // Generate Dwarves
             for (int i = rand.Next(2,7); i != 0; i--)
             {
-                Actor a = new Actor("Dwarf", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'D', this, ConsoleColor.Black, ConsoleColor.Blue);
+                var a = new Actor("Dwarf", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'D', this, ConsoleColor.Black, ConsoleColor.Blue);
                 AddEntity(a);
             }
             
         }
 
+        public void RemoveEntityById(int id)
+        {
+            var entity = from e in Entities where e.Id == id select e;
+
+            Entities.Remove(entity.First());
+        }
+
         public void AddEntity(Entity e)
         {
+            Entities.Add(e);
+        }
+
+        public void AddEntity(Entity e, Point pos)
+        {
+            e.Pos = pos;
             Entities.Add(e);
         }
 
@@ -136,14 +149,11 @@ namespace DwarfCastles
             foreach (var e in Entities)
             {
                 var Types = e.GetTag("Types");
-                if (e != null)
+                foreach (var v in Types.ArrayValues)
                 {
-                    foreach (var v in Types.ArrayValues)
+                    if (v.GetString() == Type)
                     {
-                        if (v.GetString() == Type)
-                        {
-                            MatchingEntities.Add(e);
-                        }
+                        MatchingEntities.Add(e);
                     }
                 }
             }

@@ -6,7 +6,7 @@ namespace DwarfCastles
 {
     public static class ResourceMasterList
     {
-        private static IDictionary<string, Entity> DefaultEntities;
+        private static readonly IDictionary<string, Entity> DefaultEntities;
         
         // TODO Store the dependency names in a paired list, so we know when they have been resolved
         private static IList<string> MissingDependancesStaging; 
@@ -75,7 +75,7 @@ namespace DwarfCastles
         {
             try
             {
-                Entity e = ResourceParser.ParseFile(path);
+                var e = ResourceParser.ParseFile(path);
                 if (e.Name == "Inheritance Missing")
                 {
                     MissingDependancesStaging.Add(path);

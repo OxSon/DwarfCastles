@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Drawing;
 using System.Threading;
+using DwarfCastles.Jobs;
 
 namespace DwarfCastles
 {
@@ -15,22 +16,22 @@ namespace DwarfCastles
         public Map Map { get; }
         public Gui Gui { get; }
         private bool Running = true;
-        private static ConcurrentQueue<Task> Tasks;
+        private static ConcurrentQueue<Job> Tasks;
 
         public GameManager(Map map, Gui gui)
         {
             Map = map;
             Gui = gui;
-            Tasks = new ConcurrentQueue<Task>();
+            Tasks = new ConcurrentQueue<Job>();
             Run();
         }
 
-        public void AddTask(Task task)
+        public void AddTask(Job task)
         {
             Tasks.Enqueue(task);
         }
 
-        public Task GetTask()
+        public Job GetTask()
         {
             return Tasks.TryDequeue(out var result) ? result : null;
         }
@@ -48,23 +49,23 @@ namespace DwarfCastles
         public void Update()
         {
             Logger.Log("Entering Update Method in GameManager.cs");
-            foreach (Entity e in Map.Entities)
+            foreach (var e in Map.Entities)
             {
-                if (e is Actor)
+                if (e is Actor a)
                 {
-                    Actor a = (Actor) e;
-                    if (a.Tasks.Count == 0)
+                    if (a.Jobs.Count == 0)
                     {
-                        Random r = new Random();
+                        var r = new Random();
                         
-                        Point nextPos = new Point();
+                        Point nextPos;
                         do
                         {
                             nextPos = new Point(r.Next(0, Map.Size.X), r.Next(0, Map.Size.Y));
                         } while (Map.Impassables[nextPos.X,nextPos.Y]);
                         
-                        Task t = new Task(0, nextPos, a);
-                        a.Tasks.Enqueue(t);
+                        Job j = new Build(nextPos, "forge");
+                        a.Jobs.Enqueue(j);
+                        j.Actor = a;
                     }
                     a.Update();
                 }
