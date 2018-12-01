@@ -1,0 +1,24 @@
+{
+  "attributes":{
+    "class":"entity",
+    "name":"tree",
+    "display":"Tree",
+    "ascii":"T",
+    "backgroundcolor":"black",
+    "foregroundcolor":"green",
+    "passable":false
+  },
+  "harvestable":{
+    "tool":{
+      "type":"axe"
+    },
+    "yield":[
+      {
+        "name":"wood",
+        "amount":20
+      }
+    ],
+    "work":0,
+    "workrequired":20
+  }
+}

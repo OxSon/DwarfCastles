@@ -15,7 +15,7 @@
     "yield":[
       {
         "name":"coal",
-        "amount":"30"
+        "amount":30
       }
     ],
     "work":0,
