@@ -62,6 +62,25 @@ namespace DwarfCastles
         {
             return pos.X > 0 && pos.Y > 0 && pos.X < Size.X && pos.Y < Size.Y;
         }
+
+        public bool Passable(Point pos)
+        {
+            return InBounds(pos) && Impassables[pos.X, pos.Y];
+        }
+        
+        public IEnumerable<Point> AdjacentPoints(Point origin)
+        {
+            var rawAdjacents = new[]
+            {
+                new Point(origin.X - 1, origin.Y),
+                new Point(origin.X + 1, origin.Y),
+                new Point(origin.X, origin.Y - 1),
+                new Point(origin.X, origin.Y + 1)
+            };
+
+            return rawAdjacents.Where(Passable).ToList();
+        }
+        
         /// <summary>
         /// Get all entites that have a certain tag, ignoring the value of that tag
         /// </summary>

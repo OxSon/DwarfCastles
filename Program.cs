@@ -6,7 +6,7 @@
         {
             ResourceMasterList.LoadAllResources();
             //ResourceParser.ParseFile("Entities/Entity.json");
-            //GameManager game = new GameManager(new Map(), new Gui());
+            GameManager game = new GameManager(new Map(), new Gui());
         }
     }
 }
