@@ -7,8 +7,8 @@
     <ProjectGuid>{7CAA87E9-27FD-4D9B-96AA-24E54DD70ABC}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DwarfFortress</RootNamespace>
-    <AssemblyName>DwarfFortress</AssemblyName>
+    <RootNamespace>DwarfCastles</RootNamespace>
+    <AssemblyName>DwarfCastles</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -75,14 +75,10 @@
     <Content Include="Resources\Entities\Resources\Harvestable\ironvein.json" />
     <Content Include="Resources\Entities\Resources\Raw\coal.json" />
     <Content Include="Resources\Entities\Resources\Raw\ironore.json" />
-    <Content Include="Resources\Entities\Resources\Raw\wood.json" />
     <Content Include="Resources\Entities\Resources\Refined\ironbar.json" />
     <Content Include="Resources\Entities\Tools\ironpickaxe.json" />
     <Content Include="Resources\Entities\Tools\stonehammer.json" />
     <Content Include="Resources\MasterActionTagList.info" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

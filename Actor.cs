@@ -29,11 +29,14 @@ namespace DwarfCastles
         public void Update()
         {
             var updateables = GetTag("updateables");
-            foreach (var tag in updateables.SubTags)
+            if (updateables != null)
             {
-                var value = tag.GetTag("Value").Value;
-                var rate = tag.GetTag("Rate").Value;
-                value.setValue(value.GetDouble() - rate.GetDouble());
+                foreach (var tag in updateables.SubTags)
+                {
+                    var value = tag.GetTag("Value").Value;
+                    var rate = tag.GetTag("Rate").Value;
+                    value.setValue(value.GetDouble() - rate.GetDouble());
+                }
             }
 
             Logger.Log("Update Method for Actor");
