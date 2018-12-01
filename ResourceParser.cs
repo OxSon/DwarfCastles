@@ -66,11 +66,8 @@ namespace DwarfCastles
                 Logger.Log($"Entering inheritance with {InheritanceArray.Count} elements");
                 foreach (var o in InheritanceArray)
                 {
-<<<<<<< Updated upstream
-                    string s = (string) o;
-=======
                     var s = (string) o;
->>>>>>> Stashed changes
+                    
                     var defaultE = ResourceMasterList.GetDefault(s);
                     if (defaultE == null)
                     {
@@ -97,12 +94,9 @@ namespace DwarfCastles
                 e.Display = (string) Attributes["display"];
             }
 
-<<<<<<< Updated upstream
             Enum.TryParse((string) Attributes["backgroundcolor"], true, out ConsoleColor c);
-=======
-            ConsoleColor.TryParse((string) Attributes["backgroundcolor"], true, out ConsoleColor c);
->>>>>>> Stashed changes
             e.BackgroundColor = c;
+            
             Enum.TryParse((string) Attributes["foregroundcolor"], true, out c);
             e.ForegroundColor = c;
 
