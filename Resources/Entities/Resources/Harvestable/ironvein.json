@@ -4,7 +4,7 @@
 		"name":"ironvein",
 		"display":"Iron Vein",
 		"ascii":"I",
-		"backgroundcolor":"grey",
+		"backgroundcolor":"gray",
 		"foregroundcolor":"white",
 		"passable":false
 	},

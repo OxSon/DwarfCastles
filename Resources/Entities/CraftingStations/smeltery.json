@@ -4,7 +4,7 @@
     "name":"smeltery",
     "display":"Smeltery",
     "ascii":"S",
-    "backgroundcolor":"grey",
+    "backgroundcolor":"gray",
     "foregroundcolor":"red",
     "passable":false
   },
@@ -19,7 +19,9 @@
         "amount":10
       }
     ],
-    "tool":"hammer",
+    "tool":{
+      "type":"hammer"
+    },
     "work":0,
     "workrequired":30
   }

@@ -1,7 +1,6 @@
 {
   "types":[
-    "burnable",
-    "wood"
+    "burnable"
   ],
   "attributes":{
     "class":"entity",
@@ -10,6 +9,6 @@
     "ascii":"w",
     "backgroundcolor":"black",
     "foregroundcolor":"orange",
-    "passable":false
+    "passable":true
   }
 }

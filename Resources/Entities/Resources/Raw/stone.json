@@ -1,12 +1,12 @@
 {
   "types":[
-    "burnable"
+    "stone"
   ],
   "attributes":{
     "class":"entity",
-    "name":"coal",
-    "display":"Coal Chunk",
-    "ascii":"c",
+    "name":"stone",
+    "display":"Stone",
+    "ascii":"s",
     "backgroundcolor":"gray",
     "foregroundcolor":"black",
     "passable":true

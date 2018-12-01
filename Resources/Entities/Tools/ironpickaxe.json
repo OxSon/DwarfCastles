@@ -7,7 +7,7 @@
     "display": "Iron Pickaxe",
     "ascii": "p",
     "backgroundcolor":"black",
-    "foregroundcolor":"grey",
+    "foregroundcolor":"gray",
     "weight": 3
   },
   "stats": {

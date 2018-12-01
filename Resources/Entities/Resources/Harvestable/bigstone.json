@@ -1,9 +1,9 @@
 {
   "attributes":{
     "class":"entity",
-    "name":"coalvein",
-    "display":"Coal Vein",
-    "ascii":"C",
+    "name":"stone",
+    "display":"Stone",
+    "ascii":"S",
     "backgroundcolor":"gray",
     "foregroundcolor":"black",
     "passable":false
@@ -14,11 +14,11 @@
     },
     "yield":[
       {
-        "name":"coal",
-        "amount":30
+        "name":"stone",
+        "amount":80
       }
     ],
     "work":0,
-    "workrequired":10
+    "workrequired":15
   }
 }

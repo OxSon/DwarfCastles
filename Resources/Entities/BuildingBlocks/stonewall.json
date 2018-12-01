@@ -1,0 +1,21 @@
+{
+  "attributes":{
+    "class":"entity",
+    "name":"stonewall",
+    "display":"Stone Wall",
+    "ascii":"W",
+    "backgroundcolor":"gray",
+    "foregroundcolor":"darkgray",
+    "passable":true
+  },
+  "buildable":{
+    "resources":[
+      {
+        "type":"stone",
+        "amount":5
+      }
+    ],
+    "work":0,
+    "workrequired":10
+  }
+}
