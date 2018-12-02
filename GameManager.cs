@@ -57,9 +57,11 @@ namespace DwarfCastles
             
             foreach (var e in Map.Entities)
             {
-                if (e is Actor a)
+                
+                if (e is Actor)
                 {
-                    if (Tasks.Count < 5)
+                    var a = (Actor) e;
+                    if (a.Jobs.Count == 0)
                     {
                         Tasks.Enqueue(new Seek(a, "ironvein", 10));
                     }

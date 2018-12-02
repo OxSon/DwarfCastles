@@ -85,8 +85,18 @@ namespace DwarfCastles
             Logger.Log("(" + Pos.X + ", " + Pos.Y + ")");
         }
 
-        public void Travel(Point location)
+        public override Entity Clone()
         {
+            Entity a = new Actor
+            {
+                Name = Name, Ascii = Ascii, BackgroundColor = BackgroundColor, ForegroundColor = ForegroundColor
+            };
+            foreach (var tag in Tags)
+            {
+                a.AddTag(tag.Clone());
+            }
+
+            return a;
         }
 
         public bool CanMove()

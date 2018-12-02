@@ -71,7 +71,7 @@ namespace DwarfCastles
             return t.GetTag(tagName);
         }
 
-        public Entity Clone()
+        public virtual Entity Clone()
         {
             var e = new Entity
             {
