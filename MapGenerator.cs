@@ -52,6 +52,10 @@ namespace DwarfCastles
                         {
                             var pos = new Point(mapCenter.X + i, mapCenter.Y + j);
                             var dwarfClone = ResourceMasterList.GetDefaultClone("dwarf");
+                            if (dwarfClone is Actor)
+                            {
+                                Logger.Log("Dwarfclone is for sure an actor");
+                            }
                             dwarfClone.Pos = pos;
                             m.AddEntity(dwarfClone);
                             remaining--;

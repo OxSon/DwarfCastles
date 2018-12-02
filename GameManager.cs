@@ -57,8 +57,10 @@ namespace DwarfCastles
             
             foreach (var e in Map.Entities)
             {
-                if (e is Actor a)
+                
+                if (e is Actor)
                 {
+                    var a = (Actor) e;
                     if (a.Jobs.Count == 0)
                     {
                         var r = new Random();
