@@ -51,12 +51,14 @@ namespace DwarfCastles
                         if (!m.Impassables[mapCenter.X + i, mapCenter.Y + j])
                         {
                             var pos = new Point(mapCenter.X + i, mapCenter.Y + j);
-                            var dwarfClone = ResourceMasterList.GetDefaultClone("dwarf");
+                            Entity dwarfClone = ResourceMasterList.GetDefaultClone("dwarf");
                             if (dwarfClone is Actor)
                             {
-                                Logger.Log("Dwarfclone is for sure an actor");
+                                Actor a = (Actor) dwarfClone;
+                                a.Map = m;
                             }
                             dwarfClone.Pos = pos;
+                            
                             m.AddEntity(dwarfClone);
                             remaining--;
                             if (remaining == 0)

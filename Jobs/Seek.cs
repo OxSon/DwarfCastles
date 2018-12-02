@@ -32,11 +32,14 @@ namespace DwarfCastles.Jobs
                         next = Actor.Map.Entities[index];
                         index++;
 
-                        if (next?.GetTag("harvestable") != null)
+                        if (next.GetTag("harvestable") != null)
                         {
                             Logger.Log("Seek : Work -> Found resource! :)");
+                            
+                            var harvestable = next.GetTag("harvestable");
+                            
                             string query = next.GetTag("type") == null ? "name" : "type";
-
+                            
                             if (next.GetTag(query).Value.GetString() == typeOrName)
                             {
                                 Found = next;
