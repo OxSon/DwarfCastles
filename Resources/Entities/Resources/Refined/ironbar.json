@@ -10,7 +10,7 @@
     "display":"Iron Bar",
     "ascii":"i",
     "backgroundcolor":"black",
-    "foregroundcolor":"grey",
+    "foregroundcolor":"gray",
     "passable":false
   },
   "craftable":{

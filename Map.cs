@@ -18,39 +18,11 @@ namespace DwarfCastles
         public List<Entity> Entities { get; }
         public readonly bool[,] Impassables;
         
-
-        public Map()
+        public Map(Point size)
         {
+            Size = size;
             Entities = new List<Entity>();
-            Size = new Point(25,25);
-            Impassables = new bool[Size.X, Size.Y];
-            GenerateSampleMap();
-        }
-
-        private void GenerateSampleMap()
-        {
-            var rand = new Random();
-            // Generate Trees
-            for (int i = rand.Next(20, 50); i != 0; i--)
-            {
-                var e = new Entity("Tree", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'T', ConsoleColor.Black, ConsoleColor.Green);
-                //e.Tags.Add(new Tag("Passable", false)); // TODO Implement Tags
-                Impassables[e.Pos.X, e.Pos.Y] = true; //TODO will this work for testing?
-                AddEntity(e);
-            }
-            // Generate Rocks
-            for (int i = rand.Next(20, 50); i != 0; i--)
-            {
-                var e = new Entity("Rock", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'r', ConsoleColor.Black, ConsoleColor.Gray);
-                AddEntity(e);
-            }
-            // Generate Dwarves
-            for (int i = rand.Next(2,7); i != 0; i--)
-            {
-                var a = new Actor("Dwarf", new Point(rand.Next(0,Size.X), rand.Next(0, Size.Y)), 'D', this, ConsoleColor.Black, ConsoleColor.Blue);
-                AddEntity(a);
-            }
-            
+            Impassables = new bool[Size.X,Size.Y];
         }
 
         public void RemoveEntityById(int id)
@@ -63,12 +35,19 @@ namespace DwarfCastles
         public void AddEntity(Entity e)
         {
             Entities.Add(e);
+            if (e.GetTag("attributes.passable") != null)
+            {
+                if (!e.GetTag("attributes.passable").Value.GetBool())
+                {
+                    Impassables[e.Pos.X, e.Pos.Y] = true;
+                }
+            }
         }
 
         public void AddEntity(Entity e, Point pos)
         {
             e.Pos = pos;
-            Entities.Add(e);
+            AddEntity(e);
         }
 
         public bool InBounds(Point pos)

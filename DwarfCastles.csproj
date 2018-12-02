@@ -55,11 +55,12 @@
     <Compile Include="InputManager.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="Jobs\Build.cs" />
-      <Compile Include="Jobs\Construct.cs"/>
-      <Compile Include="Jobs\Harvest.cs"/>
-      <Compile Include="Jobs\Seek.cs"/>
+    <Compile Include="Jobs\Construct.cs" />
+    <Compile Include="Jobs\Harvest.cs" />
+    <Compile Include="Jobs\Seek.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Map.cs" />
+    <Compile Include="MapGenerator.cs" />
     <Compile Include="MenuManager.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
@@ -75,13 +76,21 @@
   <ItemGroup>
     <Content Include="Resources\Actors\Dwarf.json" />
     <Content Include="Resources\BuildingObjects.info" />
+    <Content Include="Resources\Entities\BuildingBlocks\stonewall.json" />
+    <Content Include="Resources\Entities\CraftingStations\farm.json" />
+    <Content Include="Resources\Entities\CraftingStations\quarry.json" />
     <Content Include="Resources\Entities\CraftingStations\forge.json" />
     <Content Include="Resources\Entities\CraftingStations\smeltery.json" />
     <Content Include="Resources\Entities\Entity.json" />
+    <Content Include="Resources\Entities\Resources\Harvestable\bigstone.json" />
     <Content Include="Resources\Entities\Resources\Harvestable\coalvein.json" />
     <Content Include="Resources\Entities\Resources\Harvestable\ironvein.json" />
+    <Content Include="Resources\Entities\Resources\Harvestable\tree.json" />
     <Content Include="Resources\Entities\Resources\Raw\coal.json" />
     <Content Include="Resources\Entities\Resources\Raw\ironore.json" />
+    <Content Include="Resources\Entities\Resources\Raw\potatoe.json" />
+    <Content Include="Resources\Entities\Resources\Raw\stone.json" />
+    <Content Include="Resources\Entities\Resources\Raw\wood.json" />
     <Content Include="Resources\Entities\Resources\Refined\ironbar.json" />
     <Content Include="Resources\Entities\Tools\ironpickaxe.json" />
     <Content Include="Resources\Entities\Tools\stonehammer.json" />

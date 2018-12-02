@@ -8,8 +8,8 @@
     "name":"ironore",
     "display":"Iron Ore",
     "ascii":"i",
-    "backgroundcolor":"grey",
+    "backgroundcolor":"gray",
     "foregroundcolor":"black",
-    "passable":false
+    "passable":true
   }
 }

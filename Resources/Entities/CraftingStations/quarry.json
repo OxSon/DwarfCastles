@@ -1,22 +1,26 @@
 {
   "attributes":{
     "class":"entity",
-    "name":"forge",
-    "display":"Forge",
-    "ascii":"F",
+    "name":"quarry",
+    "display":"Stone Quarry",
+    "ascii":"Q",
     "backgroundcolor":"black",
-    "foregroundcolor":"red",
+    "foregroundcolor":"gray",
     "passable":false
   },
   "buildable":{
     "resources":[
       {
-        "name":"ironore",
+        "name":"ironbar",
         "amount":10
+      },
+      {
+        "name":"wood",
+        "amount":30
       }
     ],
     "tool":{
-      "type":"hammer"
+      "type":"pickaxe"
     },
     "work":0,
     "workrequired":30

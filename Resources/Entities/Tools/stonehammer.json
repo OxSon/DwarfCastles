@@ -7,7 +7,7 @@
     "display": "Stone Hammer",
     "ascii": "h",
     "backgroundcolor":"black",
-    "foregroundcolor":"grey",
+    "foregroundcolor":"gray",
     "weight": 5
   },
   "stats": {

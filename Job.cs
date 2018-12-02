@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -31,7 +32,6 @@ namespace DwarfCastles
         {
             WorkRequired = 0;
         }
-        
         public IEnumerable<Point> GenTravelPath()
         {
 //            Logger.Log("Task.GenTravelPath: ");

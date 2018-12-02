@@ -54,6 +54,7 @@ namespace DwarfCastles
         {
             HandleInput();
             Logger.Log("Entering Update Method in GameManager.cs");
+            
             foreach (var e in Map.Entities)
             {
                 if (e is Actor a)
