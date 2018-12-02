@@ -16,7 +16,8 @@ namespace DwarfCastles
         private Map Map { get; }
         private Gui Gui { get; }
         private bool Running = true;
-        private static ConcurrentQueue<Job> Tasks;
+        public static ConcurrentQueue<Job> Tasks { get; } = new ConcurrentQueue<Job>();
+
         private MenuManager Menu;
         private InputManager Input;
 
@@ -24,7 +25,6 @@ namespace DwarfCastles
         {
             Map = map;
             Gui = gui;
-            Tasks = new ConcurrentQueue<Job>();
             Menu = new MenuManager();
             Input = new InputManager();
             Run();
@@ -69,7 +69,7 @@ namespace DwarfCastles
                         } while (Map.Impassables[nextPos.X, nextPos.Y]);
 
                         Job j = new Build(nextPos, "forge", a);
-                        
+
                         a.Jobs.Enqueue(j);
                     }
 

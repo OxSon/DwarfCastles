@@ -47,14 +47,23 @@ namespace DwarfCastles
 
             Logger.Log("Task Count: " + Jobs.Count);
 
-            if (Jobs.Count == 0) return;
+            if (Jobs.Count == 0)
+            {
+                if (GameManager.Tasks.TryDequeue(out var newJob))
+                    Jobs.Enqueue(newJob);
+                return;
+            }
 
             if (Jobs.First().Location.Equals(Pos))
             {
                 Jobs.First().Work();
                 if (Jobs.First().WorkRequired <= 0)
+                {
                     Jobs.First().Finish();
-                return;
+                    Jobs.Dequeue();
+                    return;
+                }
+
             }
 
             Logger.Log("Next step");
