@@ -59,23 +59,32 @@ namespace DwarfCastles
             {
                 if (e is Actor a)
                 {
-                    if (a.Jobs.Count == 0)
+                    if (Tasks.Count < 5)
                     {
-                        var r = new Random();
-
-                        Point nextPos;
-                        do
-                        {
-                            nextPos = new Point(r.Next(0, Map.Size.X), r.Next(0, Map.Size.Y));
-                        } while (Map.Impassables[nextPos.X, nextPos.Y]);
-
-                        Job j = new Build(nextPos, "forge", a);
-
-                        a.Jobs.Enqueue(j);
+                        Tasks.Enqueue(new Seek(a, "ironvein", 10));
                     }
-
-                    a.Update();
                 }
+
+//            {
+//                if (e is Actor a)
+//                {
+//                    if (a.Jobs.Count == 0)
+//                    {
+//                        var r = new Random();
+//
+//                        Point nextPos;
+//                        do
+//                        {
+//                            nextPos = new Point(r.Next(0, Map.Size.X), r.Next(0, Map.Size.Y));
+//                        } while (Map.Impassables[nextPos.X, nextPos.Y]);
+//
+//                        Job j = new Build(nextPos, "forge", a);
+//
+//                        a.Jobs.Enqueue(j);
+//                    }
+//
+//                    a.Update();
+//                }
             }
 
             Gui.Draw(Map, Menu);

@@ -67,7 +67,7 @@ namespace DwarfCastles
             //recheck our pathing every 5 moves, or if we don't currently have a path
             if (currentTravelPath == null || counter > 4)
             {
-                var attemptedPath = Jobs.First().GenTravelPath();
+                var attemptedPath = Jobs.First().GenAdjacentTravelPath();
                 if (attemptedPath != null)
                     currentTravelPath = new Queue<Point>(attemptedPath);
                 else
