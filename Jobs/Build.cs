@@ -4,18 +4,27 @@ namespace DwarfCastles.Jobs
 {
     public class Build : Job
     {
-        private double WorkRequired;
-        
-        public Build(Point Position, string name)
+        public string Name { get; }
+
+        public Build(Point location, string name, Actor actor = null) : base(location, actor)
         {
-            var workRequired = ResourceMasterList.GetDefault(name).GetTag("buildable.workrequired");
-            if (workRequired != null)
+            Name = name;
+            Location = location;
+
+            var resources = ResourceMasterList.GetDefault(name).GetTag("buildable.resources").SubTags;
+
+            foreach (var r in resources)
             {
-                WorkRequired = workRequired.Value.GetDouble();
+                //TODO check inventory for resource
+                var seek = new Seek(Actor, location, r.Name, r.Value.GetDouble());
+                SubJobs.Enqueue(seek);
+                SubJobs.Enqueue(new Harvest(Actor, Location, seek.Found));
             }
+
+            SubJobs.Enqueue(new Construct(Actor, location, name));
         }
-        
-        public override void Work()
+
+        public override void Finish()
         {
             
         }

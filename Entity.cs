@@ -16,7 +16,7 @@ namespace DwarfCastles
 
         public string Name { get; set; }
         public string Display { get; set; }
-        public Point Pos { get; protected set; }
+        public Point Pos { get; set; }
         public int Id { get; }
         private static int id;
 

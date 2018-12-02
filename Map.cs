@@ -15,7 +15,7 @@ namespace DwarfCastles
         // Represents the max Size of the map
         public Point Size;
         
-        public IList<Entity> Entities { get; }
+        public List<Entity> Entities { get; }
         public bool[,] Impassables;
         
 
@@ -53,8 +53,21 @@ namespace DwarfCastles
             
         }
 
+        public void RemoveEntityById(int id)
+        {
+            var entity = from e in Entities where e.Id == id select e;
+
+            Entities.Remove(entity.First());
+        }
+
         public void AddEntity(Entity e)
         {
+            Entities.Add(e);
+        }
+
+        public void AddEntity(Entity e, Point pos)
+        {
+            e.Pos = pos;
             Entities.Add(e);
         }
 

@@ -10,21 +10,20 @@ namespace DwarfCastles
     {
         private Queue<Point> currentTravelPath;
         private static int counter;
-        public PriorityQueue<Task> Tasks { get; }
+        public Queue<Job> Jobs { get; } = new Queue<Job>();
         public Map Map { get; } //current map Actor is on
+        public IDictionary<string, double> inventory { get; }
 
         public Actor()
         {
-            Tasks = new PriorityQueue<Task>();
         }
 
         public Actor(string name, Point pos, char ascii, Map map,
             ConsoleColor backgroundColor = ConsoleColor.Black,
             ConsoleColor foregroundColor = ConsoleColor.White) :
-            base(name, pos, ascii, backgroundColor, foregroundColor)
-        {
-            Map = map;
-            Tasks = new PriorityQueue<Task>();
+            base(name, pos, ascii, backgroundColor, foregroundColor) {
+                Map = map;
+                inventory = new Dictionary<string, double>();
         }
 
         public void Update()
@@ -46,29 +45,42 @@ namespace DwarfCastles
 //                Logger.Log("Actor.Update : exited foreach loop");
             }
 
-            Logger.Log("Task Count: " + Tasks.Count);
+            Logger.Log("Task Count: " + Jobs.Count);
 
-            if (Tasks.Count == 0 || Tasks.First().Location.Equals(Pos)) return;
+            if (Jobs.Count == 0) return;
+
+            if (Jobs.First().Location.Equals(Pos))
+            {
+                Jobs.First().Work();
+                if (Jobs.First().WorkRequired <= 0)
+                    Jobs.First().Finish();
+                return;
+            }
 
             Logger.Log("Next step");
             //recheck our pathing every 5 moves, or if we don't currently have a path
             if (currentTravelPath == null || counter > 4)
             {
-                var attemptedPath = Tasks.First().GenTravelPath();
+                var attemptedPath = Jobs.First().GenTravelPath();
                 if (attemptedPath != null)
                     currentTravelPath = new Queue<Point>(attemptedPath);
                 else
-                    Logger.Log($"Destination unreachable; Dq'ing: {Tasks.Dequeue()}");
+                    Logger.Log($"Destination unreachable; Dq'ing: {Jobs.Dequeue()}");
 
-                Logger.Log(Tasks.Count + "");
+                Logger.Log(Jobs.Count + "");
                 counter = 0;
             }
             else
                 counter++;
 
             Logger.Log("Update for Actor moving from (" + Pos.X + ", " + Pos.Y + ") to");
-            Pos = currentTravelPath.Dequeue();
+            if (currentTravelPath != null)
+                Pos = currentTravelPath.Dequeue();
             Logger.Log("(" + Pos.X + ", " + Pos.Y + ")");
+        }
+
+        public void Travel(Point location)
+        {
         }
 
         public bool CanMove()

@@ -54,6 +54,9 @@
     <Compile Include="Gui.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="Jobs\Build.cs" />
+      <Compile Include="Jobs\Construct.cs"/>
+      <Compile Include="Jobs\Harvest.cs"/>
+      <Compile Include="Jobs\Seek.cs"/>
     <Compile Include="Logger.cs" />
     <Compile Include="Map.cs" />
     <Compile Include="MenuManager.cs" />
