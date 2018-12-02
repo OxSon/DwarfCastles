@@ -6,18 +6,23 @@ namespace DwarfCastles.Jobs
     {
         public string Name { get; }
 
-        public Build(Point location, string name, Actor actor = null) : base(location, actor)
+        public Build(Point location, string name, Actor actor) : base(location, actor)
         {
             Name = name;
-            Location = location;
 
             var resources = ResourceMasterList.GetDefault(name).GetTag("buildable.resources").SubTags;
 
             foreach (var r in resources)
             {
+//                Logger.Log($"Resource: {r}");
                 //TODO check inventory for resource
-                var seek = new Seek(Actor, location, r.Name, r.Value.GetDouble());
+                string query = r.GetTag("type") == null ? "name" : "type";
+                
+                var seek = new Seek(Actor, location, r.GetTag(query).Value.GetString(),
+                    r.GetTag("amount").Value.GetDouble());
                 SubJobs.Enqueue(seek);
+                seek.Work();
+                //TODO maybe add Found later?
                 SubJobs.Enqueue(new Harvest(Actor, Location, seek.Found));
             }
 

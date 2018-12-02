@@ -68,9 +68,9 @@ namespace DwarfCastles
                             nextPos = new Point(r.Next(0, Map.Size.X), r.Next(0, Map.Size.Y));
                         } while (Map.Impassables[nextPos.X, nextPos.Y]);
 
-                        Job j = new Build(nextPos, "forge");
+                        Job j = new Build(nextPos, "forge", a);
+                        
                         a.Jobs.Enqueue(j);
-                        j.Actor = a;
                     }
 
                     a.Update();

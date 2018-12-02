@@ -11,10 +11,6 @@
   "buildable":{
     "resources":[
       {
-        "type":"stone",
-        "amount":40
-      },
-      {
         "name":"ironore",
         "amount":10
       }

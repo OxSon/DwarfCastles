@@ -5,33 +5,53 @@ namespace DwarfCastles.Jobs
 {
     public class Seek : Task
     {
-        private readonly string type;
+        private readonly string typeOrName;
         private readonly double amount;
         public Entity Found { get; private set; }
 
-        public Seek(Actor actor, Point location, string type, double amount) : base(actor, location,
-            ResourceMasterList.GetDefault(type).GetTag("harvestable.workrequired").Value.GetDouble())
+        public Seek(Actor actor, Point location, string type, double amount) : base(actor, location, 0)
+            
         {
-            this.type = type;
+            typeOrName = type;
             this.amount = amount;
         }
 
         public override void Work()
         {
-            Entity resource = null;
+            Logger.Log("Seek : Work");
             int index = 0;
 
-            do
+            if (index < Actor.Map.Entities.Count)
             {
-                var next = Actor.Map.Entities[index];
-                index++;
+                do
+                {
+                    Entity next = null;
 
-                if (next.Name == type)
-                    resource = next;
-            } while (resource == null);
+                    if (index < Actor.Map.Entities.Count)
+                    {
+                        next = Actor.Map.Entities[index];
+                        index++;
 
-            Found = resource;
-            PickUp(resource);
+                        if (next?.GetTag("harvestable") != null)
+                        {
+                            Logger.Log("Seek : Work -> Found resource! :)");
+                            string query = next.GetTag("type") == null ? "name" : "type";
+
+                            if (next.GetTag(query).Value.GetString() == typeOrName)
+                            {
+                                Found = next;
+                            }
+                            else
+                            {
+                                Logger.Log("Seek: next was null");
+                            }
+                        }
+                    }
+                } while (Found == null) ;
+
+                PickUp(Found);
+            }
+
         }
         
         
@@ -44,7 +64,7 @@ namespace DwarfCastles.Jobs
             }
             else
             {
-                Actor.inventory.Add(type, amount);
+                Actor.inventory.Add(typeOrName, amount);
             }
         }
     }
