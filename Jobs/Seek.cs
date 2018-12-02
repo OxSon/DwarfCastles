@@ -5,8 +5,8 @@ namespace DwarfCastles.Jobs
 {
     public class Seek : Task
     {
-        private string type;
-        private double amount;
+        private readonly string type;
+        private readonly double amount;
         public Entity Found { get; private set; }
 
         public Seek(Actor actor, Point location, string type, double amount) : base(actor, location,
@@ -23,7 +23,7 @@ namespace DwarfCastles.Jobs
 
             do
             {
-                Entity next = Actor.Map.Entities[index];
+                var next = Actor.Map.Entities[index];
                 index++;
 
                 if (next.Name == type)

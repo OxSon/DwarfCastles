@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -42,7 +41,7 @@ namespace DwarfCastles
             {
                 if (map.InBounds(Point.Add(e.Pos, new Size(CameraOffset))))
                 {
-                    Point RelativePoint = new Point(e.Pos.X + CameraOffset.X, e.Pos.Y + CameraOffset.Y);
+                    var RelativePoint = new Point(e.Pos.X + CameraOffset.X, e.Pos.Y + CameraOffset.Y);
                     visibleCharsColorsBackground[RelativePoint.X, RelativePoint.Y] = e.BackgroundColor;
                     visibleCharsColorsForeground[RelativePoint.X, RelativePoint.Y] = e.ForegroundColor;
                     visibleChars[RelativePoint.X, RelativePoint.Y] = e.Ascii;
@@ -70,7 +69,7 @@ namespace DwarfCastles
             }
         }
 
-        static IEnumerable<string> Split(string str, int chunkSize)
+        private static IEnumerable<string> Split(string str, int chunkSize)
         {
             return Enumerable.Range(0, str.Length / chunkSize)
                 .Select(i => str.Substring(i * chunkSize, chunkSize));

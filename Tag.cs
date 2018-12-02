@@ -34,17 +34,17 @@ namespace DwarfCastles
 
         public Tag(string name, bool value) : this(name)
         {
-            Value.setValue(value);
+            Value.SetValue(value);
         }
 
         public Tag(string name, double value) : this(name)
         {
-            Value.setValue(value);
+            Value.SetValue(value);
         }
 
         public Tag(string name, string value) : this(name)
         {
-            Value.setValue(value);
+            Value.SetValue(value);
         }
 
         #endregion Constructors
@@ -127,9 +127,9 @@ namespace DwarfCastles
                 clone.AddTag(subTag.Clone());
             }
 
-            foreach (var Value in ArrayValues)
+            foreach (var v in ArrayValues)
             {
-                clone.AddArrayValue(Value.Clone());
+                clone.AddArrayValue(v.Clone());
             }
 
             return clone;

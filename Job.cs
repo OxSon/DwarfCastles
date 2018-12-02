@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -13,7 +12,7 @@ namespace DwarfCastles
 
         public Actor Actor { get; set; }
 
-        public Job(Point location, Actor actor)
+        protected Job(Point location, Actor actor)
         {
             Actor = actor;
             Location = location;
@@ -65,7 +64,7 @@ namespace DwarfCastles
 
 //                    Logger.Log($"Comparing {child} to {Location} -> {child == Location}");
 
-                    if (child == (Location))
+                    if (child == Location)
                     {
                         Logger.Log("Task.GenTravelPath: Returning");
                         return ToPath(origin, Location);

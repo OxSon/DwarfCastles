@@ -6,38 +6,44 @@ namespace DwarfCastles
         private bool boolValue;
         private string stringValue;
 
-        public Value(){}
-        
+        public Value()
+        {
+        }
+
         public Value(object o)
         {
-            setValue(o);
+            SetValue(o);
         }
-        
+
         // Setters
-        public void setValue(object o)
+        public void SetValue(object o)
         {
-            if (o.GetType() == typeof(double))
+            if (o is double d)
             {
-                doubleValue = (double) o;
-            }else if (o.GetType() == typeof(bool))
+                doubleValue = d;
+            }
+            else if (o is bool b)
             {
-                boolValue = (bool) o;
-            }else if (o.GetType() == typeof(string))
+                boolValue = b;
+            }
+            else if (o is string s)
             {
-                stringValue = (string) o;
+                stringValue = s;
             }
         }
-        
+
         // Getters
-        public void getValue(out double outputDouble)
+        public void GetValue(out double outputDouble)
         {
             outputDouble = doubleValue;
         }
-        public void getValue(out string outputString)
+
+        public void GetValue(out string outputString)
         {
             outputString = stringValue;
         }
-        public void getValue(out bool outputBool)
+
+        public void GetValue(out bool outputBool)
         {
             outputBool = boolValue;
         }
@@ -65,7 +71,7 @@ namespace DwarfCastles
         // Utility Methods
         public Value Clone()
         {
-            Value clone = new Value {boolValue = boolValue, doubleValue = doubleValue, stringValue = stringValue};
+            var clone = new Value {boolValue = boolValue, doubleValue = doubleValue, stringValue = stringValue};
             return clone;
         }
     }

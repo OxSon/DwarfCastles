@@ -39,7 +39,7 @@ namespace DwarfCastles
                 {
                     var value = tag.GetTag("value").Value;
                     var rate = tag.GetTag("rate").Value;
-                    value.setValue(value.GetDouble() - rate.GetDouble());
+                    value.SetValue(value.GetDouble() - rate.GetDouble());
                 }
 
 //                Logger.Log("Actor.Update : exited foreach loop");
