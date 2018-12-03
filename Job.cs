@@ -7,7 +7,12 @@ namespace DwarfCastles
 {
     public abstract class Job
     {
-        public Point Location { get; protected set; }
+        public Point Location
+        {
+            get;
+            protected set;
+        }
+
         protected Queue<Job> SubJobs { get; }
 
         public Actor Owner { get; set; }
@@ -33,33 +38,46 @@ namespace DwarfCastles
         {
             Owner = a;
         }
-        
+
         /// <summary>
         /// This method is used to release a job and
         /// making it ready for a new actor to take it
         /// </summary>
-        public virtual void ReleaseOwnership(){}
+        public virtual void ReleaseOwnership()
+        {
+        }
 
         /// <summary>
         /// This method is called whenever the owning actor
         /// is at the location and ready to do the work
         /// </summary>
-        public virtual void Work(){}
+        public virtual void Work()
+        {
+        }
 
         public virtual void Finish()
         {
             Completed = true;
         }
 
+        public virtual Point GetLocation()
+        {
+            return Location;
+        }
+
         public bool NextToLocation(Point p)
         {
-            return Owner.Map.AdjacentPoints(Location).Any(x => x.X == p.X && x.Y == p.Y);
+            if (p.X == GetLocation().X && p.Y == GetLocation().Y)
+            {
+                return true;
+            }
+            return Owner.Map.AdjacentPoints(GetLocation()).Any(x => x.X == p.X && x.Y == p.Y);
         }
-        
+
         public IEnumerable<Point> GenTravelPath()
         {
             Logger.Log($"Job.GenTravelPath: Entered to Location ({Location.X}, {Location.Y})");
-            Logger.Log(Owner.Map.Impassables[Location.X, Location.Y] + " is the value of passable for the location");
+            Logger.Log(Owner.Map.Impassables[GetLocation().X, GetLocation().Y] + " is the value of passable for the location");
             if (!Owner.CanMove())
             {
                 Logger.Log("Job.GenTravelPath: Returning: Can't Move");
@@ -72,12 +90,12 @@ namespace DwarfCastles
             var origin = new Dictionary<Point, Point?> {{Owner.Pos, null}};
 
             Point current;
-            
+
             while (q.Count != 0)
             {
                 current = q.Dequeue();
                 Logger.Log($"({current.X}, {current.Y}) Being searched");
-                
+
                 foreach (var child in Owner.Map.AdjacentPoints(current))
                 {
                     if (!origin.ContainsKey(child))
@@ -92,7 +110,7 @@ namespace DwarfCastles
 
 //                    Logger.Log($"Comparing {child} to {Location} -> {child == Location}");
 
-                    if (child == Location || Owner.Map.Impassables[Location.X, Location.Y] && NextToLocation(child))
+                    if (child == GetLocation() || Owner.Map.Impassables[GetLocation().X, GetLocation().Y] && NextToLocation(child))
                     {
                         Logger.Log("Job.GenTravelPath: Returning");
                         return ToPath(origin, child);
@@ -100,7 +118,7 @@ namespace DwarfCastles
                 }
             }
 
-            Logger.Log($"Pathing failed: last node processed: {current}; goal: {Location}");
+            Logger.Log($"Pathing failed: last node processed: {current}; goal: {GetLocation()}");
 
             return null;
         }
@@ -124,7 +142,7 @@ namespace DwarfCastles
             path.Reverse();
 
             Logger.Log("Task.ToPath : returning");
-            return from p in path select p;  
+            return from p in path select p;
         }
     }
 }

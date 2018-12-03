@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using DwarfCastles.Jobs;
 
 namespace DwarfCastles
 {
@@ -34,19 +35,23 @@ namespace DwarfCastles
                 if (GameManager.Jobs.TryDequeue(out var newJob))
                 {
                     Logger.Log("Actor taking job from GameManager.Jobs");
-                    newJob.TakeOwnership(this);
                     Jobs.Enqueue(newJob);
+                    newJob.TakeOwnership(this);
                 }
-
-                //TODO Generate a wander Task
+                else
+                {
+                    Jobs.Enqueue(new Wander(this));
+                }
                 return;
             }
-
+            Logger.Log("Checking if Actor should work on job");
             if (Jobs.First().NextToLocation(Pos))
             {
+                Logger.Log("Actor is working on Job");
                 Jobs.First().Work();
                 if (Jobs.First().Completed)
                 {
+                    Logger.Log("Actor is completing a job");
                     Jobs.First().ReleaseOwnership();
                     Jobs.Dequeue();
                     return;
@@ -76,6 +81,12 @@ namespace DwarfCastles
             Logger.Log("(" + Pos.X + ", " + Pos.Y + ")");
         }
 
+        public void Inturupt()
+        {
+            Job returnToQueue = Jobs.Dequeue();
+            GameManager.Jobs.Enqueue(returnToQueue);
+        }
+        
         public override Entity Clone()
         {
             Entity a = new Actor
