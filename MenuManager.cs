@@ -46,7 +46,8 @@ namespace DwarfCastles
                 return;
             }
 
-            CurrentMenuActionHandler(CurrentMenuContext[key]);
+            if (CurrentMenuContext.TryGetValue(key, out string value))
+                CurrentMenuActionHandler(value);
         }
 
         private void ResetMenu()
@@ -127,7 +128,7 @@ namespace DwarfCastles
         public void HandleFinishHarvestAction(Point p)
         {
             var r = FixedRectangle(FirstPoint, p);
-            Logger.Log("Harvesting everything between {FirstPoint.X}, {FirstPoint.Y} and {p.X}, {p.Y}");
+            Logger.Log($"Harvesting everything between {FirstPoint.X}, {FirstPoint.Y} and {p.X}, {p.Y}");
             foreach (var e in Map.Entities)
             {
                 if (Map.Within(e.Pos, r))
@@ -141,7 +142,7 @@ namespace DwarfCastles
             ResetMenu();
         }
 
-        public Rectangle FixedRectangle(Point p1, Point p2)
+        public static Rectangle FixedRectangle(Point p1, Point p2)
         {
             var minX = Math.Min(p1.X, p2.X);
             var minY = Math.Min(p1.Y, p2.Y);

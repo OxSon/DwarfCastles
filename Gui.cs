@@ -124,7 +124,7 @@ namespace DwarfCastles
             }
             else if(menu.State == 2)
             {
-                var r = menu.FixedRectangle(menu.FirstPoint, input.CursorPosition);
+                var r = MenuManager.FixedRectangle(menu.FirstPoint, input.CursorPosition);
                 for (int i = r.X * 2; i < r.Right * 2; i++)
                 {
                     Console.SetCursorPosition(i, r.Y);
