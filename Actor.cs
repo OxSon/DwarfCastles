@@ -13,18 +13,6 @@ namespace DwarfCastles
         public Queue<Job> Jobs { get; } = new Queue<Job>();
         public Map Map { get; set; } //current map Actor is on
 
-        public Actor()
-        {
-        }
-
-        public Actor(string name, Point pos, char ascii, Map map,
-            ConsoleColor backgroundColor = ConsoleColor.Black,
-            ConsoleColor foregroundColor = ConsoleColor.White) :
-            base(name, pos, ascii, backgroundColor, foregroundColor)
-        {
-            Map = map;
-        }
-
         public void Update()
         {
             Logger.Log("Update Method for Actor");
@@ -92,7 +80,7 @@ namespace DwarfCastles
         {
             Entity a = new Actor
             {
-                Name = Name, Ascii = Ascii, BackgroundColor = BackgroundColor, ForegroundColor = ForegroundColor
+                Name = Name, Ascii = Ascii, BackgroundColor = BackgroundColor, ForegroundColor = ForegroundColor, Display = Display
             };
             foreach (var tag in Tags)
             {
