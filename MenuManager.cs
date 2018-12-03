@@ -86,6 +86,9 @@ namespace DwarfCastles
                     SetPointAction = HandleStartHarvestAction;
                     break;
                 case "Info":
+                    Info = "Please select where you would like information about";
+                    State = 1;
+                    SetPointAction = HandleFinishInfoAction;
                     break;
             }
         }
@@ -151,6 +154,18 @@ namespace DwarfCastles
             }
 
             ResetMenu();
+        }
+
+        public void HandleFinishInfoAction(Point p)
+        {
+            Logger.Log($"Getting info on Point ({p.X},{p.Y})");
+            
+            var ents = Map.GetEntitiesByLocation(p);
+//            Info = string.Join("; ", ents.Select(e => e.ToString("Ascii", "Name")));
+            Info = string.Join("; ", ents.Select(e => $"{e.Ascii}: {e.Name}"));
+            State = -1;
+            
+            Logger.Log($"Found {Info}\n");
         }
 
         public static Rectangle FixedRectangle(Point p1, Point p2)

@@ -14,17 +14,17 @@ namespace DwarfCastles
     {
         // Represents the max Size of the map
         public Point Size;
-        
+
         public List<Entity> Entities { get; }
         public readonly bool[,] Impassables;
 
         public bool[,] Zoned;
-        
+
         public Map(Point size)
         {
             Size = size;
             Entities = new List<Entity>();
-            Impassables = new bool[Size.X,Size.Y];
+            Impassables = new bool[Size.X, Size.Y];
             Zoned = new bool[Size.X, Size.Y];
         }
 
@@ -89,7 +89,7 @@ namespace DwarfCastles
         {
             return InBounds(pos) && !Impassables[pos.X, pos.Y];
         }
-        
+
         public IEnumerable<Point> AdjacentPoints(Point origin)
         {
             var rawAdjacents = new[]
@@ -103,11 +103,18 @@ namespace DwarfCastles
             return rawAdjacents.Where(Passable).ToList();
         }
 
+        public IEnumerable<Entity> GetEntitiesByLocation(Point p)
+        {
+            return from ents in Entities
+                where ents.Pos == p
+                select ents;
+        }
+
         public IEnumerable<Point> PassableAdjacents(Point origin)
         {
             return AdjacentPoints(origin).Where(InBounds).ToList();
         }
-        
+
         /// <summary>
         /// Get all entites that have a certain tag, ignoring the value of that tag
         /// </summary>

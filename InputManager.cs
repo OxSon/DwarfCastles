@@ -36,9 +36,7 @@ namespace DwarfCastles
                         break;
                     case ConsoleKey.Enter:
                         if (menus.State > 0)
-                        {
                             menus.SetPointAction(new Point(CursorPosition.X, CursorPosition.Y));
-                        }
                         break;
                     default:
                         menus.HandleMenuCommand(keyInfo.KeyChar);
