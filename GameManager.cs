@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Threading;
 using DwarfCastles.Jobs;
 
@@ -13,10 +15,10 @@ namespace DwarfCastles
     /// </summary>
     public class GameManager
     {
-        private Map Map { get; }
+        public Map Map { get; }
         private Gui Gui { get; }
         private bool Running = true;
-        public static ConcurrentQueue<Job> Tasks { get; } = new ConcurrentQueue<Job>();
+        public static ConcurrentQueue<Job> Jobs { get; } = new ConcurrentQueue<Job>();
 
         private MenuManager Menu;
         private InputManager Input;
@@ -27,17 +29,18 @@ namespace DwarfCastles
             Gui = gui;
             Menu = new MenuManager();
             Input = new InputManager();
+            Menu.SetManager(this);
             Run();
         }
 
         public void AddTask(Job task)
         {
-            Tasks.Enqueue(task);
+            Jobs.Enqueue(task);
         }
 
         public Job GetTask()
         {
-            return Tasks.TryDequeue(out var result) ? result : null;
+            return Jobs.TryDequeue(out var result) ? result : null;
         }
 
 
@@ -50,37 +53,38 @@ namespace DwarfCastles
             }
         }
 
+        private void HarvestEverything() //TODO Remove this method it was for testing once it is not longer needed ty
+        {
+            foreach (var e in Map.Entities)
+            {
+                var harvestable = e.GetTag("harvestable");
+                if (harvestable != null)
+                {
+                    Jobs.Enqueue(new Harvest(e));
+                }
+            }
+        }
+
         private void Update()
         {
             HandleInput();
             Logger.Log("Entering Update Method in GameManager.cs");
-            
+            var snapShot = new List<Entity>();
             foreach (var e in Map.Entities)
+            {
+                snapShot.Add(e);
+            }
+            foreach (var e in snapShot)
             {
                 
                 if (e is Actor)
                 {
                     var a = (Actor) e;
-                    if (a.Jobs.Count == 0)
-                    {
-                        var r = new Random();
-
-                        Point nextPos;
-                        do
-                        {
-                            nextPos = new Point(r.Next(0, Map.Size.X), r.Next(0, Map.Size.Y));
-                        } while (Map.Impassables[nextPos.X, nextPos.Y]);
-
-                        Job j = new Build(nextPos, "forge", a);
-
-                        a.Jobs.Enqueue(j);
-                    }
-
                     a.Update();
                 }
             }
 
-            Gui.Draw(Map, Menu);
+            Gui.Draw(Map, Menu, Input);
         }
 
         private void HandleInput()

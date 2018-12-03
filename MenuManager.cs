@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using DwarfCastles.Jobs;
 
 namespace DwarfCastles
 {
@@ -12,9 +13,9 @@ namespace DwarfCastles
         // 1 is a position selection menu
         // 2 is a rectangle selection menu
         public int State;
-        
+
         private string Info;
-        
+
         private IDictionary<char, string> CurrentMenuContext;
         private Action<string> CurrentMenuActionHandler;
 
@@ -23,9 +24,18 @@ namespace DwarfCastles
         public Action<Point> SetPointAction;
         private string StoredValue;
 
+        public Map Map;
+        public GameManager Manager;
+
         public MenuManager()
         {
             ResetMenu();
+        }
+
+        public void SetManager(GameManager manager)
+        {
+            Manager = manager;
+            Map = manager.Map;
         }
 
         public void HandleMenuCommand(char key)
@@ -35,9 +45,10 @@ namespace DwarfCastles
                 ResetMenu();
                 return;
             }
+
             CurrentMenuActionHandler(CurrentMenuContext[key]);
         }
-        
+
         private void ResetMenu()
         {
             IDictionary<char, string> Actions = new Dictionary<char, string>();
@@ -48,7 +59,7 @@ namespace DwarfCastles
             Info = "Please Select an Action to do:";
             CurrentMenuContext = Actions;
             CurrentMenuActionHandler = HandleMainAction;
-            State = 1;
+            State = 0;
             StoredValue = "";
             FirstPoint = Point.Empty;
         }
@@ -68,10 +79,14 @@ namespace DwarfCastles
                     CurrentMenuActionHandler = HandleCraftAction;
                     break;
                 case "Harvest":
+                    Info = "Please select where you would like to Harvest (First point)";
+                    State = 1;
+                    CurrentMenuContext = new Dictionary<char, string>();
+                    SetPointAction = HandleStartHarvestAction;
                     break;
                 case "Info":
                     break;
-            }   
+            }
         }
 
         public void HandleBuildAction(string selectedObject)
@@ -85,7 +100,8 @@ namespace DwarfCastles
 
         public void FinishBuildAction(Point p)
         {
-            
+            Manager.AddTask(new Build(p, StoredValue));
+            ResetMenu();
         }
 
         public void HandleCraftAction(string stationName)
@@ -97,21 +113,55 @@ namespace DwarfCastles
 
         public void HandleStationSelection(string itemName)
         {
-            
+            ResetMenu();
         }
 
-        
+        public void HandleStartHarvestAction(Point p)
+        {
+            Info = "Please select where the other point of the rectangle goes";
+            FirstPoint = p;
+            State = 2;
+            SetPointAction = HandleFinishHarvestAction;
+        }
+
+        public void HandleFinishHarvestAction(Point p)
+        {
+            var r = FixedRectangle(FirstPoint, p);
+            Logger.Log("Harvesting everything between {FirstPoint.X}, {FirstPoint.Y} and {p.X}, {p.Y}");
+            foreach (var e in Map.Entities)
+            {
+                if (Map.Within(e.Pos, r))
+                {
+                    if (e.GetTag("harvestable") != null)
+                    {
+                        Manager.AddTask(new Harvest(e));
+                    }
+                }
+            }
+            ResetMenu();
+        }
+
+        public Rectangle FixedRectangle(Point p1, Point p2)
+        {
+            var minX = Math.Min(p1.X, p2.X);
+            var minY = Math.Min(p1.Y, p2.Y);
+            var Width = Math.Max(p1.X, p2.X) - minX;
+            var Height = Math.Max(p1.Y, p2.Y) - minY;
+            return new Rectangle(minX, minY, Width, Height);
+        }
+
+
         public string GetMenuDisplay()
         {
             string s = $"{Info}\n{string.Join("\n", CurrentMenuContext.Select(x => $"{x.Key} {x.Value}"))}";
             Logger.Log(s);
             return s;
         }
-        
+
         private IDictionary<char, string> GetAllBuildableEntities()
         {
             IDictionary<char, string> buildables = new Dictionary<char, string>();
-            
+
             char c = 'a';
             foreach (var e in ResourceMasterList.GetAllEntities())
             {
@@ -125,10 +175,10 @@ namespace DwarfCastles
             return buildables;
         }
 
-        private IDictionary<char, string>  GetAllCraftingStations()
+        private IDictionary<char, string> GetAllCraftingStations()
         {
-            IDictionary<char, string> stations = new Dictionary<char, string>{{'a', "none"}};
-            
+            IDictionary<char, string> stations = new Dictionary<char, string> {{'a', "none"}};
+
             char c = 'b';
             foreach (var e in ResourceMasterList.GetAllEntities())
             {
@@ -149,7 +199,7 @@ namespace DwarfCastles
         private IDictionary<char, string> GetItemsCraftableAt(string stationName)
         {
             IDictionary<char, string> items = new Dictionary<char, string>();
-            
+
             char c = 'a';
             foreach (var e in ResourceMasterList.GetAllEntities())
             {

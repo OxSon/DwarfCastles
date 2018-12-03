@@ -6,7 +6,8 @@
     "ascii":"T",
     "backgroundcolor":"black",
     "foregroundcolor":"green",
-    "passable":false
+    "passable":false,
+    "carriable":false
   },
   "harvestable":{
     "tool":{

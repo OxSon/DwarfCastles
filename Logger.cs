@@ -5,6 +5,7 @@ namespace DwarfCastles
 {
     public static class Logger
     {
+        public const bool DoLogging = true;
         static Logger()
         {
             try
@@ -22,6 +23,10 @@ namespace DwarfCastles
 
         public static void Log(string s)
         {
+            if (!DoLogging)
+            {
+                return;
+            }
             try
             {
                 using (var LogWriter = new StreamWriter("Log.txt", true))

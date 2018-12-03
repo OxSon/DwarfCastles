@@ -5,7 +5,7 @@
     "display":"Raw Potatoe",
     "ascii":"P",
     "backgroundcolor":"black",
-    "foregroundcolor":"orange",
+    "foregroundcolor":"darkred",
     "passable":true
   },
   "craftable": {

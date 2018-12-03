@@ -9,70 +9,97 @@ namespace DwarfCastles
     {
         public Point Location { get; protected set; }
         protected Queue<Job> SubJobs { get; }
-        public double WorkRequired { get; protected set; }
 
-        public Actor Actor { get; set; }
+        public Actor Owner { get; set; }
 
-        protected Job(Point location, Actor actor)
+        public bool Completed;
+
+        protected Job()
         {
-            Actor = actor;
-            Location = location;
             SubJobs = new Queue<Job>();
         }
 
-        public virtual void Work()
+        protected Job(Point location) : this()
         {
-            foreach (var job in SubJobs)
-            {
-                job.Work();
-            }
+            Location = location;
         }
+
+        /// <summary>
+        /// This method is called when a job is taken from
+        /// the queue to be worked on by an actor
+        /// </summary>
+        /// <param name="a"></param>
+        public virtual void TakeOwnership(Actor a)
+        {
+            Owner = a;
+        }
+        
+        /// <summary>
+        /// This method is used to release a job and
+        /// making it ready for a new actor to take it
+        /// </summary>
+        public virtual void ReleaseOwnership(){}
+
+        /// <summary>
+        /// This method is called whenever the owning actor
+        /// is at the location and ready to do the work
+        /// </summary>
+        public virtual void Work(){}
 
         public virtual void Finish()
         {
-            WorkRequired = 0;
+            Completed = true;
         }
+
+        public bool NextToLocation(Point p)
+        {
+            return Owner.Map.AdjacentPoints(Location).Any(x => x.X == p.X && x.Y == p.Y);
+        }
+        
         public IEnumerable<Point> GenTravelPath()
         {
-//            Logger.Log("Task.GenTravelPath: ");
-            Logger.Log(Actor.Map.Impassables[Location.X, Location.Y] + " IS THE VALUE OF IMPASSABLE FOR THE LOCATION");
-            Logger.Log("Task.GenTravelPath: Entered");
-            if (!Actor.CanMove())
+            Logger.Log($"Job.GenTravelPath: Entered to Location ({Location.X}, {Location.Y})");
+            Logger.Log(Owner.Map.Impassables[Location.X, Location.Y] + " is the value of passable for the location");
+            if (!Owner.CanMove())
             {
-                Logger.Log("Task.GenTravelPath: Returning: Can't Move");
+                Logger.Log("Job.GenTravelPath: Returning: Can't Move");
                 return null;
             }
 
             var q = new Queue<Point>();
-            q.Enqueue(Actor.Pos);
+            q.Enqueue(Owner.Pos);
 
-            var origin = new Dictionary<Point, Point?> {{Actor.Pos, null}};
+            var origin = new Dictionary<Point, Point?> {{Owner.Pos, null}};
 
             Point current;
             
             while (q.Count != 0)
             {
                 current = q.Dequeue();
+                Logger.Log($"({current.X}, {current.Y}) Being searched");
                 
-                foreach (var child in Actor.Map.AdjacentPoints(current))
+                foreach (var child in Owner.Map.AdjacentPoints(current))
                 {
                     if (!origin.ContainsKey(child))
                     {
                         q.Enqueue(child);
                         origin.Add(child, current);
                     }
+                    else
+                    {
+                        Logger.Log($"Refusing to add ({child.X}, {child.Y})");
+                    }
 
 //                    Logger.Log($"Comparing {child} to {Location} -> {child == Location}");
 
-                    if (child == Location)
+                    if (child == Location || Owner.Map.Impassables[Location.X, Location.Y] && NextToLocation(child))
                     {
-                        Logger.Log("Task.GenTravelPath: Returning");
-                        return ToPath(origin, Location);
+                        Logger.Log("Job.GenTravelPath: Returning");
+                        return ToPath(origin, child);
                     }
                 }
             }
 
-//            Logger.Log($"Testing: (2, 3) == (2, 3) ? : {new Point(2, 3) == new Point(2, 3)}");
             Logger.Log($"Pathing failed: last node processed: {current}; goal: {Location}");
 
             return null;
@@ -84,7 +111,7 @@ namespace DwarfCastles
             var current = goal;
             var path = new List<Point> {goal};
 
-            while (current != Actor.Pos)
+            while (current != Owner.Pos)
             {
                 path.Add(current);
                 Point? result;

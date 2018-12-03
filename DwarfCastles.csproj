@@ -57,6 +57,7 @@
     <Compile Include="Jobs\Build.cs" />
     <Compile Include="Jobs\Construct.cs" />
     <Compile Include="Jobs\Harvest.cs" />
+    <Compile Include="Jobs\Haul.cs" />
     <Compile Include="Jobs\Seek.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Map.cs" />
@@ -67,7 +68,6 @@
     <Compile Include="ResourceMasterList.cs" />
     <Compile Include="ResourceParser.cs" />
     <Compile Include="Tag.cs" />
-    <Compile Include="Task.cs" />
     <Compile Include="Value.cs" />
   </ItemGroup>
   <ItemGroup>

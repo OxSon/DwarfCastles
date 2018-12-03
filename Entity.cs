@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace DwarfCastles
 {
@@ -24,6 +25,8 @@ namespace DwarfCastles
         public char Ascii { get; set; } //ascii character used to 'draw' entity
         public ConsoleColor BackgroundColor { get; set; }
         public ConsoleColor ForegroundColor { get; set; }
+
+        public bool Locked;
 
         public Entity()
         {
@@ -83,6 +86,15 @@ namespace DwarfCastles
             }
 
             return e;
+        }
+
+        public bool HasType(string s)
+        {
+            var typeTag = GetTag("types");
+            if (typeTag == null) 
+                return false;
+            return typeTag.ArrayValues.Any(t => t.GetString() == s);
+
         }
 
         public override string ToString()

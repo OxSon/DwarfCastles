@@ -30,7 +30,7 @@ namespace DwarfCastles
             }
         }
 
-        public void Draw(Map map, MenuManager menus)
+        public void Draw(Map map, MenuManager menus, InputManager input)
         {
             char[,] visibleChars = new char[CameraSize.X, CameraSize.Y];
             ConsoleColor[,] visibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
@@ -58,19 +58,23 @@ namespace DwarfCastles
                         Console.BackgroundColor = visibleCharsColorsBackground[i, j];
                         Console.ForegroundColor = visibleCharsColorsForeground[i, j];
                         Console.Write(visibleChars[i, j]);
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.Write(' ');
                     }
                     else
                     {
                         Console.BackgroundColor = ConsoleColor.Black;
                         Console.ForegroundColor = ConsoleColor.White;
                         Console.Write(map.InBounds(new Point(i, j)) ? '.' : ' ');
+                        Console.BackgroundColor = ConsoleColor.Black;
+                        Console.Write(' ');
                     }
                 }
             }
-            DrawMenu(menus);
+            DrawMenu(menus, input);
         }
 
-        public void DrawMenu(MenuManager menu)
+        public void DrawMenu(MenuManager menu, InputManager input)
         {
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
@@ -110,6 +114,34 @@ namespace DwarfCastles
                 Console.Write(s);
                 line++;
             }
+
+            Console.BackgroundColor = ConsoleColor.Magenta;
+
+            if (menu.State == 1)
+            {
+                Console.SetCursorPosition(input.CursorPosition.X * 2, input.CursorPosition.Y);
+                Console.Write(' ');
+            }
+            else if(menu.State == 2)
+            {
+                var r = menu.FixedRectangle(menu.FirstPoint, input.CursorPosition);
+                for (int i = r.X * 2; i < r.Right * 2; i++)
+                {
+                    Console.SetCursorPosition(i, r.Y);
+                    Console.Write(' ');
+                    Console.SetCursorPosition(i, r.Bottom);
+                    Console.Write(' ');
+                }
+
+                for (int i = r.Y; i < r.Bottom; i++)
+                {
+                    Console.SetCursorPosition(r.X * 2, i);
+                    Console.Write(' ');
+                    Console.SetCursorPosition(r.Right * 2, i);
+                    Console.Write(' ');
+                }
+            }
+
         }
 
         private static IEnumerable<string> Split(string str, int chunkSize)

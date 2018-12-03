@@ -17,12 +17,20 @@ namespace DwarfCastles
         
         public List<Entity> Entities { get; }
         public readonly bool[,] Impassables;
+
+        public bool[,] Zoned;
         
         public Map(Point size)
         {
             Size = size;
             Entities = new List<Entity>();
             Impassables = new bool[Size.X,Size.Y];
+            Zoned = new bool[Size.X, Size.Y];
+        }
+
+        public Entity GetEntityById(int id)
+        {
+            return Entities.Find(x => x.Id == id);
         }
 
         public void RemoveEntityById(int id)
@@ -50,21 +58,35 @@ namespace DwarfCastles
             AddEntity(e);
         }
 
+        public void AddEntities(IEnumerable<Entity> entities)
+        {
+            foreach (var e in entities)
+            {
+                AddEntity(e);
+            }
+        }
+
+        public void AddEntities(IEnumerable<Entity> entities, Point pos)
+        {
+            foreach (var e in entities)
+            {
+                AddEntity(e, pos);
+            }
+        }
+
         public bool InBounds(Point pos)
         {
             var result = pos.X > 0 && pos.Y > 0 && pos.X < Size.X && pos.Y < Size.Y;
-//            Logger.Log($"Map.InBounds for {pos} == {result}");
             return result;
+        }
+
+        public bool Within(Point p, Rectangle r)
+        {
+            return p.X >= r.X && p.Y >= r.Y && p.X <= r.X + r.Width && p.Y <= r.Y + r.Height;
         }
 
         private bool Passable(Point pos)
         {
-//            Logger.Log("Found impassables: ");
-            
-//            foreach (var x in Impassables)
-//            {
-//                Logger.Log(x.ToString());
-//            }
             return InBounds(pos) && !Impassables[pos.X, pos.Y];
         }
         
@@ -78,24 +100,12 @@ namespace DwarfCastles
                 new Point(origin.X, origin.Y + 1)
             };
 
-//            foreach (var p in rawAdjacents)
-//            {
-//                Logger.Log($"{p} passable? : {Passable(p)}");
-//            }
-            
-            var result = rawAdjacents.Where(Passable).ToList();
+            return rawAdjacents.Where(Passable).ToList();
+        }
 
-            if (result.Count > 0)
-            {
-//                foreach (var el in result)
-//                {
-////                    Logger.Log($"Found passable point: {el}");
-//                }
-            }
-            else
-                Logger.Log("Found no passable points");
-
-            return result;
+        public IEnumerable<Point> PassableAdjacents(Point origin)
+        {
+            return AdjacentPoints(origin).Where(InBounds).ToList();
         }
         
         /// <summary>

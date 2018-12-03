@@ -20,19 +20,19 @@ namespace DwarfCastles
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.UpArrow:
-                        CursorPosition.Y--;
+                        CursorPosition.Y = Math.Max(0, CursorPosition.Y - 1);
                         break;
                     case ConsoleKey.DownArrow:
-                        CursorPosition.Y++;
+                        CursorPosition.Y = Math.Min(Console.WindowHeight, CursorPosition.Y + 1); // TODO use map Height
                         break;
                     case ConsoleKey.LeftArrow:
                         CursorPosition.X = Math.Max(0, CursorPosition.X - 1);
                         break;
                     case ConsoleKey.RightArrow:
-                        CursorPosition.X = Math.Min(Console.WindowWidth, CursorPosition.X + 1); // TODO use map Width instead?
+                        CursorPosition.X = Math.Min(Console.WindowWidth, CursorPosition.X + 1); // TODO use map Width 
                         break;
                     case ConsoleKey.Enter:
-                        if (menus.State > 1)
+                        if (menus.State > 0)
                         {
                             menus.SetPointAction(new Point(CursorPosition.X, CursorPosition.Y));
                         }

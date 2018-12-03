@@ -11,8 +11,7 @@ namespace DwarfCastles
         private Queue<Point> currentTravelPath;
         private static int counter;
         public Queue<Job> Jobs { get; } = new Queue<Job>();
-        public Map Map { get; } //current map Actor is on
-        public IDictionary<string, double> inventory { get; }
+        public Map Map { get; set; } //current map Actor is on
 
         public Actor()
         {
@@ -21,15 +20,14 @@ namespace DwarfCastles
         public Actor(string name, Point pos, char ascii, Map map,
             ConsoleColor backgroundColor = ConsoleColor.Black,
             ConsoleColor foregroundColor = ConsoleColor.White) :
-            base(name, pos, ascii, backgroundColor, foregroundColor) {
-                Map = map;
-                inventory = new Dictionary<string, double>();
+            base(name, pos, ascii, backgroundColor, foregroundColor)
+        {
+            Map = map;
         }
 
         public void Update()
         {
             Logger.Log("Update Method for Actor");
-
             var updateables = GetTag("updateables");
             if (updateables != null)
             {
@@ -43,24 +41,28 @@ namespace DwarfCastles
             }
 
             Logger.Log("Task Count: " + Jobs.Count);
-
             if (Jobs.Count == 0)
             {
-                if (GameManager.Tasks.TryDequeue(out var newJob))
+                if (GameManager.Jobs.TryDequeue(out var newJob))
+                {
+                    Logger.Log("Actor taking job from GameManager.Jobs");
+                    newJob.TakeOwnership(this);
                     Jobs.Enqueue(newJob);
+                }
+
+                //TODO Generate a wander Task
                 return;
             }
 
-            if (Jobs.First().Location.Equals(Pos))
+            if (Jobs.First().NextToLocation(Pos))
             {
                 Jobs.First().Work();
-                if (Jobs.First().WorkRequired <= 0)
+                if (Jobs.First().Completed)
                 {
-                    Jobs.First().Finish();
+                    Jobs.First().ReleaseOwnership();
                     Jobs.Dequeue();
                     return;
                 }
-
             }
 
             Logger.Log("Next step");
@@ -81,7 +83,8 @@ namespace DwarfCastles
 
             Logger.Log("Update for Actor moving from (" + Pos.X + ", " + Pos.Y + ") to");
             if (currentTravelPath != null)
-                Pos = currentTravelPath.Dequeue();
+                if (currentTravelPath.Count > 0)
+                    Pos = currentTravelPath.Dequeue();
             Logger.Log("(" + Pos.X + ", " + Pos.Y + ")");
         }
 

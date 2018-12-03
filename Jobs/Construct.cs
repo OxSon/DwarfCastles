@@ -2,21 +2,28 @@ using System.Drawing;
 
 namespace DwarfCastles.Jobs
 {
-    public class Construct : Task
+    public class Construct : Job
     {
-        private string structure;
+        private string ConstructName;
 
-        public Construct(Actor actor, Point location, string structure) : base(actor, location,
-            ResourceMasterList.GetDefault(structure).GetTag("buildable.workrequired").Value.GetDouble())
+        private double WorkRequired;
+
+        private Point Location;
+        
+        public Construct(Point location, string constructName)
         {
-            Actor = actor;
-            var resources = ResourceMasterList.GetDefault(structure).GetTag("buildable.resources").SubTags;
+            Location = location;
+            WorkRequired = ResourceMasterList.GetDefault(constructName).GetTag("buildable.workrequired").Value.GetDouble();
         }
 
         public override void Work()
         {
-            Logger.Log("entered construct work");
-            //TODO
+            WorkRequired--;
+        }
+
+        public override void Finish()
+        {
+            Owner.Map.AddEntity(ResourceMasterList.GetDefaultClone(ConstructName), Location);
         }
     }
 }
