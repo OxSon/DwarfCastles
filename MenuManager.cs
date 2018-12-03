@@ -50,7 +50,7 @@ namespace DwarfCastles
                 CurrentMenuActionHandler(value);
         }
 
-        private void ResetMenu()
+        public void ResetMenu()
         {
             IDictionary<char, string> Actions = new Dictionary<char, string>();
             Actions.Add('b', "Build");
@@ -93,6 +93,16 @@ namespace DwarfCastles
         public void HandleBuildAction(string selectedObject)
         {
             Info = $"Please select where you want to build {selectedObject}";
+            var buildable = ResourceMasterList.GetDefault(selectedObject).GetTag("buildable");
+            if (buildable.GetTag("resources") != null)
+            {
+                var resources = buildable.GetTag("resources");
+                foreach (var r in resources.SubTags)
+                {
+                    Info += r.ToString() + '\n';
+                }
+            }
+
             CurrentMenuContext = new Dictionary<char, string>();
             State = 1;
             StoredValue = selectedObject;
@@ -139,6 +149,7 @@ namespace DwarfCastles
                     }
                 }
             }
+
             ResetMenu();
         }
 

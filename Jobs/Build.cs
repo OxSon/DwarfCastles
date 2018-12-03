@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Web.UI;
 
 namespace DwarfCastles.Jobs
 {
@@ -17,6 +18,7 @@ namespace DwarfCastles.Jobs
 
         public Build(Point location, string buildingName)
         {
+            ResourcesCaptured = new List<Entity>();
             BuildingName = buildingName;
             BuildSite = location;
             var buildable = ResourceMasterList.GetDefault(buildingName).GetTag("buildable");
@@ -56,7 +58,13 @@ namespace DwarfCastles.Jobs
         public override void TakeOwnership(Actor a)
         {
             Owner = a;
+            Owner.Map.Impassables[BuildSite.X, BuildSite.Y] = true; // When someone starts working on it, make the location impassable
             GenerateNextStep();
+            if (Location != BuildSite && SubJobs.Count == 0)
+            {
+                Logger.Log("Interrupting Owner in Build Job");
+                Owner.Inturupt();
+            }
         }
 
         public void GenerateNextStep()
@@ -72,25 +80,46 @@ namespace DwarfCastles.Jobs
             }
         }
 
+        public override Point GetLocation()
+        {
+            if (SubJobs.Count == 0)
+            {
+                Logger.Log("Build job returning it's own location");
+                return Location;
+            }
+            Logger.Log("Build job returning Subjob Location");
+            return SubJobs.Peek().Location;
+        }
+
         public override void Work()
         {
-            if (SubJobs.Count != 0)
+            if (SubJobs.Count == 0)
             {
+                Logger.Log("Build doing self work");
                 WorkRequired--;
+                if (WorkRequired <= 0)
+                {
+                    Logger.Log("Build Finishing");
+                    Finish();
+                }
             }
             else
             {
+                Logger.Log("Build doing subwork");
                 SubJobs.Peek().Work();
+                Location = SubJobs.Peek().Location;
                 if (SubJobs.Peek().Completed)
                 {
                     if (SubJobs.Peek() is Haul)
                     {
-                        var j = (Haul)SubJobs.Peek();
+                        var j = (Haul) SubJobs.Peek();
                         foreach (var c in j.Carried)
                         {
                             ResourcesCaptured.Add(c);
                         }
+
                         j.Carried = new List<Entity>();
+                        j.ReleaseOwnership();
                     }
 
                     SubJobs.Dequeue();
@@ -107,7 +136,38 @@ namespace DwarfCastles.Jobs
             var found = 0;
             foreach (var e in Owner.Map.Entities)
             {
-                
+                if (e.Locked)
+                {
+                    continue;
+                }
+
+                var carriable = e.GetTag("attributes.carriable");
+                if (carriable != null)
+                {
+                    if (!carriable.Value.GetBool())
+                    {
+                        continue;
+                    }
+                }
+
+                if (Matches(resourceTag, e))
+                {
+                    entityIds.Add(e.Id);
+                    found++;
+                }
+
+                if (found == amount)
+                {
+                    Logger.Log("Found the correct amount of resources needed to build");
+                    break;
+                }
+            }
+
+            if (found == amount)
+            {
+                SubJobs.Enqueue(new Haul(BuildSite, entityIds, Owner));
+                SubJobs.Peek().TakeOwnership(Owner);
+                Location = SubJobs.Peek().Location;
             }
         }
 
@@ -128,7 +188,7 @@ namespace DwarfCastles.Jobs
 
         public override void Finish()
         {
-            Owner.Map.AddEntity(ResourceMasterList.GetDefaultClone(BuildingName));
+            Owner.Map.AddEntity(ResourceMasterList.GetDefaultClone(BuildingName), BuildSite);
             Completed = true;
         }
     }

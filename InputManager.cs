@@ -19,6 +19,9 @@ namespace DwarfCastles
                 ConsoleKeyInfo keyInfo = Console.ReadKey();
                 switch (keyInfo.Key)
                 {
+                    case ConsoleKey.Backspace:
+                        menus.ResetMenu();
+                        break;
                     case ConsoleKey.UpArrow:
                         CursorPosition.Y = Math.Max(0, CursorPosition.Y - 1);
                         break;

@@ -37,6 +37,7 @@ namespace DwarfCastles.Jobs
             }
             else
             {
+                Logger.Log("Haul job is now headed to final drop location");
                 Location = LocationToHaulTo;
             }
         }
@@ -57,10 +58,12 @@ namespace DwarfCastles.Jobs
         {
             if (EntitiesToHaul.Count == 0)
             {
+                Logger.Log("Haul job finishing!");
                 Finish();
             }
             else
             {
+                Logger.Log($"Haul.Work Picking up entity with id {EntitiesToHaul[0]}");
                 Carried.Add(Owner.Map.GetEntityById(EntitiesToHaul[0]));
                 Owner.Map.RemoveEntityById(EntitiesToHaul[0]);
                 EntitiesToHaul.RemoveAt(0);

@@ -35,6 +35,7 @@ namespace DwarfCastles
             char[,] visibleChars = new char[CameraSize.X, CameraSize.Y];
             ConsoleColor[,] visibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
             ConsoleColor[,] visibleCharsColorsBackground = new ConsoleColor[CameraSize.X, CameraSize.Y];
+            bool[,] charSet = new bool[CameraSize.X, CameraSize.Y];
             Console.CursorVisible = false;
 
             foreach (var e in map.Entities)
@@ -42,9 +43,17 @@ namespace DwarfCastles
                 if (map.InBounds(Point.Add(e.Pos, new Size(CameraOffset))))
                 {
                     var RelativePoint = new Point(e.Pos.X + CameraOffset.X, e.Pos.Y + CameraOffset.Y);
+                    if (charSet[RelativePoint.X, RelativePoint.Y])
+                    {
+                        continue;
+                    }
                     visibleCharsColorsBackground[RelativePoint.X, RelativePoint.Y] = e.BackgroundColor;
                     visibleCharsColorsForeground[RelativePoint.X, RelativePoint.Y] = e.ForegroundColor;
                     visibleChars[RelativePoint.X, RelativePoint.Y] = e.Ascii;
+                    if (e is Actor)
+                    {
+                        charSet[RelativePoint.X, RelativePoint.Y] = true;
+                    }
                 }
             }
 

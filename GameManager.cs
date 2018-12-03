@@ -38,18 +38,13 @@ namespace DwarfCastles
             Jobs.Enqueue(task);
         }
 
-        public Job GetTask()
-        {
-            return Jobs.TryDequeue(out var result) ? result : null;
-        }
-
-
         private void Run()
         {
+            test();
             while (Running)
             {
                 Update();
-                Thread.Sleep(1000);
+                Thread.Sleep(200);
             }
         }
 
@@ -62,6 +57,15 @@ namespace DwarfCastles
                 {
                     Jobs.Enqueue(new Harvest(e));
                 }
+            }
+        }
+
+
+        public void test()
+        {
+            for (int i = 0; i < 100; i++)
+            {
+                Map.AddEntity(ResourceMasterList.GetDefaultClone("wood"), new Point(12, 12));
             }
         }
 
