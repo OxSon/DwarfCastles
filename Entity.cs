@@ -41,26 +41,6 @@ namespace DwarfCastles
             t = new Tag();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="pos"></param>
-        /// <param name="ascii"></param>
-        /// <param name="backgroundColor"></param>
-        /// <param name="foregroundColor"></param>
-        public Entity(string name, Point pos, char ascii, //TODO Remove constructor TESTING
-            ConsoleColor backgroundColor = ConsoleColor.Black, ConsoleColor foregroundColor = ConsoleColor.White)
-        {
-            Name = name;
-            Pos = pos;
-            Ascii = ascii;
-            BackgroundColor = backgroundColor;
-            ForegroundColor = foregroundColor;
-            t = new Tag();
-            Id = id++;
-        }
-
         public void AddTag(Tag tag)
         {
             t.AddTag(tag);

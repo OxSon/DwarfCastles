@@ -88,6 +88,7 @@ namespace DwarfCastles
                 case "Info":
                     Info = "Please select where you would like information about";
                     State = 1;
+                    CurrentMenuContext = new Dictionary<char, string>();
                     SetPointAction = HandleFinishInfoAction;
                     break;
             }
@@ -158,10 +159,7 @@ namespace DwarfCastles
 
         public void HandleFinishInfoAction(Point p)
         {
-            Logger.Log($"Getting info on Point ({p.X},{p.Y})");
-            
             var ents = Map.GetEntitiesByLocation(p);
-//            Info = string.Join("; ", ents.Select(e => e.ToString("Ascii", "Name")));
             Info = string.Join("; ", ents.Select(e => $"{e.Ascii}: {e.Name}"));
             State = -1;
             
