@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
+using System.Text;
 
 namespace DwarfCastles
 {
@@ -100,6 +102,21 @@ namespace DwarfCastles
         public override string ToString()
         {
             return t.ToString();
+        }
+
+        public string ToString(params string[] properties)
+        {
+            List<object> results = properties.Select(prop => GetType().GetProperty(prop)?.GetValue(this, null)).ToList();
+
+            var sb = new StringBuilder();
+            int i = 0;
+            
+            foreach (var prop in results)
+            {
+                sb.Append($"{properties[i]}: {results[i]}; ");
+                i++;
+            }
+            return sb.ToString();
         }
 
         public void Inherit(Entity e)
