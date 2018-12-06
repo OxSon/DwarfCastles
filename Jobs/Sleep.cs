@@ -12,8 +12,9 @@ namespace DwarfCastles.Jobs
         private ConsoleColor[] colors;
         private int colorIndex;
 
-        public Sleep()
+        public Sleep(Actor owner)
         {
+            Owner = owner;
             Location = owner.Pos; //we don't move for this job
             origFg = owner.ForegroundColor;
             colors = new[] {origFg, tempFg};
@@ -34,7 +35,7 @@ namespace DwarfCastles.Jobs
         {
             owner.ForegroundColor = origFg;
             owner.Exhaustion = 0;
-            owner.Jobs.Dequeue();
+            Completed = true;
         }
     }
 }

@@ -12,8 +12,9 @@ namespace DwarfCastles.Jobs
         private ConsoleColor[] colors;
         private int colorIndex;
 
-        public Eat()
+        public Eat(Actor owner)
         {
+            Owner = owner;
             Location = owner.Map.MessHall;
             origFg = owner.ForegroundColor;
             colors = new[] {origFg, tempFg};
@@ -33,7 +34,7 @@ namespace DwarfCastles.Jobs
         protected override void Finish()
         {
             owner.Hunger = 0;
-            owner.Jobs.Dequeue();
+            Completed = true;
         }
     }
 }

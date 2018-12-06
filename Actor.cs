@@ -18,8 +18,8 @@ namespace DwarfCastles
         
        
         private int hunger; //values increase overtime
-        private const int hungerThreshold = 40; //point at which an actor must eat
-        private const int hungerRate = 10; //rate at which hunger increases
+        private const int hungerThreshold = 100; //point at which an actor must eat
+        private const int hungerRate = 5; //rate at which hunger increases
         public int Hunger
         {
             get => hunger;
@@ -28,12 +28,12 @@ namespace DwarfCastles
                 hunger = value;
                 //if we're beyond hunger threshold and do not have an eat job in our queue yet add one
                 if (hunger >= hungerThreshold && !(overrideJobs.Any(j => j is Eat)))
-                    overrideJobs.Enqueue(new Eat());
+                    overrideJobs.Enqueue(new Eat(this));
             }
         }
         
         private int exhaustion; //values increase overtime
-        private const int exhaustionThreshold = 40; //point at which an actor must eat
+        private const int exhaustionThreshold = 200; //point at which an actor must eat
         private const int exhaustionRate = 5; //rate at which exhaustion increases
         public int Exhaustion
         {
@@ -42,7 +42,7 @@ namespace DwarfCastles
             {
                 exhaustion = value;
                 if (exhaustion >= exhaustionThreshold && !(overrideJobs.Any(j => j is Sleep)))
-                    overrideJobs.Enqueue(new Sleep());
+                    overrideJobs.Enqueue(new Sleep(this));
             }
         }
 

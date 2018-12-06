@@ -23,6 +23,11 @@ namespace DwarfCastles
             SubJobs = new Queue<Job>();
         }
 
+        protected Job(Actor owner) : this()
+        {
+            this.owner = owner;
+        }
+
         protected Job(Point location) : this()
         {
             Location = location;
