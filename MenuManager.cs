@@ -24,18 +24,9 @@ namespace DwarfCastles
         public Action<Point> SetPointAction;
         private string StoredValue;
 
-        public Map Map;
-        public GameManager Manager;
-
         public MenuManager()
         {
             ResetMenu();
-        }
-
-        public void SetManager(GameManager manager)
-        {
-            Manager = manager;
-            Map = manager.Map;
         }
 
         public void HandleMenuCommand(char key)
@@ -115,7 +106,7 @@ namespace DwarfCastles
 
         public void FinishBuildAction(Point p)
         {
-            Manager.AddTask(new Build(p, StoredValue));
+            GameManager.ActiveMap.AddTask(new Build(p, StoredValue));
             ResetMenu();
         }
 
@@ -143,13 +134,13 @@ namespace DwarfCastles
         {
             var r = FixedRectangle(FirstPoint, p);
             Logger.Log($"Harvesting everything between {FirstPoint.X}, {FirstPoint.Y} and {p.X}, {p.Y}");
-            foreach (var e in Map.Entities)
+            foreach (var e in GameManager.ActiveMap.Entities)
             {
-                if (Map.Within(e.Pos, r))
+                if (GameManager.ActiveMap.Within(e.Pos, r))
                 {
                     if (e.GetTag("harvestable") != null)
                     {
-                        Manager.AddTask(new Harvest(e));
+                        GameManager.ActiveMap.AddTask(new Harvest(e));
                     }
                 }
             }
@@ -159,7 +150,7 @@ namespace DwarfCastles
 
         public void HandleFinishInfoAction(Point p)
         {
-            var ents = Map.GetEntitiesByLocation(p);
+            var ents = GameManager.ActiveMap.GetEntitiesByLocation(p);
             Info = string.Join("; ", ents.Select(e => $"{e.Ascii}: {e.Name}"));
             State = -1;
             

@@ -5,7 +5,7 @@ namespace DwarfCastles
 {
     public static class Logger
     {
-        public const bool DoLogging = true;
+        public const bool DoLogging = false;
         static Logger()
         {
             try

@@ -13,14 +13,21 @@ namespace DwarfCastles
     public class Gui
     {
         public Point CameraOffset { get; }
-
         public Point CameraSize { get; }
+        
+        private char[,] visibleChars;
+        private ConsoleColor[,] visibleCharsColorsForeground;
+        private ConsoleColor[,] visibleCharsColorsBackground;
+        private bool[,] charSet;
 
         public Gui()
         {
             CameraOffset = new Point();
             CameraSize = new Point(25, 25);
-
+            visibleChars = new char[CameraSize.X, CameraSize.Y];
+            visibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
+            visibleCharsColorsBackground = new ConsoleColor[CameraSize.X, CameraSize.Y];
+            charSet = new bool[CameraSize.X, CameraSize.Y];
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
             for (int i = 0; i < CameraSize.Y; i++)
@@ -30,12 +37,18 @@ namespace DwarfCastles
             }
         }
 
+        private void SetUpNewDraw()
+        {
+            
+        }
+
+        private void PrepareDraw(char c, int x, int y, ConsoleColor foreground, ConsoleColor background)
+        {
+            
+        }
+
         public void Draw(Map map, MenuManager menus, InputManager input)
         {
-            char[,] visibleChars = new char[CameraSize.X, CameraSize.Y];
-            ConsoleColor[,] visibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
-            ConsoleColor[,] visibleCharsColorsBackground = new ConsoleColor[CameraSize.X, CameraSize.Y];
-            bool[,] charSet = new bool[CameraSize.X, CameraSize.Y];
             Console.CursorVisible = false;
 
             foreach (var e in map.Entities)
@@ -107,7 +120,7 @@ namespace DwarfCastles
                     correctedLines.Add(splitString);
                 }
             }
-
+            // Clear the menu as to ensure there is no overlapped Lines
             Console.ForegroundColor = ConsoleColor.Black;
             for (int i = 0; i < CameraSize.Y; i++)
             {
@@ -134,7 +147,7 @@ namespace DwarfCastles
             else if(menu.State == 2)
             {
                 var r = MenuManager.FixedRectangle(menu.FirstPoint, input.CursorPosition);
-                for (int i = r.X * 2; i < r.Right * 2; i++)
+                for (int i = r.X * 2; i <= r.Right * 2; i++)
                 {
                     Console.SetCursorPosition(i, r.Y);
                     Console.Write(' ');
@@ -142,7 +155,7 @@ namespace DwarfCastles
                     Console.Write(' ');
                 }
 
-                for (int i = r.Y; i < r.Bottom; i++)
+                for (int i = r.Y; i <= r.Bottom; i++)
                 {
                     Console.SetCursorPosition(r.X * 2, i);
                     Console.Write(' ');

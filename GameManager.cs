@@ -15,80 +15,79 @@ namespace DwarfCastles
     /// </summary>
     public class GameManager
     {
-        public Map Map { get; }
+        public static Map ActiveMap { get; private set; }
         private Gui Gui { get; }
         private bool Running = true;
-        public static ConcurrentQueue<Job> Jobs { get; } = new ConcurrentQueue<Job>();
+        private bool Paused = false;
 
-        private MenuManager Menu;
-        private InputManager Input;
+        public static MenuManager Menu;
+        public static InputManager Input;
 
-        public GameManager(Map map, Gui gui)
+        public GameManager(Map activeMap, Gui gui)
         {
-            Map = map;
+            ActiveMap = activeMap;
             Gui = gui;
             Menu = new MenuManager();
             Input = new InputManager();
-            Menu.SetManager(this);
+            GenerateStartingResources();
             Run();
         }
 
-        public void AddTask(Job task)
-        {
-            Jobs.Enqueue(task);
-        }
-
+        
+        /// <summary>
+        /// Sets up a thread for game updates,
+        /// and then loops for user input and gui draw
+        /// </summary>
         private void Run()
         {
-            test();
+            Thread childThread = new Thread(GameUpdate);
+            childThread.Start();
+            
             while (Running)
             {
-                Update();
-                Thread.Sleep(200);
+                HandleInput();
+                Gui.Draw(ActiveMap, Menu, Input);
+                Thread.Sleep(50);
             }
         }
 
-        private void HarvestEverything() //TODO Remove this method it was for testing once it is not longer needed ty
-        {
-            foreach (var e in Map.Entities)
-            {
-                var harvestable = e.GetTag("harvestable");
-                if (harvestable != null)
-                {
-                    Jobs.Enqueue(new Harvest(e));
-                }
-            }
-        }
-
-
-        public void test()
+        public void GenerateStartingResources()
         {
             for (int i = 0; i < 100; i++)
             {
-                Map.AddEntity(ResourceMasterList.GetDefaultClone("wood"), new Point(12, 12));
+                ActiveMap.AddEntity(ResourceMasterList.GetDefaultClone("wood"), new Point(12, 12));
             }
         }
 
-        private void Update()
+        private void GameUpdate()
         {
-            HandleInput();
-            Logger.Log("Entering Update Method in GameManager.cs");
-            var snapShot = new List<Entity>();
-            foreach (var e in Map.Entities)
+            while (Running)
             {
-                snapShot.Add(e);
-            }
-            foreach (var e in snapShot)
-            {
-                
-                if (e is Actor)
+                Logger.Log("Entering Update Method in GameManager.cs");
+                if (!Paused)
                 {
-                    var a = (Actor) e;
-                    a.Update();
-                }
-            }
+                    var snapShot = new List<Entity>();
+                    foreach (var e in ActiveMap.Entities)
+                    {
+                        snapShot.Add(e);
+                    }
 
-            Gui.Draw(Map, Menu, Input);
+                    foreach (var e in snapShot)
+                    {
+
+                        if (e is Actor)
+                        {
+                            var a = (Actor) e;
+                            a.Update();
+                        }
+                    }
+                }
+                else
+                {
+                    Logger.Log("Game was paused, exiting");
+                }
+                Thread.Sleep(200);
+            }
         }
 
         private void HandleInput()

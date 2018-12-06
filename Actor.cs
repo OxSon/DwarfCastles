@@ -6,7 +6,6 @@ using DwarfCastles.Jobs;
 
 namespace DwarfCastles
 {
-    /// <inheritdoc/>
     public class Actor : Entity
     {
         private Queue<Point> currentTravelPath;
@@ -32,13 +31,12 @@ namespace DwarfCastles
             Logger.Log("Task Count: " + Jobs.Count);
             if (Jobs.Count == 0)
             {
-                if (GameManager.Jobs.TryDequeue(out var newJob))
+                if (Map.Jobs.TryDequeue(out var newJob))
                 {
                     Logger.Log("Actor taking job from GameManager.Jobs");
                     Jobs.Enqueue(newJob);
                     newJob.TakeOwnership(this);
-                }
-                else
+                } else
                 {
                     Jobs.Enqueue(new Wander(this));
                 }
@@ -74,17 +72,21 @@ namespace DwarfCastles
             else
                 counter++;
 
-            Logger.Log("Update for Actor moving from (" + Pos.X + ", " + Pos.Y + ") to");
             if (currentTravelPath != null)
+            {
                 if (currentTravelPath.Count > 0)
+                {
+                    string logText = $"Update for Actor moving from ({Pos.X}, {Pos.Y}) to";
                     Pos = currentTravelPath.Dequeue();
-            Logger.Log("(" + Pos.X + ", " + Pos.Y + ")");
+                    Logger.Log($"{logText} ({Pos.X}, {Pos.Y})");
+                }
+            }
         }
 
-        public void Inturupt()
+        public void Inturrupt()
         {
             Job returnToQueue = Jobs.Dequeue();
-            GameManager.Jobs.Enqueue(returnToQueue);
+            Map.AddTask(returnToQueue);
         }
         
         public override Entity Clone()

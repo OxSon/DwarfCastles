@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -15,6 +16,7 @@ namespace DwarfCastles
         // Represents the max Size of the map
         public Point Size;
 
+        public ConcurrentQueue<Job> Jobs { get; } = new ConcurrentQueue<Job>();
         public List<Entity> Entities { get; }
         public readonly bool[,] Impassables;
 
@@ -26,6 +28,11 @@ namespace DwarfCastles
             Entities = new List<Entity>();
             Impassables = new bool[Size.X, Size.Y];
             Zoned = new bool[Size.X, Size.Y];
+        }
+        
+        public void AddTask(Job task)
+        {
+            Jobs.Enqueue(task);
         }
 
         public Entity GetEntityById(int id)
