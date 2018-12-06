@@ -35,7 +35,7 @@ namespace DwarfCastles
                 {
                     Logger.Log("Actor taking job from GameManager.Jobs");
                     Jobs.Enqueue(newJob);
-                    newJob.TakeOwnership(this);
+                    newJob.Owner = this;
                 } else
                 {
                     Jobs.Enqueue(new Wander(this));
@@ -50,7 +50,7 @@ namespace DwarfCastles
                 if (Jobs.First().Completed)
                 {
                     Logger.Log("Actor is completing a job");
-                    Jobs.First().ReleaseOwnership();
+                    Jobs.First().Owner = null;
                     Jobs.Dequeue();
                     return;
                 }

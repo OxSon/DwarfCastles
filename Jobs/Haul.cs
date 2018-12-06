@@ -3,13 +3,36 @@ using System.Drawing;
 
 namespace DwarfCastles.Jobs
 {
-    public class Haul : Job
+    public sealed class Haul : Job
     {
+        private readonly IList<int> EntitiesToHaul;
+        private readonly Point LocationToHaulTo;
+        
         public IList<Entity> Carried;
 
-        private readonly IList<int> EntitiesToHaul;
+        public override Actor Owner
+        {
+            get => owner;
+            set
+            {
+                owner = value;
+                
+                if (value != null)
+                {
+                    GenerateNextLocation();
+                }
+                else //setting null Owner value represents release of ownership
+                {
+                    Owner.Map.AddEntities(Carried, Owner.Pos);
+                    foreach (var e in Carried)
+                    {
+                        e.Locked = false;
+                    }
 
-        private readonly Point LocationToHaulTo;
+                    Finish();
+                }
+            }
+        }
 
         public Haul(Point locationToHaulTo, IList<int> entitiesToHaulById, Actor a)
         {
@@ -20,12 +43,6 @@ namespace DwarfCastles.Jobs
             {
                 a.Map.GetEntityById(i).Locked = true;
             }
-        }
-
-        public override void TakeOwnership(Actor a)
-        {
-            Owner = a;
-            GenerateNextLocation();
         }
 
         public void GenerateNextLocation()
@@ -40,18 +57,6 @@ namespace DwarfCastles.Jobs
                 Logger.Log("Haul job is now headed to final drop location");
                 Location = LocationToHaulTo;
             }
-        }
-
-        public override void ReleaseOwnership()
-        {
-            Owner.Map.AddEntities(Carried, Owner.Pos);
-            foreach (var e in Carried)
-            {
-                e.Locked = false;
-            }
-
-            Owner = null;
-            Completed = true;
         }
 
         public override void Work()

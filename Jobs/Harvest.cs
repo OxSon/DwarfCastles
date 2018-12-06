@@ -1,8 +1,7 @@
-using System.Drawing;
 
 namespace DwarfCastles.Jobs
 {
-    public class Harvest : Job
+    public sealed class Harvest : Job
     {
         private Entity Resource;
 
