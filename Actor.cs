@@ -10,8 +10,11 @@ namespace DwarfCastles
     {
         private Queue<Point> currentTravelPath;
         private static int counter;
-        public Queue<Job> Jobs { get; } = new Queue<Job>();
         public Map Map { get; set; } //current map Actor is on
+        
+        private Queue<Job> standardJobs = new Queue<Job>();
+        private Queue<Job> overrideJobs = new Queue<Job>();
+        public Queue<Job> Jobs => overrideJobs.Count > 0 ? overrideJobs : standardJobs;
         
        
         private int hunger; //values increase overtime
@@ -23,10 +26,9 @@ namespace DwarfCastles
             set
             {
                 hunger = value;
-                if (hunger >= hungerThreshold)
-                {
-                    //TODO make them eat
-                }
+                //if we're beyond hunger threshold and do not have an eat job in our queue yet add one
+                if (hunger >= hungerThreshold && !(overrideJobs.Any(j => j is Eat)))
+                    overrideJobs.Enqueue(new Eat());
             }
         }
         
@@ -39,10 +41,8 @@ namespace DwarfCastles
             set
             {
                 exhaustion = value;
-                if (exhaustion >= exhaustionThreshold)
-                {
-                    //TODO make them sleep
-                }
+                if (exhaustion >= exhaustionThreshold && !(overrideJobs.Any(j => j is Sleep)))
+                    overrideJobs.Enqueue(new Sleep());
             }
         }
 

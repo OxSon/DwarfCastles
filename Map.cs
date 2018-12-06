@@ -19,6 +19,9 @@ namespace DwarfCastles
         public ConcurrentQueue<Job> Jobs { get; } = new ConcurrentQueue<Job>();
         public List<Entity> Entities { get; }
         public readonly bool[,] Impassables;
+        
+        //TODO need a globally readable 'mess-hall' location
+        public Point MessHall { get; } = new Point(0, 0);
 
         public bool[,] Zoned;
 
