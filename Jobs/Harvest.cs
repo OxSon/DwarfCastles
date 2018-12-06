@@ -1,5 +1,3 @@
-using System.Drawing;
-
 namespace DwarfCastles.Jobs
 {
     public class Harvest : Job
