@@ -28,38 +28,18 @@ namespace DwarfCastles
             Location = location;
         }
 
-//        /// <summary>
-//        /// This method is called when a job is taken from
-//        /// the queue to be worked on by an actor
-//        /// </summary>
-//        /// <param name="a"></param>
-//        public virtual void TakeOwnership(Actor a)
-//        {
-//            Owner = a;
-//        }
-//
-//        /// <summary>
-//        /// This method is used to release a job and
-//        /// making it ready for a new actor to take it
-//        /// </summary>
-//        public virtual void ReleaseOwnership()
-//        {
-//        }
-
         /// <summary>
         /// This method is called whenever the owning actor
         /// is at the location and ready to do the work
         /// </summary>
-        public virtual void Work()
-        {
-        }
+        public abstract void Work();
 
-        public virtual void Finish()
+        protected virtual void Finish()
         {
             Completed = true;
         }
 
-        public virtual Point GetLocation()
+        protected virtual Point GetLocation()
         {
             return Location;
         }
@@ -122,7 +102,7 @@ namespace DwarfCastles
             return null;
         }
 
-        private IEnumerable<Point> ToPath(Dictionary<Point, Point?> mappings, Point goal)
+        private IEnumerable<Point> ToPath(IReadOnlyDictionary<Point, Point?> mappings, Point goal)
         {
             Logger.Log("Task.ToPath : entering");
             var current = goal;

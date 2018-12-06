@@ -79,7 +79,7 @@ namespace DwarfCastles.Jobs
             }
         }
 
-        public override Point GetLocation()
+        protected override Point GetLocation()
         {
             if (SubJobs.Count == 0)
             {
@@ -185,7 +185,7 @@ namespace DwarfCastles.Jobs
             return false;
         }
 
-        public override void Finish()
+        protected override void Finish()
         {
             Owner.Map.AddEntity(ResourceMasterList.GetDefaultClone(BuildingName), BuildSite);
             Completed = true;

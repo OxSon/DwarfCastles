@@ -24,7 +24,7 @@ namespace DwarfCastles.Jobs
             }
         }
 
-        public override void Finish()
+        protected override void Finish()
         {
             Owner.Map.RemoveEntityById(Resource.Id);
             var yield = Resource.GetTag("harvestable.yield").SubTags;

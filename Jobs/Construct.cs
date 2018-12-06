@@ -18,7 +18,7 @@ namespace DwarfCastles.Jobs
             WorkRequired--;
         }
 
-        public override void Finish()
+        protected override void Finish()
         {
             Owner.Map.AddEntity(ResourceMasterList.GetDefaultClone(ConstructName), Location);
         }

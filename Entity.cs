@@ -14,7 +14,7 @@ namespace DwarfCastles
     /// </summary>
     public class Entity
     {
-        protected readonly Tag t;
+        private readonly Tag t;
         protected IEnumerable<Tag> Tags => t.SubTags;
 
         public string Name { get; set; }

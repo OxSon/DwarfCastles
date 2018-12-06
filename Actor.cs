@@ -12,10 +12,46 @@ namespace DwarfCastles
         private static int counter;
         public Queue<Job> Jobs { get; } = new Queue<Job>();
         public Map Map { get; set; } //current map Actor is on
+        
+       
+        private int hunger; //values increase overtime
+        private const int hungerThreshold = 40; //point at which an actor must eat
+        private const int hungerRate = 10; //rate at which hunger increases
+        public int Hunger
+        {
+            get => hunger;
+            set
+            {
+                hunger = value;
+                if (hunger >= hungerThreshold)
+                {
+                    //TODO make them eat
+                }
+            }
+        }
+        
+        private int exhaustion; //values increase overtime
+        private const int exhaustionThreshold = 40; //point at which an actor must eat
+        private const int exhaustionRate = 5; //rate at which exhaustion increases
+        public int Exhaustion
+        {
+            get => exhaustion;
+            set
+            {
+                exhaustion = value;
+                if (exhaustion >= exhaustionThreshold)
+                {
+                    //TODO make them sleep
+                }
+            }
+        }
 
         public void Update()
         {
             Logger.Log("Update Method for Actor");
+            Exhaustion += exhaustionRate;
+            Hunger += hungerRate;
+            
             var updateables = GetTag("updateables");
             if (updateables != null)
             {
