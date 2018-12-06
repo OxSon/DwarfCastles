@@ -1,20 +1,31 @@
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Web.UI;
 
 namespace DwarfCastles.Jobs
 {
-    public class Build : Job
+    public sealed class Build : Job
     {
         public string BuildingName { get; }
         private IList<Tag> ResourcesRequired;
-
         private IList<Entity> ResourcesCaptured;
-
         private Point BuildSite;
-
         private double WorkRequired;
+
+        public override Actor Owner
+        {
+            get => owner;
+            set
+            {
+                owner = value;
+                Owner.Map.Impassables[BuildSite.X, BuildSite.Y] = true; // When someone starts working on it, make the location impassable
+                GenerateNextStep();
+                if (Location != BuildSite && SubJobs.Count == 0)
+                {
+                    Logger.Log("Interrupting Owner in Build Job");
+                    Owner.Inturrupt();
+                }
+            }
+        }
 
         public Build(Point location, string buildingName)
         {
@@ -53,18 +64,6 @@ namespace DwarfCastles.Jobs
             }
 
             return count;
-        }
-
-        public override void TakeOwnership(Actor a)
-        {
-            Owner = a;
-            Owner.Map.Impassables[BuildSite.X, BuildSite.Y] = true; // When someone starts working on it, make the location impassable
-            GenerateNextStep();
-            if (Location != BuildSite && SubJobs.Count == 0)
-            {
-                Logger.Log("Interrupting Owner in Build Job");
-                Owner.Inturrupt();
-            }
         }
 
         public void GenerateNextStep()
@@ -119,7 +118,7 @@ namespace DwarfCastles.Jobs
                         }
 
                         j.Carried = new List<Entity>();
-                        j.ReleaseOwnership();
+                        j.Owner = null;
                     }
 
                     SubJobs.Dequeue();
@@ -166,7 +165,7 @@ namespace DwarfCastles.Jobs
             if (found == amount)
             {
                 SubJobs.Enqueue(new Haul(BuildSite, entityIds, Owner));
-                SubJobs.Peek().TakeOwnership(Owner);
+                SubJobs.Peek().Owner = Owner;
                 Location = SubJobs.Peek().Location;
             }
         }

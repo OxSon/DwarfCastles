@@ -2,14 +2,11 @@ using System.Drawing;
 
 namespace DwarfCastles.Jobs
 {
-    public class Construct : Job
+    public sealed class Construct : Job
     {
-        private string ConstructName;
+        private string ConstructName;//TODO this is never assigned
+        private double WorkRequired;//TODO this is assigned but never accessed
 
-        private double WorkRequired;
-
-        private Point Location;
-        
         public Construct(Point location, string constructName)
         {
             Location = location;
