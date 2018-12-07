@@ -59,7 +59,6 @@
     <Compile Include="Jobs\Craft.cs" />
     <Compile Include="Jobs\Harvest.cs" />
     <Compile Include="Jobs\Haul.cs" />
-    <Compile Include="Jobs\Seek.cs" />
     <Compile Include="Jobs\Wander.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Map.cs" />
