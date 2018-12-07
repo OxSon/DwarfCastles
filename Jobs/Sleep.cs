@@ -4,8 +4,8 @@ namespace DwarfCastles.Jobs
 {
     public sealed class Sleep : Job
     {
-        private int sleepRequired = 40;
-        private const int sleepRate = 10;
+        private int sleepRequired = 20;
+        private const int sleepRate = 1;
 
         private ConsoleColor origFg;
         private const ConsoleColor tempFg = ConsoleColor.Blue;
@@ -22,6 +22,7 @@ namespace DwarfCastles.Jobs
 
         public override void Work()
         {
+            Logger.Log($"{owner} is sleeping; sleep required = {sleepRequired}");
             //flash between two colors
             colorIndex = (colorIndex + 1) % 2;
             owner.ForegroundColor = colors[colorIndex];
@@ -33,6 +34,7 @@ namespace DwarfCastles.Jobs
 
         protected override void Finish()
         {
+            Logger.Log($"{owner} is finishing sleeping");
             owner.ForegroundColor = origFg;
             owner.Exhaustion = 0;
             Completed = true;

@@ -10,6 +10,7 @@ namespace DwarfCastles
     {
         private Queue<Point> currentTravelPath;
         private static int counter;
+        private static readonly Random rand = new Random();
         public Map Map { get; set; } //current map Actor is on
         
         private Queue<Job> standardJobs = new Queue<Job>();
@@ -19,7 +20,7 @@ namespace DwarfCastles
        
         private int hunger; //values increase overtime
         private const int hungerThreshold = 100; //point at which an actor must eat
-        private const int hungerRate = 5; //rate at which hunger increases
+        private const int hungerRate = 1; //rate at which hunger increases
         public int Hunger
         {
             get => hunger;
@@ -33,8 +34,8 @@ namespace DwarfCastles
         }
         
         private int exhaustion; //values increase overtime
-        private const int exhaustionThreshold = 200; //point at which an actor must eat
-        private const int exhaustionRate = 5; //rate at which exhaustion increases
+        private const int exhaustionThreshold = 300; //point at which an actor must eat
+        private const int exhaustionRate = 1; //rate at which exhaustion increases
         public int Exhaustion
         {
             get => exhaustion;
@@ -44,6 +45,13 @@ namespace DwarfCastles
                 if (exhaustion >= exhaustionThreshold && !(overrideJobs.Any(j => j is Sleep)))
                     overrideJobs.Enqueue(new Sleep(this));
             }
+        }
+
+        public Actor()
+        {
+            var rand = new Random();
+            exhaustion = rand.Next(0, 300);
+            hunger = rand.Next(0, 100);
         }
 
         public void Update()
@@ -119,7 +127,7 @@ namespace DwarfCastles
             }
         }
 
-        public void Inturrupt()
+        public void Interrupt()
         {
             Job returnToQueue = Jobs.Dequeue();
             Map.AddTask(returnToQueue);
@@ -129,7 +137,8 @@ namespace DwarfCastles
         {
             Entity a = new Actor
             {
-                Name = Name, Ascii = Ascii, BackgroundColor = BackgroundColor, ForegroundColor = ForegroundColor, Display = Display
+                Name = Name, Ascii = Ascii, BackgroundColor = BackgroundColor, ForegroundColor = ForegroundColor,
+                Display = Display, exhaustion = rand.Next(0, 300), hunger = rand.Next(0, 100)
             };
             foreach (var tag in Tags)
             {

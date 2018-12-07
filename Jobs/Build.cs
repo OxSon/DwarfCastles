@@ -22,7 +22,7 @@ namespace DwarfCastles.Jobs
                 if (Location != BuildSite && SubJobs.Count == 0)
                 {
                     Logger.Log("Interrupting Owner in Build Job");
-                    Owner.Inturrupt();
+                    Owner.Interrupt();
                 }
             }
         }
