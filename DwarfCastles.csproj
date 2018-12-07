@@ -55,7 +55,6 @@
     <Compile Include="InputManager.cs" />
     <Compile Include="Job.cs" />
     <Compile Include="Jobs\Build.cs" />
-    <Compile Include="Jobs\Construct.cs" />
     <Compile Include="Jobs\Craft.cs" />
     <Compile Include="Jobs\Harvest.cs" />
     <Compile Include="Jobs\Haul.cs" />

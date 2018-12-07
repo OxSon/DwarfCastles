@@ -26,13 +26,13 @@ namespace DwarfCastles
                         CursorPosition.Y = Math.Max(0, CursorPosition.Y - 1);
                         break;
                     case ConsoleKey.DownArrow:
-                        CursorPosition.Y = Math.Min(Console.WindowHeight, CursorPosition.Y + 1); // TODO use map Height
+                        CursorPosition.Y = Math.Min(GameManager.ActiveMap.Size.Y ,CursorPosition.Y + 1); // TODO use map Height
                         break;
                     case ConsoleKey.LeftArrow:
                         CursorPosition.X = Math.Max(0, CursorPosition.X - 1);
                         break;
                     case ConsoleKey.RightArrow:
-                        CursorPosition.X = Math.Min(Console.WindowWidth, CursorPosition.X + 1); // TODO use map Width 
+                        CursorPosition.X = Math.Min(GameManager.ActiveMap.Size.X, CursorPosition.X + 1); // TODO use map Width 
                         break;
                     case ConsoleKey.Enter:
                         if (menus.State > 0)

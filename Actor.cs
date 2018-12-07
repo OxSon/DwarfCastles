@@ -46,9 +46,9 @@ namespace DwarfCastles
             {
                 Logger.Log("Actor is working on Job");
                 Jobs.First().Work();
-                if (Jobs.First().Completed)
+                if (Jobs.Count != 0 && Jobs.First().Completed)
                 {
-                    Logger.Log("Actor is completing a job");
+                    Logger.Log("hActor is completing a job");
                     Jobs.First().ReleaseOwnership();
                     Jobs.Dequeue();
                     return;

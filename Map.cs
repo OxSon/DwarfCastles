@@ -82,7 +82,7 @@ namespace DwarfCastles
 
         public bool InBounds(Point pos)
         {
-            var result = pos.X > 0 && pos.Y > 0 && pos.X < Size.X && pos.Y < Size.Y;
+            var result = pos.X >= 0 && pos.Y >= 0 && pos.X < Size.X && pos.Y < Size.Y;
             return result;
         }
 
