@@ -119,6 +119,7 @@ namespace DwarfCastles
 
         public void HandleStationSelection(string itemName)
         {
+            GameManager.ActiveMap.AddTask(new Craft(itemName));
             ResetMenu();
         }
 
@@ -154,7 +155,7 @@ namespace DwarfCastles
             Info = string.Join("; ", ents.Select(e => $"{e.Ascii}: {e.Name}"));
             State = -1;
             
-            Logger.Log($"Found {Info}\n");
+          //  Logger.Log($"Found {Info}\n");
         }
 
         public static Rectangle FixedRectangle(Point p1, Point p2)

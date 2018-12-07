@@ -24,10 +24,6 @@ namespace DwarfCastles
         {
             CameraOffset = new Point();
             CameraSize = new Point(25, 25);
-            visibleChars = new char[CameraSize.X, CameraSize.Y];
-            visibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
-            visibleCharsColorsBackground = new ConsoleColor[CameraSize.X, CameraSize.Y];
-            charSet = new bool[CameraSize.X, CameraSize.Y];
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.White;
             for (int i = 0; i < CameraSize.Y; i++)
@@ -51,6 +47,10 @@ namespace DwarfCastles
         {
             Console.CursorVisible = false;
 
+            visibleChars = new char[CameraSize.X, CameraSize.Y];
+            visibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
+            visibleCharsColorsBackground = new ConsoleColor[CameraSize.X, CameraSize.Y];
+            charSet = new bool[CameraSize.X, CameraSize.Y];
             foreach (var e in map.Entities)
             {
                 if (map.InBounds(Point.Add(e.Pos, new Size(CameraOffset))))
@@ -113,10 +113,8 @@ namespace DwarfCastles
 
             foreach (var s in menu.GetMenuDisplay().Split('\n'))
             {
-                Logger.Log($"Line for Menu display is {s} which has a length of {s.Length}");
                 foreach (var splitString in Split(s, FreeSpace))
                 {
-                    Logger.Log($"SplitString for menu display is {splitString}");
                     correctedLines.Add(splitString);
                 }
             }

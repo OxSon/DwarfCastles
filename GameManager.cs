@@ -51,7 +51,7 @@ namespace DwarfCastles
         {
             for (int i = 0; i < 100; i++)
             {
-                ActiveMap.AddEntity(ResourceMasterList.GetDefaultClone("wood"), new Point(12, 12));
+             //   ActiveMap.AddEntity(ResourceMasterList.GetDefaultClone("wood"), new Point(12, 12));
             }
         }
 
