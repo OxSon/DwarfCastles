@@ -18,7 +18,6 @@ namespace DwarfCastles
         private char[,] PastVisibleChars;
         private ConsoleColor[,] PastVisibleCharsColorsForeground;
         private ConsoleColor[,] PastVisibleCharsColorsBackground;
-        private bool[,] PastVisibleCharOwnershipSet;
         private char[,] VisibleChars;
         private ConsoleColor[,] VisibleCharsColorsForeground;
         private ConsoleColor[,] VisibleCharsColorsBackground;
@@ -46,7 +45,6 @@ namespace DwarfCastles
         private void SetUpNewDraw()
         {
             PastVisibleChars = VisibleChars;
-            PastVisibleCharOwnershipSet = VisibleCharOwnershipSet;
             PastVisibleCharsColorsBackground = VisibleCharsColorsBackground;
             PastVisibleCharsColorsForeground = VisibleCharsColorsForeground;
             VisibleChars = new char[Console.WindowWidth, Console.WindowHeight];
@@ -70,6 +68,7 @@ namespace DwarfCastles
             {
                 for (int j = 0; j < VisibleChars.GetLength(1); j++)
                 {
+                    // Continue if the character is the same as last draw
                     if (PastVisibleChars[i, j] == VisibleChars[i, j] &&
                         PastVisibleCharsColorsBackground[i, j] == VisibleCharsColorsBackground[i, j] &&
                         PastVisibleCharsColorsForeground[i, j] == VisibleCharsColorsForeground[i, j])
@@ -101,10 +100,26 @@ namespace DwarfCastles
 
         public void DrawFrame()
         {
+            // Outter Frame
             for (int i = 0; i < Console.WindowWidth; i++)
             {
                 PrepareDraw('_', i, 0, ConsoleColor.Black, ConsoleColor.White, true);
-                PrepareDraw('\u203E', i, Console.WindowHeight - 1, ConsoleColor.Black, ConsoleColor.White);
+                PrepareDraw('\u00AF', i, Console.WindowHeight - 1, ConsoleColor.Black, ConsoleColor.White);
+            }
+
+            for (int i = 0; i < Console.WindowHeight; i++)
+            {
+                PrepareDraw('|', 0, i, ConsoleColor.Black, ConsoleColor.White, true);
+                PrepareDraw('|', Console.WindowWidth - 1, i, ConsoleColor.Black, ConsoleColor.White, true);
+            }
+            // Right and Bottom of the Map Window
+            for (int i = 0; i < CameraSize.Y; i++)
+            {
+                PrepareDraw('|', CameraSize.X * 2 + 1, i + 1, ConsoleColor.Black, ConsoleColor.White, true);
+            }
+            for (int i = 0; i < CameraSize.X * 2; i++)
+            {
+                PrepareDraw('\u00AF', i + 1, CameraSize.Y + 1, ConsoleColor.Black, ConsoleColor.White, true);
             }
         }
 
@@ -163,15 +178,6 @@ namespace DwarfCastles
                     VisibleChars[r.Right, i] = ' ';
                 }
             }
-
-            Console.BackgroundColor = ConsoleColor.Black;
-            Console.ForegroundColor = ConsoleColor.White;
-            for (int i = 0; i < CameraSize.Y; i++)
-            {
-                Console.SetCursorPosition(CameraSize.X * 2, i);
-                Console.Write("|");
-            }
-
             int FreeSpace = Console.WindowWidth - CameraSize.X * 2 - 3;
             int Start = CameraSize.X * 2 + 2;
 
@@ -185,16 +191,9 @@ namespace DwarfCastles
                 }
             }
 
-            // Clear the menu as to ensure there is no overlapped Lines
-            Console.ForegroundColor = ConsoleColor.Black;
-            for (int i = 0; i < CameraSize.Y; i++)
-            {
-                Console.SetCursorPosition(Start, i);
-                Console.Write(string.Concat(Enumerable.Repeat(" ", FreeSpace)));
-            }
-
             Console.ForegroundColor = ConsoleColor.White;
-            var line = 0;
+            Console.BackgroundColor = ConsoleColor.Black;
+            var line = 1;
             foreach (var s in correctedLines)
             {
                 Console.SetCursorPosition(Start, line);
