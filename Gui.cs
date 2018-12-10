@@ -84,8 +84,17 @@ namespace DwarfCastles
             }
         }
 
+        private void PrepareDraw(string s, int x, int y, ConsoleColor background, ConsoleColor foreground,
+            bool drawOnTop = false)
+        {
+            for (int i = 0; i < s.Length; i++)
+            {
+                PrepareDraw(s[i], x + i, y, background, foreground, drawOnTop);
+            }
+        }
+
         private void PrepareDraw(char c, int x, int y, ConsoleColor background, ConsoleColor foreground,
-            bool DrawOnTop = false)
+            bool drawOnTop = false)
         {
             if (VisibleCharOwnershipSet[x, y])
             {
@@ -95,7 +104,7 @@ namespace DwarfCastles
             VisibleChars[x, y] = c;
             VisibleCharsColorsBackground[x, y] = background;
             VisibleCharsColorsForeground[x, y] = foreground;
-            VisibleCharOwnershipSet[x, y] = DrawOnTop;
+            VisibleCharOwnershipSet[x, y] = drawOnTop;
         }
 
         private void DrawFrame()
