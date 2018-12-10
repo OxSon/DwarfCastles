@@ -169,10 +169,8 @@ namespace DwarfCastles
             }
         }
 
-        public void Draw()
+        private void DrawMap()
         {
-            SetUpNewDraw();
-            DrawFrame();
             for (int i = 0; i < CameraSize.X; i++)
             {
                 for (int j = 0; j < CameraSize.Y; j++)
@@ -197,6 +195,13 @@ namespace DwarfCastles
                         e is Actor);
                 }
             }
+        }
+
+        public void Draw()
+        {
+            SetUpNewDraw();
+            DrawFrame();
+            DrawMap();
             DrawInput();
             DrawMenu();
             FinishDraw();
