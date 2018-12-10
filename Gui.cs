@@ -151,7 +151,7 @@ namespace DwarfCastles
             }
         }
 
-        public void Draw(Map map, MenuManager menus, InputManager input)
+        public void Draw()
         {
             SetUpNewDraw();
             DrawFrame();
@@ -165,7 +165,7 @@ namespace DwarfCastles
 
             IList<Entity> snapshot = new List<Entity>();
             // Use a snapshot to ensure the List is not changed during draw by another thread
-            foreach (var e in map.Entities)
+            foreach (var e in GameManager.ActiveMap.Entities)
             {
                 snapshot.Add(e);
             }
@@ -187,7 +187,7 @@ namespace DwarfCastles
 
             IList<string> correctedLines = new List<string>();
 
-            foreach (var s in menus.GetMenuDisplay().Split('\n'))
+            foreach (var s in GameManager.Menu.GetMenuDisplay().Split('\n'))
             {
                 foreach (var splitString in Split(s, FreeSpace))
                 {
