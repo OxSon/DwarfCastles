@@ -170,14 +170,9 @@ namespace DwarfCastles
                 }
             }
 
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Black;
-            var line = 1;
-            foreach (var s in correctedLines)
+            for (int i = 0; i < correctedLines.Count; i++)
             {
-                Console.SetCursorPosition(Start, line);
-                Console.Write(s);
-                line++;
+                PrepareDraw(correctedLines[i], Start, i + 1, ConsoleColor.Black, ConsoleColor.White, true);
             }
         }
 
