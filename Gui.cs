@@ -36,7 +36,10 @@ namespace DwarfCastles
                 Console.Write(string.Concat(Enumerable.Repeat(" ", Console.WindowWidth)));
             }
 
-            SetUpNewDraw();
+            VisibleChars = new char[Console.WindowWidth, Console.WindowHeight];
+            VisibleCharsColorsForeground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
+            VisibleCharsColorsBackground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
+            VisibleCharOwnershipSet = new bool[Console.WindowWidth, Console.WindowHeight];
             Console.CursorVisible = false;
         }
 
@@ -50,6 +53,15 @@ namespace DwarfCastles
             VisibleCharsColorsForeground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
             VisibleCharsColorsBackground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
             VisibleCharOwnershipSet = new bool[Console.WindowWidth, Console.WindowHeight];
+            for (int i = 0; i < VisibleCharsColorsBackground.GetUpperBound(0); i++)
+            {
+                for (int j = 0; j < VisibleCharsColorsBackground.GetUpperBound(1); j++)
+                {
+                    VisibleChars[i, j] = ' ';
+                    VisibleCharsColorsBackground[i, j] = ConsoleColor.Black;
+                    VisibleCharsColorsForeground[i, j] = ConsoleColor.Black;
+                }
+            }
         }
 
         private void FinishDraw()
@@ -87,10 +99,19 @@ namespace DwarfCastles
             VisibleCharOwnershipSet[x, y] = DrawOnTop;
         }
 
+        public void DrawFrame()
+        {
+            for (int i = 0; i < Console.WindowWidth; i++)
+            {
+                PrepareDraw('_', i, 0, ConsoleColor.Black, ConsoleColor.White, true);
+                PrepareDraw('\u203E', i, Console.WindowHeight - 1, ConsoleColor.Black, ConsoleColor.White);
+            }
+        }
+
         public void Draw(Map map, MenuManager menus, InputManager input)
         {
             SetUpNewDraw();
-
+            DrawFrame();
             for (int i = 0; i < CameraSize.X; i++)
             {
                 for (int j = 0; j < CameraSize.Y; j++)
