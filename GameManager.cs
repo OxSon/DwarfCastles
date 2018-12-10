@@ -42,7 +42,7 @@ namespace DwarfCastles
             while (Running)
             {
                 HandleInput();
-                Gui.Draw(ActiveMap, Menu, Input);
+                Gui.Draw();
                 Thread.Sleep(50);
             }
         }
