@@ -127,26 +127,21 @@ namespace DwarfCastles
         {
             if (GameManager.Menu.State == 1)
             {
-                VisibleCharsColorsBackground[GameManager.Input.CursorPosition.X, GameManager.Input.CursorPosition.Y] = ConsoleColor.Magenta;
-                VisibleChars[GameManager.Input.CursorPosition.X, GameManager.Input.CursorPosition.Y] = ' ';
+                VisibleCharsColorsBackground[GameManager.Input.CursorPosition.X * 2 + 1, GameManager.Input.CursorPosition.Y + 1] = ConsoleColor.Magenta;
             }
             else if (GameManager.Menu.State == 2)
             {
                 var r = MenuManager.FixedRectangle(GameManager.Menu.FirstPoint, GameManager.Input.CursorPosition);
-                for (int i = r.X; i <= r.Right; i++)
+                for (int i = r.X * 2 + 1; i <= r.Right * 2 + 1; i++)
                 {
-                    VisibleCharsColorsBackground[i, r.Y] = ConsoleColor.Magenta;
-                    VisibleChars[i, r.Y] = ' ';
-                    VisibleCharsColorsBackground[i, r.Bottom] = ConsoleColor.Magenta;
-                    VisibleChars[i, r.Bottom] = ' ';
+                    VisibleCharsColorsBackground[i, r.Y + 1] = ConsoleColor.Magenta;
+                    VisibleCharsColorsBackground[i, r.Bottom + 1] = ConsoleColor.Magenta;
                 }
 
                 for (int i = r.Y; i <= r.Bottom; i++)
                 {
-                    VisibleCharsColorsBackground[r.X, i] = ConsoleColor.Magenta;
-                    VisibleChars[r.X, i] = ' ';
-                    VisibleCharsColorsBackground[r.Right, i] = ConsoleColor.Magenta;
-                    VisibleChars[r.Right, i] = ' ';
+                    VisibleCharsColorsBackground[r.X * 2 + 1, i + 1] = ConsoleColor.Magenta;
+                    VisibleCharsColorsBackground[r.Right * 2 + 1, i + 1] = ConsoleColor.Magenta;
                 }
             }
         }
