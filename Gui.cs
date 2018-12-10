@@ -98,7 +98,7 @@ namespace DwarfCastles
             VisibleCharOwnershipSet[x, y] = DrawOnTop;
         }
 
-        public void DrawFrame()
+        private void DrawFrame()
         {
             // Outter Frame
             for (int i = 0; i < Console.WindowWidth; i++)
@@ -123,7 +123,7 @@ namespace DwarfCastles
             }
         }
 
-        public void DrawInput()
+        private void DrawInput()
         {
             if (GameManager.Menu.State == 1)
             {
@@ -146,7 +146,7 @@ namespace DwarfCastles
             }
         }
 
-        public void DrawMenu()
+        private void DrawMenu()
         {
             int FreeSpace = Console.WindowWidth - CameraSize.X * 2 - 3;
             int Start = CameraSize.X * 2 + 2;
