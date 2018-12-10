@@ -93,6 +93,14 @@ namespace DwarfCastles
         {
             SetUpNewDraw();
 
+            for (int i = 0; i < CameraSize.X; i++)
+            {
+                for (int j = 0; j < CameraSize.Y; j++)
+                {
+                    PrepareDraw('.', i * 2 + 1, j + 1, ConsoleColor.Black, ConsoleColor.White);
+                }
+            }
+
             IList<Entity> snapshot = new List<Entity>();
             // Use a snapshot to ensure the List is not changed during draw by another thread
             foreach (var e in map.Entities)
@@ -137,8 +145,8 @@ namespace DwarfCastles
                 }
             }
 
-            Console.BackgroundColor = ConsoleColor.White;
-            Console.ForegroundColor = ConsoleColor.Black;
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
             for (int i = 0; i < CameraSize.Y; i++)
             {
                 Console.SetCursorPosition(CameraSize.X * 2, i);
@@ -159,14 +167,14 @@ namespace DwarfCastles
             }
 
             // Clear the menu as to ensure there is no overlapped Lines
-            Console.ForegroundColor = ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.Black;
             for (int i = 0; i < CameraSize.Y; i++)
             {
                 Console.SetCursorPosition(Start, i);
                 Console.Write(string.Concat(Enumerable.Repeat(" ", FreeSpace)));
             }
 
-            Console.ForegroundColor = ConsoleColor.Black;
+            Console.ForegroundColor = ConsoleColor.White;
             var line = 0;
             foreach (var s in correctedLines)
             {
