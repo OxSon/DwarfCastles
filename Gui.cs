@@ -49,7 +49,7 @@ namespace DwarfCastles
             {
                 for (int j = 0; j < VisibleChars.GetLength(1); j++)
                 {
-                    Console.SetCursorPosition(i * 2, j - CameraOffset.Y);
+                    Console.SetCursorPosition(i, j);
                     if (VisibleChars[i, j] != '\0')
                     {
                         Console.BackgroundColor = VisibleCharsColorsBackground[i, j];
@@ -99,7 +99,7 @@ namespace DwarfCastles
             {
                 if (Map.Within(e.Pos, new Rectangle(CameraOffset.X, CameraOffset.Y, CameraSize.X, CameraSize.Y)))
                 {
-                    Point DrawPosition = new Point(e.Pos.X - CameraOffset.X + 1, e.Pos.Y - CameraOffset.Y + 1);
+                    Point DrawPosition = new Point((e.Pos.X - CameraOffset.X) * 2 + 1, e.Pos.Y - CameraOffset.Y + 1);
                     PrepareDraw(e.Ascii, DrawPosition.X, DrawPosition.Y, e.BackgroundColor, e.ForegroundColor, e is Actor);
                 }
             }
