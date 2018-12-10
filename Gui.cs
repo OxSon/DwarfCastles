@@ -27,14 +27,7 @@ namespace DwarfCastles
         {
             CameraOffset = new Point();
             CameraSize = new Point(25, 25);
-            Console.BackgroundColor = ConsoleColor.White;
-            Console.ForegroundColor = ConsoleColor.Black;
-            for (int i = 0; i < CameraSize.Y; i++)
-            {
-                Console.SetCursorPosition(0, i);
-                Console.Write(string.Concat(Enumerable.Repeat(" ", Console.WindowWidth)));
-            }
-
+            
             VisibleChars = new char[Console.WindowWidth, Console.WindowHeight];
             VisibleCharsColorsForeground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
             VisibleCharsColorsBackground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
