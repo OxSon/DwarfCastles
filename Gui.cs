@@ -31,11 +31,15 @@ namespace DwarfCastles
                 Console.SetCursorPosition(0,i);
                 Console.Write(string.Concat(Enumerable.Repeat(" ", Console.WindowWidth)));
             }
+            Console.CursorVisible = false;
         }
 
         private void SetUpNewDraw()
         {
-            
+            visibleChars = new char[CameraSize.X, CameraSize.Y];
+            visibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
+            visibleCharsColorsBackground = new ConsoleColor[CameraSize.X, CameraSize.Y];
+            charSet = new bool[CameraSize.X, CameraSize.Y];
         }
 
         private void PrepareDraw(char c, int x, int y, ConsoleColor foreground, ConsoleColor background)
@@ -45,13 +49,14 @@ namespace DwarfCastles
 
         public void Draw(Map map, MenuManager menus, InputManager input)
         {
-            Console.CursorVisible = false;
+            SetUpNewDraw();
 
-            visibleChars = new char[CameraSize.X, CameraSize.Y];
-            visibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
-            visibleCharsColorsBackground = new ConsoleColor[CameraSize.X, CameraSize.Y];
-            charSet = new bool[CameraSize.X, CameraSize.Y];
+            IList<Entity> snapshot = new List<Entity>();
             foreach (var e in map.Entities)
+            {
+                snapshot.Add(e);
+            }
+            foreach (var e in snapshot)
             {
                 if (map.InBounds(Point.Add(e.Pos, new Size(CameraOffset))))
                 {
