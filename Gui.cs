@@ -113,7 +113,7 @@ namespace DwarfCastles
             for (int i = 0; i < Console.WindowWidth; i++)
             {
                 PrepareDraw('_', i, 0, ConsoleColor.Black, ConsoleColor.White, true);
-                PrepareDraw('\u00AF', i, Console.WindowHeight - 1, ConsoleColor.Black, ConsoleColor.White);
+                PrepareDraw('\u00AF', i, Console.WindowHeight - 1, ConsoleColor.Black, ConsoleColor.White, true);
             }
 
             for (int i = 0; i < Console.WindowHeight; i++)
