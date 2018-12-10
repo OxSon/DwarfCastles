@@ -146,6 +146,32 @@ namespace DwarfCastles
             }
         }
 
+        public void DrawMenu()
+        {
+            int FreeSpace = Console.WindowWidth - CameraSize.X * 2 - 3;
+            int Start = CameraSize.X * 2 + 2;
+
+            IList<string> correctedLines = new List<string>();
+
+            foreach (var s in GameManager.Menu.GetMenuDisplay().Split('\n'))
+            {
+                foreach (var splitString in Split(s, FreeSpace))
+                {
+                    correctedLines.Add(splitString);
+                }
+            }
+
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.BackgroundColor = ConsoleColor.Black;
+            var line = 1;
+            foreach (var s in correctedLines)
+            {
+                Console.SetCursorPosition(Start, line);
+                Console.Write(s);
+                line++;
+            }
+        }
+
         public void Draw()
         {
             SetUpNewDraw();
@@ -175,32 +201,9 @@ namespace DwarfCastles
                 }
             }
             DrawInput();
+            DrawMenu();
             FinishDraw();
 
-            int FreeSpace = Console.WindowWidth - CameraSize.X * 2 - 3;
-            int Start = CameraSize.X * 2 + 2;
-
-            IList<string> correctedLines = new List<string>();
-
-            foreach (var s in GameManager.Menu.GetMenuDisplay().Split('\n'))
-            {
-                foreach (var splitString in Split(s, FreeSpace))
-                {
-                    correctedLines.Add(splitString);
-                }
-            }
-
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.BackgroundColor = ConsoleColor.Black;
-            var line = 1;
-            foreach (var s in correctedLines)
-            {
-                Console.SetCursorPosition(Start, line);
-                Console.Write(s);
-                line++;
-            }
-
-            Console.BackgroundColor = ConsoleColor.Magenta;
         }
 
         private static IEnumerable<string> Split(string str, int chunkSize)
