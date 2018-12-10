@@ -69,8 +69,6 @@ namespace DwarfCastles
                     Console.BackgroundColor = VisibleCharsColorsBackground[i, j];
                     Console.ForegroundColor = VisibleCharsColorsForeground[i, j];
                     Console.Write(VisibleChars[i, j]);
-                    Console.BackgroundColor = ConsoleColor.White;
-                    Console.Write(' ');
                 }
             }
         }
