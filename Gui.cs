@@ -37,10 +37,10 @@ namespace DwarfCastles
 
         private void SetUpNewDraw()
         {
-            VisibleChars = new char[CameraSize.X, CameraSize.Y];
-            VisibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
-            VisibleCharsColorsBackground = new ConsoleColor[CameraSize.X, CameraSize.Y];
-            VisibleCharOwnershipSet = new bool[CameraSize.X, CameraSize.Y];
+            VisibleChars = new char[Console.WindowWidth, Console.WindowHeight];
+            VisibleCharsColorsForeground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
+            VisibleCharsColorsBackground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
+            VisibleCharOwnershipSet = new bool[Console.WindowWidth, Console.WindowHeight];
         }
 
         private void FinishDraw()
@@ -97,49 +97,10 @@ namespace DwarfCastles
 
             foreach (var e in snapshot)
             {
-                if (map.InBounds(Point.Add(e.Pos, new Size(CameraOffset))))
+                if (Map.Within(e.Pos, new Rectangle(CameraOffset.X, CameraOffset.Y, CameraSize.X, CameraSize.Y)))
                 {
-                    var RelativePoint = new Point(e.Pos.X + CameraOffset.X, e.Pos.Y + CameraOffset.Y);
-                    if (VisibleCharOwnershipSet[RelativePoint.X, RelativePoint.Y])
-                    {
-                        continue;
-                    }
-
-                    ConsoleColor c1;
-                    ConsoleColor c2;
-                    if (e.BackgroundColor == ConsoleColor.Black)
-                    {
-                        c1 = ConsoleColor.White;
-                    }
-                    else if (e.BackgroundColor == ConsoleColor.White)
-                    {
-                        c1 = ConsoleColor.Black;
-                    }
-                    else
-                    {
-                        c1 = e.BackgroundColor;
-                    }
-
-                    if (e.ForegroundColor == ConsoleColor.Black)
-                    {
-                        c2 = ConsoleColor.White;
-                    }
-                    else if (e.ForegroundColor == ConsoleColor.White)
-                    {
-                        c2 = ConsoleColor.Black;
-                    }
-                    else
-                    {
-                        c2 = e.ForegroundColor;
-                    }
-
-                    VisibleCharsColorsBackground[RelativePoint.X, RelativePoint.Y] = c1;
-                    VisibleCharsColorsForeground[RelativePoint.X, RelativePoint.Y] = c2;
-                    VisibleChars[RelativePoint.X, RelativePoint.Y] = e.Ascii;
-                    if (e is Actor)
-                    {
-                        VisibleCharOwnershipSet[RelativePoint.X, RelativePoint.Y] = true;
-                    }
+                    Point DrawPosition = new Point(e.Pos.X - CameraOffset.X + 1, e.Pos.Y - CameraOffset.Y + 1);
+                    PrepareDraw(e.Ascii, DrawPosition.X, DrawPosition.Y, e.BackgroundColor, e.ForegroundColor, e is Actor);
                 }
             }
 
