@@ -42,6 +42,33 @@ namespace DwarfCastles
             charSet = new bool[CameraSize.X, CameraSize.Y];
         }
 
+        private void FinishDraw()
+        {
+            for (int i = 0; i < visibleChars.GetLength(0); i++)
+            {
+                for (int j = 0; j < visibleChars.GetLength(1); j++)
+                {
+                    Console.SetCursorPosition(i * 2, j - CameraOffset.Y);
+                    if (visibleChars[i, j] != '\0')
+                    {
+                        Console.BackgroundColor = visibleCharsColorsBackground[i, j];
+                        Console.ForegroundColor = visibleCharsColorsForeground[i, j];
+                        Console.Write(visibleChars[i, j]);
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.Write(' ');
+                    }
+                    else
+                    {
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.ForegroundColor = ConsoleColor.Black;
+                        Console.Write(GameManager.ActiveMap.InBounds(new Point(i, j)) ? '.' : ' ');
+                        Console.BackgroundColor = ConsoleColor.White;
+                        Console.Write(' ');
+                    }
+                }
+            }
+        }
+
         private void PrepareDraw(char c, int x, int y, ConsoleColor foreground, ConsoleColor background)
         {
             
@@ -99,6 +126,8 @@ namespace DwarfCastles
                     }
                 }
             }
+            
+            FinishDraw();
 
             if (menus.State == 1)
             {
@@ -122,29 +151,6 @@ namespace DwarfCastles
                     visibleChars[r.X, i] = ' ';
                     visibleCharsColorsBackground[r.Right, i] = ConsoleColor.Magenta;
                     visibleChars[r.Right, i] = ' ';
-                }
-            }
-            for (int i = 0; i < visibleChars.GetLength(0); i++)
-            {
-                for (int j = 0; j < visibleChars.GetLength(1); j++)
-                {
-                    Console.SetCursorPosition(i * 2, j - CameraOffset.Y);
-                    if (visibleChars[i, j] != '\0')
-                    {
-                        Console.BackgroundColor = visibleCharsColorsBackground[i, j];
-                        Console.ForegroundColor = visibleCharsColorsForeground[i, j];
-                        Console.Write(visibleChars[i, j]);
-                        Console.BackgroundColor = ConsoleColor.White;
-                        Console.Write(' ');
-                    }
-                    else
-                    {
-                        Console.BackgroundColor = ConsoleColor.White;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                        Console.Write(map.InBounds(new Point(i, j)) ? '.' : ' ');
-                        Console.BackgroundColor = ConsoleColor.White;
-                        Console.Write(' ');
-                    }
                 }
             }
             
