@@ -86,7 +86,7 @@ namespace DwarfCastles
             return result;
         }
 
-        public bool Within(Point p, Rectangle r)
+        public static bool Within(Point p, Rectangle r)
         {
             return p.X >= r.X && p.Y >= r.Y && p.X <= r.X + r.Width && p.Y <= r.Y + r.Height;
         }

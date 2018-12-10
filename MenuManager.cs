@@ -137,7 +137,7 @@ namespace DwarfCastles
             Logger.Log($"Harvesting everything between {FirstPoint.X}, {FirstPoint.Y} and {p.X}, {p.Y}");
             foreach (var e in GameManager.ActiveMap.Entities)
             {
-                if (GameManager.ActiveMap.Within(e.Pos, r))
+                if (Map.Within(e.Pos, r))
                 {
                     if (e.GetTag("harvestable") != null)
                     {
