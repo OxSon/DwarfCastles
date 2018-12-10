@@ -123,6 +123,34 @@ namespace DwarfCastles
             }
         }
 
+        public void DrawInput()
+        {
+            if (GameManager.Menu.State == 1)
+            {
+                VisibleCharsColorsBackground[GameManager.Input.CursorPosition.X, GameManager.Input.CursorPosition.Y] = ConsoleColor.Magenta;
+                VisibleChars[GameManager.Input.CursorPosition.X, GameManager.Input.CursorPosition.Y] = ' ';
+            }
+            else if (GameManager.Menu.State == 2)
+            {
+                var r = MenuManager.FixedRectangle(GameManager.Menu.FirstPoint, GameManager.Input.CursorPosition);
+                for (int i = r.X; i <= r.Right; i++)
+                {
+                    VisibleCharsColorsBackground[i, r.Y] = ConsoleColor.Magenta;
+                    VisibleChars[i, r.Y] = ' ';
+                    VisibleCharsColorsBackground[i, r.Bottom] = ConsoleColor.Magenta;
+                    VisibleChars[i, r.Bottom] = ' ';
+                }
+
+                for (int i = r.Y; i <= r.Bottom; i++)
+                {
+                    VisibleCharsColorsBackground[r.X, i] = ConsoleColor.Magenta;
+                    VisibleChars[r.X, i] = ' ';
+                    VisibleCharsColorsBackground[r.Right, i] = ConsoleColor.Magenta;
+                    VisibleChars[r.Right, i] = ' ';
+                }
+            }
+        }
+
         public void Draw(Map map, MenuManager menus, InputManager input)
         {
             SetUpNewDraw();
@@ -151,33 +179,9 @@ namespace DwarfCastles
                         e is Actor);
                 }
             }
-
+            DrawInput();
             FinishDraw();
 
-            if (menus.State == 1)
-            {
-                VisibleCharsColorsBackground[input.CursorPosition.X, input.CursorPosition.Y] = ConsoleColor.Magenta;
-                VisibleChars[input.CursorPosition.X, input.CursorPosition.Y] = ' ';
-            }
-            else if (menus.State == 2)
-            {
-                var r = MenuManager.FixedRectangle(menus.FirstPoint, input.CursorPosition);
-                for (int i = r.X; i <= r.Right; i++)
-                {
-                    VisibleCharsColorsBackground[i, r.Y] = ConsoleColor.Magenta;
-                    VisibleChars[i, r.Y] = ' ';
-                    VisibleCharsColorsBackground[i, r.Bottom] = ConsoleColor.Magenta;
-                    VisibleChars[i, r.Bottom] = ' ';
-                }
-
-                for (int i = r.Y; i <= r.Bottom; i++)
-                {
-                    VisibleCharsColorsBackground[r.X, i] = ConsoleColor.Magenta;
-                    VisibleChars[r.X, i] = ' ';
-                    VisibleCharsColorsBackground[r.Right, i] = ConsoleColor.Magenta;
-                    VisibleChars[r.Right, i] = ' ';
-                }
-            }
             int FreeSpace = Console.WindowWidth - CameraSize.X * 2 - 3;
             int Start = CameraSize.X * 2 + 2;
 
