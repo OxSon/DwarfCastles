@@ -14,11 +14,11 @@ namespace DwarfCastles
     {
         public Point CameraOffset { get; }
         public Point CameraSize { get; }
-        
-        private char[,] visibleChars;
-        private ConsoleColor[,] visibleCharsColorsForeground;
-        private ConsoleColor[,] visibleCharsColorsBackground;
-        private bool[,] charSet;
+
+        private char[,] VisibleChars;
+        private ConsoleColor[,] VisibleCharsColorsForeground;
+        private ConsoleColor[,] VisibleCharsColorsBackground;
+        private bool[,] VisibleCharOwnershipSet;
 
         public Gui()
         {
@@ -28,32 +28,33 @@ namespace DwarfCastles
             Console.ForegroundColor = ConsoleColor.Black;
             for (int i = 0; i < CameraSize.Y; i++)
             {
-                Console.SetCursorPosition(0,i);
+                Console.SetCursorPosition(0, i);
                 Console.Write(string.Concat(Enumerable.Repeat(" ", Console.WindowWidth)));
             }
+
             Console.CursorVisible = false;
         }
 
         private void SetUpNewDraw()
         {
-            visibleChars = new char[CameraSize.X, CameraSize.Y];
-            visibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
-            visibleCharsColorsBackground = new ConsoleColor[CameraSize.X, CameraSize.Y];
-            charSet = new bool[CameraSize.X, CameraSize.Y];
+            VisibleChars = new char[CameraSize.X, CameraSize.Y];
+            VisibleCharsColorsForeground = new ConsoleColor[CameraSize.X, CameraSize.Y];
+            VisibleCharsColorsBackground = new ConsoleColor[CameraSize.X, CameraSize.Y];
+            VisibleCharOwnershipSet = new bool[CameraSize.X, CameraSize.Y];
         }
 
         private void FinishDraw()
         {
-            for (int i = 0; i < visibleChars.GetLength(0); i++)
+            for (int i = 0; i < VisibleChars.GetLength(0); i++)
             {
-                for (int j = 0; j < visibleChars.GetLength(1); j++)
+                for (int j = 0; j < VisibleChars.GetLength(1); j++)
                 {
                     Console.SetCursorPosition(i * 2, j - CameraOffset.Y);
-                    if (visibleChars[i, j] != '\0')
+                    if (VisibleChars[i, j] != '\0')
                     {
-                        Console.BackgroundColor = visibleCharsColorsBackground[i, j];
-                        Console.ForegroundColor = visibleCharsColorsForeground[i, j];
-                        Console.Write(visibleChars[i, j]);
+                        Console.BackgroundColor = VisibleCharsColorsBackground[i, j];
+                        Console.ForegroundColor = VisibleCharsColorsForeground[i, j];
+                        Console.Write(VisibleChars[i, j]);
                         Console.BackgroundColor = ConsoleColor.White;
                         Console.Write(' ');
                     }
@@ -69,9 +70,18 @@ namespace DwarfCastles
             }
         }
 
-        private void PrepareDraw(char c, int x, int y, ConsoleColor foreground, ConsoleColor background)
+        private void PrepareDraw(char c, int x, int y, ConsoleColor background, ConsoleColor foreground,
+            bool DrawOnTop = false)
         {
-            
+            if (VisibleCharOwnershipSet[x, y])
+            {
+                return;
+            }
+
+            VisibleChars[x, y] = c;
+            VisibleCharsColorsBackground[x, y] = background;
+            VisibleCharsColorsForeground[x, y] = foreground;
+            VisibleCharOwnershipSet[x, y] = DrawOnTop;
         }
 
         public void Draw(Map map, MenuManager menus, InputManager input)
@@ -79,16 +89,18 @@ namespace DwarfCastles
             SetUpNewDraw();
 
             IList<Entity> snapshot = new List<Entity>();
+            // Use a snapshot to ensure the List is not changed during draw by another thread
             foreach (var e in map.Entities)
             {
                 snapshot.Add(e);
             }
+
             foreach (var e in snapshot)
             {
                 if (map.InBounds(Point.Add(e.Pos, new Size(CameraOffset))))
                 {
                     var RelativePoint = new Point(e.Pos.X + CameraOffset.X, e.Pos.Y + CameraOffset.Y);
-                    if (charSet[RelativePoint.X, RelativePoint.Y])
+                    if (VisibleCharOwnershipSet[RelativePoint.X, RelativePoint.Y])
                     {
                         continue;
                     }
@@ -98,7 +110,8 @@ namespace DwarfCastles
                     if (e.BackgroundColor == ConsoleColor.Black)
                     {
                         c1 = ConsoleColor.White;
-                    }else if (e.BackgroundColor == ConsoleColor.White)
+                    }
+                    else if (e.BackgroundColor == ConsoleColor.White)
                     {
                         c1 = ConsoleColor.Black;
                     }
@@ -106,10 +119,12 @@ namespace DwarfCastles
                     {
                         c1 = e.BackgroundColor;
                     }
+
                     if (e.ForegroundColor == ConsoleColor.Black)
                     {
                         c2 = ConsoleColor.White;
-                    }else if (e.ForegroundColor == ConsoleColor.White)
+                    }
+                    else if (e.ForegroundColor == ConsoleColor.White)
                     {
                         c2 = ConsoleColor.Black;
                     }
@@ -117,43 +132,44 @@ namespace DwarfCastles
                     {
                         c2 = e.ForegroundColor;
                     }
-                    visibleCharsColorsBackground[RelativePoint.X, RelativePoint.Y] = c1;
-                    visibleCharsColorsForeground[RelativePoint.X, RelativePoint.Y] = c2;
-                    visibleChars[RelativePoint.X, RelativePoint.Y] = e.Ascii;
+
+                    VisibleCharsColorsBackground[RelativePoint.X, RelativePoint.Y] = c1;
+                    VisibleCharsColorsForeground[RelativePoint.X, RelativePoint.Y] = c2;
+                    VisibleChars[RelativePoint.X, RelativePoint.Y] = e.Ascii;
                     if (e is Actor)
                     {
-                        charSet[RelativePoint.X, RelativePoint.Y] = true;
+                        VisibleCharOwnershipSet[RelativePoint.X, RelativePoint.Y] = true;
                     }
                 }
             }
-            
+
             FinishDraw();
 
             if (menus.State == 1)
             {
-                visibleCharsColorsBackground[input.CursorPosition.X, input.CursorPosition.Y] = ConsoleColor.Magenta;
-                visibleChars[input.CursorPosition.X, input.CursorPosition.Y] = ' ';
+                VisibleCharsColorsBackground[input.CursorPosition.X, input.CursorPosition.Y] = ConsoleColor.Magenta;
+                VisibleChars[input.CursorPosition.X, input.CursorPosition.Y] = ' ';
             }
-            else if(menus.State == 2)
+            else if (menus.State == 2)
             {
                 var r = MenuManager.FixedRectangle(menus.FirstPoint, input.CursorPosition);
                 for (int i = r.X; i <= r.Right; i++)
                 {
-                    visibleCharsColorsBackground[i, r.Y] = ConsoleColor.Magenta;
-                    visibleChars[i, r.Y] = ' ';
-                    visibleCharsColorsBackground[i, r.Bottom] = ConsoleColor.Magenta;
-                    visibleChars[i, r.Bottom] = ' ';
+                    VisibleCharsColorsBackground[i, r.Y] = ConsoleColor.Magenta;
+                    VisibleChars[i, r.Y] = ' ';
+                    VisibleCharsColorsBackground[i, r.Bottom] = ConsoleColor.Magenta;
+                    VisibleChars[i, r.Bottom] = ' ';
                 }
 
                 for (int i = r.Y; i <= r.Bottom; i++)
                 {
-                    visibleCharsColorsBackground[r.X, i] = ConsoleColor.Magenta;
-                    visibleChars[r.X, i] = ' ';
-                    visibleCharsColorsBackground[r.Right, i] = ConsoleColor.Magenta;
-                    visibleChars[r.Right, i] = ' ';
+                    VisibleCharsColorsBackground[r.X, i] = ConsoleColor.Magenta;
+                    VisibleChars[r.X, i] = ' ';
+                    VisibleCharsColorsBackground[r.Right, i] = ConsoleColor.Magenta;
+                    VisibleChars[r.Right, i] = ' ';
                 }
             }
-            
+
             Console.BackgroundColor = ConsoleColor.White;
             Console.ForegroundColor = ConsoleColor.Black;
             for (int i = 0; i < CameraSize.Y; i++)
@@ -164,7 +180,7 @@ namespace DwarfCastles
 
             int FreeSpace = Console.WindowWidth - CameraSize.X * 2 - 3;
             int Start = CameraSize.X * 2 + 2;
- 
+
             IList<string> correctedLines = new List<string>();
 
             foreach (var s in menus.GetMenuDisplay().Split('\n'))
@@ -174,6 +190,7 @@ namespace DwarfCastles
                     correctedLines.Add(splitString);
                 }
             }
+
             // Clear the menu as to ensure there is no overlapped Lines
             Console.ForegroundColor = ConsoleColor.White;
             for (int i = 0; i < CameraSize.Y; i++)
@@ -192,7 +209,6 @@ namespace DwarfCastles
             }
 
             Console.BackgroundColor = ConsoleColor.Magenta;
-
         }
 
         private static IEnumerable<string> Split(string str, int chunkSize)
