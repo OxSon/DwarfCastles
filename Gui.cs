@@ -15,6 +15,10 @@ namespace DwarfCastles
         public Point CameraOffset { get; }
         public Point CameraSize { get; }
 
+        private char[,] PastVisibleChars;
+        private ConsoleColor[,] PastVisibleCharsColorsForeground;
+        private ConsoleColor[,] PastVisibleCharsColorsBackground;
+        private bool[,] PastVisibleCharOwnershipSet;
         private char[,] VisibleChars;
         private ConsoleColor[,] VisibleCharsColorsForeground;
         private ConsoleColor[,] VisibleCharsColorsBackground;
@@ -32,11 +36,16 @@ namespace DwarfCastles
                 Console.Write(string.Concat(Enumerable.Repeat(" ", Console.WindowWidth)));
             }
 
+            SetUpNewDraw();
             Console.CursorVisible = false;
         }
 
         private void SetUpNewDraw()
         {
+            PastVisibleChars = VisibleChars;
+            PastVisibleCharOwnershipSet = VisibleCharOwnershipSet;
+            PastVisibleCharsColorsBackground = VisibleCharsColorsBackground;
+            PastVisibleCharsColorsForeground = VisibleCharsColorsForeground;
             VisibleChars = new char[Console.WindowWidth, Console.WindowHeight];
             VisibleCharsColorsForeground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
             VisibleCharsColorsBackground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
@@ -49,23 +58,19 @@ namespace DwarfCastles
             {
                 for (int j = 0; j < VisibleChars.GetLength(1); j++)
                 {
+                    if (PastVisibleChars[i, j] == VisibleChars[i, j] &&
+                        PastVisibleCharsColorsBackground[i, j] == VisibleCharsColorsBackground[i, j] &&
+                        PastVisibleCharsColorsForeground[i, j] == VisibleCharsColorsForeground[i, j])
+                    {
+                        continue;
+                    }
+
                     Console.SetCursorPosition(i, j);
-                    if (VisibleChars[i, j] != '\0')
-                    {
-                        Console.BackgroundColor = VisibleCharsColorsBackground[i, j];
-                        Console.ForegroundColor = VisibleCharsColorsForeground[i, j];
-                        Console.Write(VisibleChars[i, j]);
-                        Console.BackgroundColor = ConsoleColor.White;
-                        Console.Write(' ');
-                    }
-                    else
-                    {
-                        Console.BackgroundColor = ConsoleColor.White;
-                        Console.ForegroundColor = ConsoleColor.Black;
-                        Console.Write(GameManager.ActiveMap.InBounds(new Point(i, j)) ? '.' : ' ');
-                        Console.BackgroundColor = ConsoleColor.White;
-                        Console.Write(' ');
-                    }
+                    Console.BackgroundColor = VisibleCharsColorsBackground[i, j];
+                    Console.ForegroundColor = VisibleCharsColorsForeground[i, j];
+                    Console.Write(VisibleChars[i, j]);
+                    Console.BackgroundColor = ConsoleColor.White;
+                    Console.Write(' ');
                 }
             }
         }
@@ -100,7 +105,8 @@ namespace DwarfCastles
                 if (Map.Within(e.Pos, new Rectangle(CameraOffset.X, CameraOffset.Y, CameraSize.X, CameraSize.Y)))
                 {
                     Point DrawPosition = new Point((e.Pos.X - CameraOffset.X) * 2 + 1, e.Pos.Y - CameraOffset.Y + 1);
-                    PrepareDraw(e.Ascii, DrawPosition.X, DrawPosition.Y, e.BackgroundColor, e.ForegroundColor, e is Actor);
+                    PrepareDraw(e.Ascii, DrawPosition.X, DrawPosition.Y, e.BackgroundColor, e.ForegroundColor,
+                        e is Actor);
                 }
             }
 
