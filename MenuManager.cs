@@ -37,7 +37,7 @@ namespace DwarfCastles
                 return;
             }
 
-            if (CurrentMenuContext.TryGetValue(key, out string value))
+            if (CurrentMenuContext.TryGetValue(key, out var value))
                 CurrentMenuActionHandler(value);
         }
 
@@ -62,12 +62,12 @@ namespace DwarfCastles
             {
                 case "Build":
                     Info = "Please select what building you would like to place:";
-                    CurrentMenuContext = GetAllBuildableEntities();
+                    CurrentMenuContext = DefaultQueries.GetAllBuildableEntities();
                     CurrentMenuActionHandler = HandleBuildAction;
                     break;
                 case "Craft":
                     Info = "Please select what crafting station you want to craft at:";
-                    CurrentMenuContext = GetAllCraftingStations();
+                    CurrentMenuContext = DefaultQueries.GetAllCraftingStations();
                     CurrentMenuActionHandler = HandleCraftAction;
                     break;
                 case "Harvest":
@@ -113,7 +113,7 @@ namespace DwarfCastles
         public void HandleCraftAction(string stationName)
         {
             Info = "Please select what item you want to craft at the station:";
-            CurrentMenuContext = GetItemsCraftableAt(stationName);
+            CurrentMenuContext = DefaultQueries.GetItemsCraftableAt(stationName);
             CurrentMenuActionHandler = HandleStationSelection;
         }
 
@@ -154,8 +154,6 @@ namespace DwarfCastles
             var ents = GameManager.ActiveMap.GetEntitiesByLocation(p);
             Info = string.Join("; ", ents.Select(e => $"{e.Ascii}: {e.Name}"));
             State = -1;
-            
-          //  Logger.Log($"Found {Info}\n");
         }
 
         public static Rectangle FixedRectangle(Point p1, Point p2)
@@ -175,62 +173,5 @@ namespace DwarfCastles
             return s;
         }
 
-        private IDictionary<char, string> GetAllBuildableEntities()
-        {
-            IDictionary<char, string> buildables = new Dictionary<char, string>();
-
-            char c = 'a';
-            foreach (var e in ResourceMasterList.GetAllEntities())
-            {
-                var buildable = e.GetTag("buildable");
-                if (buildable != null)
-                {
-                    buildables.Add(c++, e.Name);
-                }
-            }
-
-            return buildables;
-        }
-
-        private IDictionary<char, string> GetAllCraftingStations()
-        {
-            IDictionary<char, string> stations = new Dictionary<char, string> {{'a', "none"}};
-
-            char c = 'b';
-            foreach (var e in ResourceMasterList.GetAllEntities())
-            {
-                Logger.Log($"Attempting to check if {e.Name} is craftable with a station");
-                var station = e.GetTag("craftable.station");
-                if (station != null)
-                {
-                    Logger.Log($"{e.Name} found to be craftable at {station.Value.GetString()}");
-                    if (stations.Values.Contains(station.Value.GetString()))
-                        continue;
-                    stations.Add(c++, station.Value.GetString());
-                }
-            }
-
-            return stations;
-        }
-
-        private IDictionary<char, string> GetItemsCraftableAt(string stationName)
-        {
-            IDictionary<char, string> items = new Dictionary<char, string>();
-
-            char c = 'a';
-            foreach (var e in ResourceMasterList.GetAllEntities())
-            {
-                var station = e.GetTag("craftable.station");
-                if (station != null)
-                {
-                    if (station.Value.GetString() == stationName)
-                    {
-                        items.Add(c++, e.Name);
-                    }
-                }
-            }
-
-            return items;
-        }
     }
 }
