@@ -102,7 +102,7 @@ namespace DwarfCastles
 
         private void DrawFrame()
         {
-            // Outter Frame
+            // Outer Frame
             for (int i = 0; i < Console.WindowWidth; i++)
             {
                 PrepareDraw('_', i, 0, ConsoleColor.Black, ConsoleColor.White, true);
