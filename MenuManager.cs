@@ -56,7 +56,7 @@ namespace DwarfCastles
             FirstPoint = Point.Empty;
         }
 
-        public void HandleMainAction(string Selection)
+        private void HandleMainAction(string Selection)
         {
             switch (Selection)
             {
@@ -82,10 +82,13 @@ namespace DwarfCastles
                     CurrentMenuContext = new Dictionary<char, string>();
                     SetPointAction = HandleFinishInfoAction;
                     break;
+                default:
+                    State = -1;
+                    break;
             }
         }
 
-        public void HandleBuildAction(string selectedObject)
+        private void HandleBuildAction(string selectedObject)
         {
             Info = $"Please select where you want to build {selectedObject}";
             var buildable = ResourceMasterList.GetDefault(selectedObject).GetTag("buildable");
@@ -104,26 +107,26 @@ namespace DwarfCastles
             SetPointAction = FinishBuildAction;
         }
 
-        public void FinishBuildAction(Point p)
+        private void FinishBuildAction(Point p)
         {
             GameManager.ActiveMap.AddTask(new Build(p, StoredValue));
             ResetMenu();
         }
 
-        public void HandleCraftAction(string stationName)
+        private void HandleCraftAction(string stationName)
         {
             Info = "Please select what item you want to craft at the station:";
             CurrentMenuContext = DefaultQueries.GetItemsCraftableAt(stationName);
             CurrentMenuActionHandler = HandleStationSelection;
         }
 
-        public void HandleStationSelection(string itemName)
+        private void HandleStationSelection(string itemName)
         {
             GameManager.ActiveMap.AddTask(new Craft(itemName));
             ResetMenu();
         }
 
-        public void HandleStartHarvestAction(Point p)
+        private void HandleStartHarvestAction(Point p)
         {
             Info = "Please select where the other point of the rectangle goes";
             FirstPoint = p;
@@ -131,7 +134,7 @@ namespace DwarfCastles
             SetPointAction = HandleFinishHarvestAction;
         }
 
-        public void HandleFinishHarvestAction(Point p)
+        private void HandleFinishHarvestAction(Point p)
         {
             var r = FixedRectangle(FirstPoint, p);
             Logger.Log($"Harvesting everything between {FirstPoint.X}, {FirstPoint.Y} and {p.X}, {p.Y}");
@@ -149,7 +152,7 @@ namespace DwarfCastles
             ResetMenu();
         }
 
-        public void HandleFinishInfoAction(Point p)
+        private void HandleFinishInfoAction(Point p)
         {
             var ents = GameManager.ActiveMap.GetEntitiesByLocation(p);
             Info = string.Join("; ", ents.Select(e => $"{e.Ascii}: {e.Name}"));
@@ -165,13 +168,9 @@ namespace DwarfCastles
             return new Rectangle(minX, minY, Width, Height);
         }
 
-
         public string GetMenuDisplay()
         {
-            string s = $"{Info}\n{string.Join("\n", CurrentMenuContext.Select(x => $"{x.Key} {x.Value}"))}";
-            Logger.Log(s);
-            return s;
+            return $"{Info}\n{string.Join("\n", CurrentMenuContext.Select(x => $"{x.Key} {x.Value}"))}";
         }
-
     }
 }

@@ -19,14 +19,11 @@ namespace DwarfCastles
         public List<Entity> Entities { get; }
         public readonly bool[,] Impassables;
 
-        public bool[,] Zoned;
-
         public Map(Point size)
         {
             Size = size;
             Entities = new List<Entity>();
             Impassables = new bool[Size.X, Size.Y];
-            Zoned = new bool[Size.X, Size.Y];
         }
         
         public void AddTask(Job task)

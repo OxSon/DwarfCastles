@@ -18,36 +18,21 @@ namespace DwarfCastles
         // Setters
         public void SetValue(object o)
         {
-            if (o is double d)
+            switch (o)
             {
-                doubleValue = d;
-            }
-            else if (o is bool b)
-            {
-                boolValue = b;
-            }
-            else if (o is string s)
-            {
-                stringValue = s;
+                case double d:
+                    doubleValue = d;
+                    break;
+                case bool b:
+                    boolValue = b;
+                    break;
+                case string s:
+                    stringValue = s;
+                    break;
             }
         }
 
         // Getters
-        public void GetValue(out double outputDouble)
-        {
-            outputDouble = doubleValue;
-        }
-
-        public void GetValue(out string outputString)
-        {
-            outputString = stringValue;
-        }
-
-        public void GetValue(out bool outputBool)
-        {
-            outputBool = boolValue;
-        }
-
         public bool GetBool()
         {
             return boolValue;

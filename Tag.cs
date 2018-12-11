@@ -32,21 +32,6 @@ namespace DwarfCastles
             Name = name.ToLower();
         }
 
-        public Tag(string name, bool value) : this(name)
-        {
-            Value.SetValue(value);
-        }
-
-        public Tag(string name, double value) : this(name)
-        {
-            Value.SetValue(value);
-        }
-
-        public Tag(string name, string value) : this(name)
-        {
-            Value.SetValue(value);
-        }
-
         #endregion Constructors
 
         #region Convienience Methods

@@ -20,7 +20,7 @@ namespace DwarfCastles
         public static void LoadAllResources()
         {
             Logger.Log("Entering LoadAllResources");
-            string filepath = "Resources/";
+            const string filepath = "Resources/";
             
             Logger.Log(Directory.GetCurrentDirectory());
             
@@ -34,13 +34,13 @@ namespace DwarfCastles
                 LoadResourceFromDirectory("../../" + filepath);
             }
 
-            bool ChangeFound = true;
+            var ChangeFound = true;
             while (ChangeFound)
             {
-                IList<string> previousUnfoundFiles = MissingDependancesStaging;
+                var previousUnfoundFiles = MissingDependancesStaging;
                 MissingDependancesStaging = new List<string>();
                 ChangeFound = false;
-                int count = DefaultEntities.Count;
+                var count = DefaultEntities.Count;
                 foreach (var s in previousUnfoundFiles)
                 {
                     LoadResourceFromFile(s);
@@ -57,21 +57,21 @@ namespace DwarfCastles
             Logger.Log("\t" + string.Join("\n\t", MissingDependancesStaging));
         }
 
-        public static void LoadResourceFromDirectory(string path)
+        private static void LoadResourceFromDirectory(string path)
         {
-            string[] subFolders = Directory.GetDirectories(path);
+            var subFolders = Directory.GetDirectories(path);
             foreach (var subPath in subFolders)
             {
                 LoadResourceFromDirectory(subPath);
             }
 
-            foreach (string s in Directory.GetFiles(path))
+            foreach (var s in Directory.GetFiles(path))
             {
                 LoadResourceFromFile(s);
             }
         }
 
-        public static void LoadResourceFromFile(string path)
+        private static void LoadResourceFromFile(string path)
         {
             try
             {

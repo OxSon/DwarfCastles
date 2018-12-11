@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace DwarfCastles.Jobs
 {
@@ -70,17 +71,7 @@ namespace DwarfCastles.Jobs
 
         public int CountMatchingResources(Tag t)
         {
-            int count = 0;
-
-            foreach (var r in ResourcesCaptured)
-            {
-                if (Matches(t, r))
-                {
-                    count++;
-                }
-            }
-
-            return count;
+            return ResourcesCaptured.Count(r => Matches(t, r));
         }
 
         public override void TakeOwnership(Actor a)
@@ -106,7 +97,7 @@ namespace DwarfCastles.Jobs
                 CollectResource(next);
                 if (SubJobs.Count == 0)
                 {
-                    Owner.Inturrupt();
+                    Owner.Inturupt();
                 }
             }
         }

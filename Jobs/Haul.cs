@@ -28,7 +28,7 @@ namespace DwarfCastles.Jobs
             GenerateNextLocation();
         }
 
-        public void GenerateNextLocation()
+        private void GenerateNextLocation()
         {
             if (EntitiesToHaul.Count != 0)
             {

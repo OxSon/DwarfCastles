@@ -82,9 +82,9 @@ namespace DwarfCastles
             }
         }
 
-        public void Inturrupt()
+        public void Inturupt()
         {
-            Job returnToQueue = Jobs.Dequeue();
+            var returnToQueue = Jobs.Dequeue();
             Map.AddTask(returnToQueue);
         }
         

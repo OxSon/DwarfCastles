@@ -1,16 +1,17 @@
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 
 namespace DwarfCastles.Jobs
 {
     public class Build : Job
     {
-        public string BuildingName { get; }
+        private string BuildingName { get; }
         private IList<Tag> ResourcesRequired;
 
         private IList<Entity> ResourcesCaptured;
 
-        private Point BuildSite;
+        private readonly Point BuildSite;
 
         private double WorkRequired;
 
@@ -40,17 +41,7 @@ namespace DwarfCastles.Jobs
 
         public int CountMatchingResources(Tag t)
         {
-            int count = 0;
-
-            foreach (var r in ResourcesCaptured)
-            {
-                if (Matches(t, r))
-                {
-                    count++;
-                }
-            }
-
-            return count;
+            return ResourcesCaptured.Count(r => Matches(t, r));
         }
 
         public override void TakeOwnership(Actor a)
@@ -61,7 +52,7 @@ namespace DwarfCastles.Jobs
             if (Location != BuildSite && SubJobs.Count == 0)
             {
                 Logger.Log("Interrupting Owner in Build Job");
-                Owner.Inturrupt();
+                Owner.Inturupt();
             }
         }
 

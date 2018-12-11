@@ -6,13 +6,13 @@ namespace DwarfCastles
 {
     public static class Logger
     {
-        public const bool DoLogging = true;
+        private const int Verboseity = 1;
 
-        private static ConcurrentQueue<string> NextOutput;
+        private static ConcurrentQueue<string> OutputQueue;
         
         static Logger()
         {
-            NextOutput = new ConcurrentQueue<string>();
+            OutputQueue = new ConcurrentQueue<string>();
             try
             {
                 using (var LogWriter = new StreamWriter("Log.txt"))
@@ -26,21 +26,21 @@ namespace DwarfCastles
             }
         }
 
-        public static void Log(string s)
+        public static void Log(string s, int VerboseLevel = 1)
         {
-            if (!DoLogging)
+            if (VerboseLevel < Verboseity)
             {
                 return;
             }
-            NextOutput.Enqueue(s);
+            OutputQueue.Enqueue(s);
             
             try
             {
                 using (var LogWriter = new StreamWriter("Log.txt", true))
                 {
-                    while (!NextOutput.IsEmpty)
+                    while (!OutputQueue.IsEmpty)
                     {
-                        LogWriter.WriteLine(NextOutput.TryDequeue(out var temp) ? temp: "");
+                        LogWriter.WriteLine(OutputQueue.TryDequeue(out var temp) ? temp: "");
                     }
                 }
             }

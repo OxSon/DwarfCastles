@@ -13,8 +13,8 @@ namespace DwarfCastles
     {
         public static Map ActiveMap { get; private set; }
         private Gui Gui { get; }
-        private bool Running = true;
-        private bool Paused = false;
+        public bool Running = true;
+        public bool Paused = false;
 
         public static MenuManager Menu;
         public static InputManager Input;
@@ -36,7 +36,7 @@ namespace DwarfCastles
         /// </summary>
         private void Run()
         {
-            Thread childThread = new Thread(GameUpdate);
+            var childThread = new Thread(GameUpdate);
             childThread.Start();
             
             while (Running)
@@ -47,9 +47,9 @@ namespace DwarfCastles
             }
         }
 
-        public void GenerateStartingResources()
+        private void GenerateStartingResources()
         {
-            for (int i = 0; i < 100; i++)
+            for (var i = 0; i < 100; i++)
             {
                 ActiveMap.AddEntity(ResourceMasterList.GetDefaultClone("wood"), new Point(12, 12));
             }

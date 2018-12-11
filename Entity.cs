@@ -72,10 +72,7 @@ namespace DwarfCastles
         public bool HasType(string s)
         {
             var typeTag = GetTag("types");
-            if (typeTag == null) 
-                return false;
-            return typeTag.ArrayValues.Any(t => t.GetString() == s);
-
+            return typeTag != null && typeTag.ArrayValues.Any(t => t.GetString() == s);
         }
 
         public override string ToString()
@@ -85,10 +82,10 @@ namespace DwarfCastles
 
         public string ToString(params string[] properties)
         {
-            List<object> results = properties.Select(prop => GetType().GetProperty(prop)?.GetValue(this, null)).ToList();
+            var results = properties.Select(prop => GetType().GetProperty(prop)?.GetValue(this, null)).ToList();
 
             var sb = new StringBuilder();
-            int i = 0;
+            var i = 0;
             
             foreach (var prop in results)
             {

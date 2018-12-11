@@ -131,8 +131,7 @@ namespace DwarfCastles
             while (current != Owner.Pos)
             {
                 path.Add(current);
-                Point? result;
-                if (mappings.TryGetValue(current, out result) && result != null)
+                if (mappings.TryGetValue(current, out var result) && result != null)
                     current = (Point) result;
                 else
                     Logger.Log("null value in ToPath");

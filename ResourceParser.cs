@@ -5,7 +5,7 @@ using Json;
 
 namespace DwarfCastles
 {
-    public class ResourceParser
+    public static class ResourceParser
     {
         public static Entity ParseFile(string fileName)
         {
@@ -20,8 +20,8 @@ namespace DwarfCastles
                 {
                     using (var reader = new StreamReader(fileName))
                     {
-                        string fileContent = reader.ReadToEnd();
-                        IDictionary<string, object> json = JsonParser.FromJson(fileContent);
+                        var fileContent = reader.ReadToEnd();
+                        var json = JsonParser.FromJson(fileContent);
                         return BuildFromJSON(json);
                     }
                 }
@@ -34,11 +34,11 @@ namespace DwarfCastles
             return null;
         }
 
-        public static Entity BuildFromJSON(IDictionary<string, object> json)
+        private static Entity BuildFromJSON(IDictionary<string, object> json)
         {
             Entity e;
 
-            IDictionary<string, object> Attributes = (IDictionary<string, object>) json["attributes"];
+            var Attributes = (IDictionary<string, object>) json["attributes"];
             Logger.Log($"Found base Object in file with subobjects of {string.Join(",", json.Keys)}");
             Logger.Log("Found Attributes in file: " + string.Join(", ", Attributes.Keys));
 
@@ -61,7 +61,7 @@ namespace DwarfCastles
             if (json.TryGetValue("inheritance", out var inheritanceOut))
             {
                 Logger.Log(inheritanceOut.GetType().ToString());
-                List<object> InheritanceArray = (List<object>) inheritanceOut;
+                var InheritanceArray = (List<object>) inheritanceOut;
                 
                 Logger.Log($"Entering inheritance with {InheritanceArray.Count} elements");
                 foreach (var o in InheritanceArray)
@@ -111,7 +111,7 @@ namespace DwarfCastles
             return e;
         }
 
-        public static Tag ParseTag(KeyValuePair<string, object> json)
+        private static Tag ParseTag(KeyValuePair<string, object> json)
         {
             var tag = new Tag(json.Key);
             Logger.Log($"Tag {json.Key} has a value type of {json.Value.GetType()} and value of {json.Value}");
@@ -126,7 +126,7 @@ namespace DwarfCastles
             }
             else if (type == typeof(List<object>))
             {
-                List<object> array = (List<object>) json.Value;
+                var array = (List<object>) json.Value;
 
                 foreach (var o in array)
                 {

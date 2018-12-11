@@ -7,7 +7,7 @@ namespace DwarfCastles.Jobs
     {
         public Wander(Actor a)
         {
-            Random r = new Random();
+            var r = new Random();
             do
             {
                 Location = new Point(a.Pos.X + r.Next(7) - 3, a.Pos.Y + r.Next(7) - 3);
