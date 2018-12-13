@@ -23,11 +23,6 @@ namespace DwarfCastles
             SubJobs = new Queue<Job>();
         }
 
-        protected Job(Point location) : this()
-        {
-            Location = location;
-        }
-
         /// <summary>
         /// This method is called when a job is taken from
         /// the queue to be worked on by an actor
