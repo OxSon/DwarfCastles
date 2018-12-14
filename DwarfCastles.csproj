@@ -66,6 +66,7 @@
     <Compile Include="Map.cs" />
     <Compile Include="MapGenerator.cs" />
     <Compile Include="MenuManager.cs" />
+    <Compile Include="PathingFunctions.cs" />
     <Compile Include="PriorityQueue.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ResourceMasterList.cs" />
