@@ -25,6 +25,17 @@ namespace DwarfCastles
             Entities = new List<Entity>();
             Impassables = new bool[Size.X, Size.Y];
         }
+
+        // TODO This feature is not yet implemented
+        public double CostOfTile(Point location)
+        {
+            if (InBounds(location))
+            {
+                return 1;
+            }
+
+            return 0;
+        }
         
         public void AddTask(Job task)
         {

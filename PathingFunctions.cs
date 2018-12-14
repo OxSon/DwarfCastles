@@ -47,7 +47,7 @@ namespace DwarfCastles
 
                 foreach (var neighbor in map.PassableAdjacents(current.p))
                 {
-                    var totalCost = costSoFar[current.p] + map.costOfTile(neighbor);
+                    var totalCost = costSoFar[current.p] + map.CostOfTile(neighbor);
                     if (!costSoFar.ContainsKey(neighbor) || totalCost < costSoFar[neighbor])
                     {
                         costSoFar[neighbor] = totalCost;
