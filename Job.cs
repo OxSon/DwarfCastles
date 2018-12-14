@@ -14,7 +14,7 @@ namespace DwarfCastles
 
         protected Queue<Job> SubJobs { get; }
 
-        public Actor Owner { get; set; }
+        protected Actor Owner { get; set; }
 
         public bool Completed;
 
