@@ -9,7 +9,7 @@ namespace DwarfCastles
     /// naive implementation, should be based on a priority heap or min heap
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class PriorityQueue<T> : IEnumerable<T> where T : IComparable
+    public class PriorityQueue<T> : IEnumerable<T> where T : IComparable<T>
     {
         private readonly List<T> items;
         private bool sorted;
