@@ -134,13 +134,13 @@ namespace DwarfCastles
             else if (GameManager.Menu.State == 2)
             {
                 var r = MenuManager.FixedRectangle(GameManager.Menu.FirstPoint, GameManager.Input.CursorPosition);
-                for (int i = r.X * 2 + 1; i <= r.Right * 2 + 1; i++)
+                for (var i = r.X * 2 + 1; i <= r.Right * 2 + 1; i++)
                 {
                     VisibleCharsColorsBackground[i, r.Y + 1] = ConsoleColor.Magenta;
                     VisibleCharsColorsBackground[i, r.Bottom + 1] = ConsoleColor.Magenta;
                 }
 
-                for (int i = r.Y; i <= r.Bottom; i++)
+                for (var i = r.Y; i <= r.Bottom; i++)
                 {
                     VisibleCharsColorsBackground[r.X * 2 + 1, i + 1] = ConsoleColor.Magenta;
                     VisibleCharsColorsBackground[r.Right * 2 + 1, i + 1] = ConsoleColor.Magenta;
@@ -182,7 +182,7 @@ namespace DwarfCastles
             {
                 if (Map.Within(e.Pos, new Rectangle(CameraOffset.X, CameraOffset.Y, CameraSize.X, CameraSize.Y)))
                 {
-                    Point drawPosition = new Point((e.Pos.X - CameraOffset.X) * 2 + 1, e.Pos.Y - CameraOffset.Y + 1);
+                    var drawPosition = new Point((e.Pos.X - CameraOffset.X) * 2 + 1, e.Pos.Y - CameraOffset.Y + 1);
                     PrepareDraw(e.Ascii, drawPosition.X, drawPosition.Y, e.BackgroundColor, e.ForegroundColor,
                         e is Actor);
                 }
