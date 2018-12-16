@@ -140,7 +140,7 @@ namespace DwarfCastles
                     VisibleCharsColorsBackground[i, r.Bottom + 1] = ConsoleColor.Magenta;
                 }
 
-                for (var i = r.Y; i <= r.Bottom; i++)
+                for (int i = r.Y; i <= r.Bottom; i++)
                 {
                     VisibleCharsColorsBackground[r.X * 2 + 1, i + 1] = ConsoleColor.Magenta;
                     VisibleCharsColorsBackground[r.Right * 2 + 1, i + 1] = ConsoleColor.Magenta;
