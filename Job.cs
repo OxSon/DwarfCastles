@@ -6,11 +6,7 @@ namespace DwarfCastles
 {
     public abstract class Job
     {
-        public Point Location
-        {
-            get;
-            protected set;
-        }
+        protected Point Location { get; set; }
 
         protected Queue<Job> SubJobs { get; }
 
@@ -49,7 +45,7 @@ namespace DwarfCastles
         {
         }
 
-        public virtual void Finish()
+        protected virtual void Finish()
         {
             Completed = true;
         }
@@ -101,8 +97,6 @@ namespace DwarfCastles
                     {
                         Logger.Log($"Refusing to add ({child.X}, {child.Y})");
                     }
-
-//                    Logger.Log($"Comparing {child} to {Location} -> {child == Location}");
 
                     if (child == GetLocation() || Owner.Map.Impassables[GetLocation().X, GetLocation().Y] && NextToLocation(child))
                     {
