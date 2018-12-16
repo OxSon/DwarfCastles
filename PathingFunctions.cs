@@ -33,7 +33,7 @@ namespace DwarfCastles
             cameFrom.Add(from, null);
             costSoFar.Add(from, 0);
 
-            Point? NextPointToAdd;
+            Point? NextPointToAdd = null;
             
             while (q.Count != 0)
             {
@@ -55,6 +55,11 @@ namespace DwarfCastles
                         cameFrom[neighbor] = current.p;
                     }
                 }
+            }
+
+            if (NextPointToAdd == null)
+            {
+                return null;
             }
             
             var Path = new List<Point>();
