@@ -39,7 +39,7 @@ namespace DwarfCastles.Jobs
             return null;
         }
 
-        public int CountMatchingResources(Tag t)
+        private int CountMatchingResources(Tag t)
         {
             return ResourcesCaptured.Count(r => Matches(t, r));
         }
@@ -52,11 +52,11 @@ namespace DwarfCastles.Jobs
             if (Location != BuildSite && SubJobs.Count == 0)
             {
                 Logger.Log("Interrupting Owner in Build Job");
-                Owner.Inturupt();
+                Owner.Interrupt();
             }
         }
 
-        public void GenerateNextStep()
+        private void GenerateNextStep()
         {
             var next = NextRequiredResource();
             if (next == null)
@@ -77,7 +77,7 @@ namespace DwarfCastles.Jobs
                 return Location;
             }
             Logger.Log("Build job returning Subjob Location");
-            return SubJobs.Peek().Location;
+            return SubJobs.Peek().GetLocation();
         }
 
         public override void Work()
@@ -96,7 +96,7 @@ namespace DwarfCastles.Jobs
             {
                 Logger.Log("Build doing subwork");
                 SubJobs.Peek().Work();
-                Location = SubJobs.Peek().Location;
+                Location = SubJobs.Peek().GetLocation();
                 if (SubJobs.Peek().Completed)
                 {
                     if (SubJobs.Peek() is Haul)
@@ -156,7 +156,6 @@ namespace DwarfCastles.Jobs
             {
                 SubJobs.Enqueue(new Haul(BuildSite, entityIds, Owner));
                 SubJobs.Peek().TakeOwnership(Owner);
-                Location = SubJobs.Peek().Location;
             }
         }
 
@@ -175,7 +174,7 @@ namespace DwarfCastles.Jobs
             return false;
         }
 
-        public override void Finish()
+        protected override void Finish()
         {
             Owner.Map.AddEntity(ResourceMasterList.GetDefaultClone(BuildingName), BuildSite);
             Completed = true;
