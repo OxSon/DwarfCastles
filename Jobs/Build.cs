@@ -49,11 +49,9 @@ namespace DwarfCastles.Jobs
             Owner = a;
             Owner.Map.Impassables[BuildSite.X, BuildSite.Y] = true; // When someone starts working on it, make the location impassable
             GenerateNextStep();
-            if (Location != BuildSite && SubJobs.Count == 0)
-            {
-                Logger.Log("Interrupting Owner in Build Job");
-                Owner.Interrupt();
-            }
+            if (Location == BuildSite || SubJob == null) return;
+            Logger.Log("Interrupting Owner in Build Job", Logger.DEBUG);
+            Owner.Interrupt();
         }
 
         private void GenerateNextStep()
@@ -71,18 +69,18 @@ namespace DwarfCastles.Jobs
 
         public override Point GetLocation()
         {
-            if (SubJobs.Count == 0)
+            if (SubJob == null)
             {
-                Logger.Log("Build job returning it's own location");
+                Logger.Log("Build job returning it's own location", Logger.VERBOSE);
                 return Location;
             }
-            Logger.Log("Build job returning Subjob Location");
-            return SubJobs.Peek().GetLocation();
+            Logger.Log("Build job returning Subjob Location", Logger.VERBOSE);
+            return SubJob.GetLocation();
         }
 
         public override void Work()
         {
-            if (SubJobs.Count == 0)
+            if (SubJob == null)
             {
                 Logger.Log("Build doing self work");
                 WorkRequired--;
@@ -95,13 +93,13 @@ namespace DwarfCastles.Jobs
             else
             {
                 Logger.Log("Build doing subwork");
-                SubJobs.Peek().Work();
-                Location = SubJobs.Peek().GetLocation();
-                if (SubJobs.Peek().Completed)
+                SubJob.Work();
+                Location = SubJob.GetLocation();
+                if (SubJob.Completed)
                 {
-                    if (SubJobs.Peek() is Haul)
+                    if (SubJob is Haul)
                     {
-                        var j = (Haul) SubJobs.Peek();
+                        var j = (Haul) SubJob;
                         foreach (var c in j.Carried)
                         {
                             ResourcesCaptured.Add(c);
@@ -111,7 +109,7 @@ namespace DwarfCastles.Jobs
                         j.ReleaseOwnership();
                     }
 
-                    SubJobs.Dequeue();
+                    SubJob = null;
                     GenerateNextStep();
                 }
             }
@@ -154,8 +152,8 @@ namespace DwarfCastles.Jobs
 
             if (found == amount)
             {
-                SubJobs.Enqueue(new Haul(BuildSite, entityIds, Owner));
-                SubJobs.Peek().TakeOwnership(Owner);
+                SubJob = new Haul(BuildSite, entityIds, Owner);
+                SubJob.TakeOwnership(Owner);
             }
         }
 

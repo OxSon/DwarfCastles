@@ -95,7 +95,7 @@ namespace DwarfCastles.Jobs
             else
             {
                 CollectResource(next);
-                if (SubJobs.Count == 0)
+                if (SubJob == null)
                 {
                     Owner.Interrupt();
                 }
@@ -104,18 +104,18 @@ namespace DwarfCastles.Jobs
 
         public override Point GetLocation()
         {
-            if (SubJobs.Count == 0)
+            if (SubJob == null)
             {
                 Logger.Log("Build job returning it's own location");
                 return Location;
             }
             Logger.Log("Build job returning Subjob Location");
-            return SubJobs.Peek().GetLocation();
+            return SubJob.GetLocation();
         }
 
         public override void Work()
         {
-            if (SubJobs.Count == 0)
+            if (SubJob == null)
             {
                 Logger.Log("Build doing self work");
                 WorkRequired--;
@@ -128,13 +128,13 @@ namespace DwarfCastles.Jobs
             else
             {
                 Logger.Log("Build doing subwork");
-                SubJobs.Peek().Work();
-                Location = SubJobs.Peek().GetLocation();
-                if (SubJobs.Peek().Completed)
+                SubJob.Work();
+                Location = SubJob.GetLocation();
+                if (SubJob.Completed)
                 {
-                    if (SubJobs.Peek() is Haul)
+                    if (SubJob is Haul)
                     {
-                        var j = (Haul) SubJobs.Peek();
+                        var j = (Haul) SubJob;
                         foreach (var c in j.Carried)
                         {
                             ResourcesCaptured.Add(c);
@@ -144,7 +144,7 @@ namespace DwarfCastles.Jobs
                         j.ReleaseOwnership();
                     }
 
-                    SubJobs.Dequeue();
+                    SubJob = null;
                     GenerateNextStep();
                 }
             }
@@ -187,12 +187,12 @@ namespace DwarfCastles.Jobs
 
             if (found == amount)
             {
-                SubJobs.Enqueue(new Haul(CraftSite, entityIds, Owner));
-                SubJobs.Peek().TakeOwnership(Owner);
+                SubJob = new Haul(CraftSite, entityIds, Owner);
+                SubJob.TakeOwnership(Owner);
             }
         }
 
-        private bool Matches(Tag ResourceTag, Entity e)
+        private static bool Matches(Tag ResourceTag, Entity e)
         {
             if (ResourceTag.GetTag("type") != null && e.HasType(ResourceTag.GetTag("type").Value.GetString()))
             {
