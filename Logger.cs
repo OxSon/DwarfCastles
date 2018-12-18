@@ -11,7 +11,7 @@ namespace DwarfCastles
         public const int DEBUG = 3;
         public const int VERBOSE = 4;
         
-        private const int Verbosity = 3;
+        private const int Verbosity = 4;
 
         private static ConcurrentQueue<string> OutputQueue;
         
@@ -23,7 +23,7 @@ namespace DwarfCastles
 
         public static void Log(string s, int VerboseLevel = 1)
         {
-            if (VerboseLevel <= Verbosity)
+            if (VerboseLevel > Verbosity)
             {
                 return;
             }
