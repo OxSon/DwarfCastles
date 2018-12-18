@@ -20,7 +20,7 @@ namespace DwarfCastles
         public string Display { get; set; }
         public Point Pos { get; set; }
         public int Id { get; }
-        private static int id;
+        protected static int id;
 
         //console 'drawing' related values
         public char Ascii { get; set; } //ascii character used to 'draw' entity
