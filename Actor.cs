@@ -9,16 +9,16 @@ namespace DwarfCastles
     {
         private Queue<Point> currentTravelPath;
         private static int counter;
-        public Queue<Job> Jobs { get; } = new Queue<Job>();
+        private Job Job { get; set; }
         public Map Map { get; set; } //current map Actor is on
 
         public void Update()
         {
-            Logger.Log("Update Method for Actor");
+            Logger.Log($"Actor.Update for Actor ID={Id}");
             var updateables = GetTag("updateables");
             if (updateables != null)
             {
-                Logger.Log("Found updateables to be non-null");
+                Logger.Log("Actor.Update Found updateables to be non-null");
                 foreach (var tag in updateables.SubTags)
                 {
                     var value = tag.GetTag("value").Value;
@@ -27,72 +27,76 @@ namespace DwarfCastles
                 }
             }
 
-            Logger.Log("Task Count: " + Jobs.Count);
-            if (Jobs.Count == 0)
+            var count = 0;
+            if (Job == null && count < Map.Jobs.Count)
             {
                 if (Map.Jobs.TryDequeue(out var newJob))
                 {
-                    Logger.Log("Actor taking job from GameManager.Jobs");
-                    Jobs.Enqueue(newJob);
+                    Logger.Log("Actor.Update taking job from Map.Jobs");
+                    Job = newJob;
                     newJob.TakeOwnership(this);
-                } else
-                {
-                    Jobs.Enqueue(new Wander(this));
                 }
-                return;
-            }
-            Logger.Log("Checking if Actor should work on job");
-            if (Jobs.First().NextToLocation(Pos))
-            {
-                Logger.Log("Actor is working on Job");
-                Jobs.First().Work();
-                if (Jobs.Count != 0 && Jobs.First().Completed)
-                {
-                    Logger.Log("hActor is completing a job");
-                    Jobs.First().ReleaseOwnership();
-                    Jobs.Dequeue();
-                    return;
-                }
+                count++;
             }
 
-            Logger.Log("Next step");
-            //recheck our pathing every 5 moves, or if we don't currently have a path
-            if (currentTravelPath == null || counter > 4)
+            if (Job == null)
             {
-                var attemptedPath = Jobs.First().GenTravelPath();
-                if (attemptedPath != null)
-                    currentTravelPath = new Queue<Point>(attemptedPath);
-                else
-                    Logger.Log($"Destination unreachable; Dq'ing: {Jobs.Dequeue()}");
-
-                Logger.Log(Jobs.Count + "");
-                counter = 0;
+                Job = new Wander(this);
+            }
+            
+            if (Job.NextToLocation(Pos))
+            {
+                Logger.Log("Actor.Update is working on Job");
+                Job.Work();
+                if (Job == null || !Job.Completed) return;
+                Logger.Log("Actor.Update is completing a job");
+                Job.ReleaseOwnership();
+                Job = null;
             }
             else
-                counter++;
-
-            if (currentTravelPath != null)
             {
-                if (currentTravelPath.Count > 0)
+                Logger.Log("Actor.Update Entering Travel portion");
+                if (currentTravelPath == null || counter > 4 || (currentTravelPath.Count > 0 &&
+                    Map.Impassables[currentTravelPath.Peek().X, currentTravelPath.Peek().Y]))
                 {
-                    string logText = $"Update for Actor moving from ({Pos.X}, {Pos.Y}) to";
-                    Pos = currentTravelPath.Dequeue();
-                    Logger.Log($"{logText} ({Pos.X}, {Pos.Y})");
+                    var attemptedPath = Job.GenTravelPath();
+                    if (attemptedPath != null)
+                    {
+                        Logger.Log($"Actor.Update Path created successfully with Length {attemptedPath.Count()}");
+                        currentTravelPath = new Queue<Point>(attemptedPath);
+                    }
+                    else
+                    {
+                        Logger.Log("Actor.Update Interrupting Actor because path was not successful", Logger.DEBUG);
+                        Interrupt();
+                    }
+
+                    counter = 0;
                 }
+                else
+                    counter++;
+                
+                if (currentTravelPath == null) return;
+                if (currentTravelPath.Count == 0) return;
+                Logger.Log("Updating Position");
+                Pos = currentTravelPath.Dequeue();
             }
+            // END ======================================================================
         }
 
-        public void Inturupt()
+        public void Interrupt()
         {
-            var returnToQueue = Jobs.Dequeue();
+            var returnToQueue = Job;
+            Job = null;
             Map.AddTask(returnToQueue);
         }
-        
+
         public override Entity Clone()
         {
             Entity a = new Actor
             {
-                Name = Name, Ascii = Ascii, BackgroundColor = BackgroundColor, ForegroundColor = ForegroundColor, Display = Display
+                Name = Name, Ascii = Ascii, BackgroundColor = BackgroundColor, ForegroundColor = ForegroundColor,
+                Display = Display
             };
             foreach (var tag in Tags)
             {
