@@ -15,6 +15,34 @@ namespace DwarfCastles
         public void Update()
         {
             Logger.Log($"Actor.Update for Actor ID={Id}");
+
+            HandleUpdatables();
+
+            if (Job == null)
+            {
+                GetNewJob();
+            }
+
+            if (Job.NextToLocation(Pos)) // TODO Make only when at the job location
+            {
+                Logger.Log("Actor.Update is working on Job");
+                Job.Work();
+                if (Job == null || !Job.Completed) return;
+                Logger.Log("Actor.Update is completing a job");
+                Job.ReleaseOwnership();
+                Job = null;
+            }
+            else
+            {
+                CheckPath();
+                UpdatePosition();
+            }
+
+            // END ======================================================================
+        }
+
+        private void HandleUpdatables()
+        {
             var updateables = GetTag("updateables");
             if (updateables != null)
             {
@@ -26,9 +54,12 @@ namespace DwarfCastles
                     value.SetValue(value.GetDouble() - rate.GetDouble());
                 }
             }
+        }
 
+        private void GetNewJob()
+        {
             var count = 0;
-            if (Job == null && count < Map.Jobs.Count)
+            while (count < Map.Jobs.Count)
             {
                 if (Map.Jobs.TryDequeue(out var newJob))
                 {
@@ -36,6 +67,7 @@ namespace DwarfCastles
                     Job = newJob;
                     newJob.TakeOwnership(this);
                 }
+
                 count++;
             }
 
@@ -43,45 +75,37 @@ namespace DwarfCastles
             {
                 Job = new Wander(this);
             }
-            
-            if (Job.NextToLocation(Pos))
-            {
-                Logger.Log("Actor.Update is working on Job");
-                Job.Work();
-                if (Job == null || !Job.Completed) return;
-                Logger.Log("Actor.Update is completing a job");
-                Job.ReleaseOwnership();
-                Job = null;
-            }
-            else
-            {
-                Logger.Log("Actor.Update Entering Travel portion");
-                if (currentTravelPath == null || counter > 4 || (currentTravelPath.Count > 0 &&
-                    Map.Impassables[currentTravelPath.Peek().X, currentTravelPath.Peek().Y]))
-                {
-                    var attemptedPath = Job.GenTravelPath();
-                    if (attemptedPath != null)
-                    {
-                        Logger.Log($"Actor.Update Path created successfully with Length {attemptedPath.Count()}");
-                        currentTravelPath = new Queue<Point>(attemptedPath);
-                    }
-                    else
-                    {
-                        Logger.Log("Actor.Update Interrupting Actor because path was not successful", Logger.DEBUG);
-                        Interrupt();
-                    }
+        }
 
-                    counter = 0;
+        private void CheckPath()
+        {
+            Logger.Log("Actor.Update Entering Travel portion");
+            if (currentTravelPath == null || counter > 4 || currentTravelPath.Count > 0 &&
+                Map.Impassables[currentTravelPath.Peek().X, currentTravelPath.Peek().Y])
+            {
+                var attemptedPath = Job.GenTravelPath();
+                if (attemptedPath != null)
+                {
+                    Logger.Log($"Actor.Update Path created successfully with Length {attemptedPath.Count()}");
+                    currentTravelPath = new Queue<Point>(attemptedPath);
                 }
                 else
-                    counter++;
-                
-                if (currentTravelPath == null) return;
-                if (currentTravelPath.Count == 0) return;
-                Logger.Log("Updating Position");
-                Pos = currentTravelPath.Dequeue();
+                {
+                    Logger.Log("Actor.Update Interrupting Actor because path was not successful", Logger.DEBUG);
+                    Interrupt();
+                }
+
+                counter = 0;
             }
-            // END ======================================================================
+            else
+                counter++;
+        }
+
+        private void UpdatePosition()
+        {
+            if (currentTravelPath == null || currentTravelPath.Count == 0) return;
+            Logger.Log("Updating Position");
+            Pos = currentTravelPath.Dequeue();
         }
 
         public void Interrupt()
