@@ -7,13 +7,13 @@ namespace DwarfCastles.Jobs
     public abstract class Construct : Job
     {
         protected IList<Tag> ResourceTags;
-        protected IList<Entity> CapturedResources;
+        private IList<Entity> CapturedResources;
 
         protected string Name;
         protected Point Site;
         protected double WorkRequired;
 
-        public Construct()
+        protected Construct()
         {
             CapturedResources = new List<Entity>();
         }
@@ -22,32 +22,30 @@ namespace DwarfCastles.Jobs
         {
             if (SubJob == null)
             {
-                Logger.Log("Build doing self work");
+                Logger.Log("Construct.Work doing self work", Logger.DEBUG);
                 WorkRequired--;
                 if (WorkRequired <= 0)
                 {
-                    Logger.Log("Build Finishing");
+                    Logger.Log("Construct.Work Finishing", Logger.DEBUG);
                     Finish();
                 }
             }
             else
             {
-                Logger.Log("Build doing subwork");
+                Logger.Log("Construct.Work doing SubJob.Work", Logger.DEBUG);
                 SubJob.Work();
                 Location = SubJob.GetLocation();
                 if (SubJob.Completed)
                 {
-                    if (SubJob is Haul)
+                    Logger.Log("Construct.Work SubJob Completed", Logger.DEBUG);
+                    var j = (Haul) SubJob;
+                    foreach (var c in j.Carried)
                     {
-                        var j = (Haul) SubJob;
-                        foreach (var c in j.Carried)
-                        {
-                            CapturedResources.Add(c);
-                        }
-
-                        j.Carried = new List<Entity>();
-                        j.ReleaseOwnership();
+                        CapturedResources.Add(c);
                     }
+
+                    j.Carried = new List<Entity>();
+                    j.ReleaseOwnership();
 
                     SubJob = null;
                     GenerateNextStep();
@@ -57,6 +55,7 @@ namespace DwarfCastles.Jobs
         
         protected override void Finish()
         {
+            Logger.Log("Construct.Finish");
             Owner.Map.AddEntity(ResourceMasterList.GetDefaultClone(Name), Site);
             Completed = true;
         }
@@ -65,15 +64,16 @@ namespace DwarfCastles.Jobs
         {
             if (SubJob == null)
             {
-                Logger.Log("Construct job returning it's own location");
+                Logger.Log("Construct job returning it's own location", Logger.DEBUG);
                 return Location;
             }
-            Logger.Log("Construct job returning Subjob Location");
+            Logger.Log("Construct job returning Subjob Location", Logger.DEBUG);
             return SubJob.GetLocation();
         }
 
         protected void CollectResource(Tag resourceTag)
         {
+            Logger.Log("Construct.CollectResource", Logger.DEBUG);
             var amount = resourceTag.GetTag("amount").Value.GetDouble();
 
             IList<int> entityIds = new List<int>();
@@ -102,13 +102,15 @@ namespace DwarfCastles.Jobs
 
                 if (found == amount)
                 {
-                    Logger.Log("Found the correct amount of resources needed to build");
+                    Logger.Log("Found the correct amount of resources needed to build", Logger.DEBUG);
                     break;
                 }
             }
+            Logger.Log($"Construct.CollectResource found {found} need {amount}");
 
             if (found == amount)
             {
+                Logger.Log("Construct.CollectResource Creating new Haul Subjob", Logger.DEBUG);
                 SubJob = new Haul(Site, entityIds, Owner);
                 SubJob.TakeOwnership(Owner);
             }
@@ -143,8 +145,7 @@ namespace DwarfCastles.Jobs
                 }
             }
 
-            Logger.Log($"Construct.NextRequiredResource Returning null as no more resources are required",
-                Logger.VERBOSE);
+            Logger.Log("Construct.NextRequiredResource Returning null as no more resources are needed",Logger.VERBOSE);
             return null;
         }
 
@@ -153,18 +154,23 @@ namespace DwarfCastles.Jobs
             return CapturedResources.Count(r => Matches(t, r));
         }
 
-        public void GenerateNextStep()
+        protected void GenerateNextStep()
         {
+            Logger.Log("Construct.GenerateNextStep", Logger.DEBUG);
             var next = NextRequiredResource();
             if (next == null)
             {
+                Logger.Log("Construct.GenerateNextStep No more resources required. Setting Location to Site", Logger.DEBUG);
                 Location = Site;
             }
             else
             {
+                
                 CollectResource(next);
+                
                 if (SubJob == null)
                 {
+                    Logger.Log("Interrupting Owner in Construct.GenerateNextStep, because there is no way to collect the resource needed", Logger.DEBUG);
                     Owner.Interrupt();
                 }
             }
