@@ -22,7 +22,7 @@ namespace DwarfCastles.Jobs
             Owner = a;
             Owner.Map.Impassables[Site.X, Site.Y] = true; // When someone starts working on it, make the location impassable
             GenerateNextStep();
-            if (Location == Site || SubJob == null) return;
+            if (Location == Site || SubJob != null) return;
             Logger.Log("Interrupting Owner in Build Job", Logger.DEBUG);
             Owner.Interrupt();
         }
