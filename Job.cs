@@ -8,16 +8,11 @@ namespace DwarfCastles
     {
         protected Point Location { get; set; }
 
-        protected Queue<Job> SubJobs { get; }
+        protected Job SubJob { get; set; }
 
         protected Actor Owner { get; set; }
 
         public bool Completed;
-
-        protected Job()
-        {
-            SubJobs = new Queue<Job>();
-        }
 
         /// <summary>
         /// This method is called when a job is taken from

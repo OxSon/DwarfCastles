@@ -72,6 +72,8 @@ namespace DwarfCastles
                     break;
                 }
             }
+
+            Path.Reverse();
             return Path;
         }
 

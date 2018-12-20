@@ -16,7 +16,7 @@ namespace DwarfCastles
         {
             while (Console.KeyAvailable)
             {
-                var keyInfo = Console.ReadKey();
+                var keyInfo = Console.ReadKey(true);
                 switch (keyInfo.Key)
                 {
                     case ConsoleKey.Backspace:
