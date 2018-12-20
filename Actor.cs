@@ -83,7 +83,7 @@ namespace DwarfCastles
             if (currentTravelPath == null || counter > 4 || currentTravelPath.Count > 0 &&
                 Map.Impassables[currentTravelPath.Peek().X, currentTravelPath.Peek().Y])
             {
-                var attemptedPath = Job.GenTravelPath();
+                var attemptedPath = PathingFunctions.GenerateAStarPath(Job.GetLocation(), Pos, Map);
                 if (attemptedPath != null)
                 {
                     Logger.Log($"Actor.Update Path created successfully with Length {attemptedPath.Count()}");
