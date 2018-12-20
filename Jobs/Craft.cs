@@ -97,7 +97,8 @@ namespace DwarfCastles.Jobs
                 CollectResource(next);
                 if (SubJobs.Count == 0)
                 {
-                    Owner.Interrupt();
+                    Owner.Inturupt();
+                    
                 }
             }
         }

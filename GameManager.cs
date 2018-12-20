@@ -43,7 +43,7 @@ namespace DwarfCastles
             {
                 HandleInput();
                 Gui.Draw();
-                Thread.Sleep(50);
+//                Thread.Sleep(50);
             }
         }
 
