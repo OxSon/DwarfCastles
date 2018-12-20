@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -23,15 +24,20 @@ namespace DwarfCastles
         private ConsoleColor[,] VisibleCharsColorsBackground;
         private bool[,] VisibleCharOwnershipSet;
 
+        private Queue<double> FrameTimes;
+
         public Gui()
         {
             CameraOffset = new Point();
             CameraSize = new Point(25, 25);
-            
+
             VisibleChars = new char[Console.WindowWidth, Console.WindowHeight];
             VisibleCharsColorsForeground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
             VisibleCharsColorsBackground = new ConsoleColor[Console.WindowWidth, Console.WindowHeight];
             VisibleCharOwnershipSet = new bool[Console.WindowWidth, Console.WindowHeight];
+
+            FrameTimes = new Queue<double>();
+
             Console.CursorVisible = false;
         }
 
@@ -75,6 +81,8 @@ namespace DwarfCastles
                     Console.Write(VisibleChars[i, j]);
                 }
             }
+
+            FrameTimes.Enqueue((new TimeSpan(DateTime.Now.Ticks)).TotalMilliseconds);
         }
 
         private void PrepareDraw(string s, int x, int y, ConsoleColor background, ConsoleColor foreground,
@@ -114,22 +122,38 @@ namespace DwarfCastles
                 PrepareDraw('|', 0, i, ConsoleColor.Black, ConsoleColor.White, true);
                 PrepareDraw('|', Console.WindowWidth - 1, i, ConsoleColor.Black, ConsoleColor.White, true);
             }
+
             // Right and Bottom of the Map Window
             for (var i = 0; i < CameraSize.Y; i++)
             {
                 PrepareDraw('|', CameraSize.X * 2 + 1, i + 1, ConsoleColor.Black, ConsoleColor.White, true);
             }
+
             for (var i = 0; i < CameraSize.X * 2; i++)
             {
                 PrepareDraw('\u00AF', i + 1, CameraSize.Y + 1, ConsoleColor.Black, ConsoleColor.White, true);
             }
         }
 
+        private void DrawFPS()
+        {
+
+            var current = (new TimeSpan(DateTime.Now.Ticks)).TotalMilliseconds;
+            while (FrameTimes.Count != 0 && FrameTimes.Peek() + 1000 < current)
+            {
+                Logger.Log($"Dequeueing {FrameTimes.Peek()} at {current}");
+                FrameTimes.Dequeue();
+            }
+
+            PrepareDraw(FrameTimes.Count.ToString(), 0, 0, ConsoleColor.Black, ConsoleColor.Red, true);
+        }
+
         private void DrawInput()
         {
             if (GameManager.Menu.State == 1)
             {
-                VisibleCharsColorsBackground[GameManager.Input.CursorPosition.X * 2 + 1, GameManager.Input.CursorPosition.Y + 1] = ConsoleColor.Magenta;
+                VisibleCharsColorsBackground[GameManager.Input.CursorPosition.X * 2 + 1,
+                    GameManager.Input.CursorPosition.Y + 1] = ConsoleColor.Magenta;
             }
             else if (GameManager.Menu.State == 2)
             {
@@ -153,7 +177,8 @@ namespace DwarfCastles
             var freeSpace = Console.WindowWidth - CameraSize.X * 2 - 3;
             var start = CameraSize.X * 2 + 2;
 
-            IList<string> correctedLines = GameManager.Menu.GetMenuDisplay().Split('\n').SelectMany(s => Split(s, freeSpace)).ToList();
+            IList<string> correctedLines = GameManager.Menu.GetMenuDisplay().Split('\n')
+                .SelectMany(s => Split(s, freeSpace)).ToList();
 
             for (var i = 0; i < correctedLines.Count; i++)
             {
@@ -192,6 +217,7 @@ namespace DwarfCastles
         public void Draw()
         {
             SetUpNewDraw();
+            DrawFPS();
             DrawFrame();
             DrawMap();
             DrawInput();
